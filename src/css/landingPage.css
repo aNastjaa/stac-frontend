@@ -1,0 +1,154 @@
+/* Hero Section */
+.hero-section {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem 2rem;
+    gap: 1rem;
+    border-radius: 30px;
+    box-shadow: 5px 6px 7px rgba(0, 0, 0, 0.25);
+  }
+  
+  .hero-section h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 38px;
+    color: #131313;
+  }
+
+  .logo-text
+  {
+    font-family: 'Sedgwick Ave Display', sans-serif;
+    font-size: 40px;
+    color: #131313;
+  }
+  
+  .hero-section p {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    font-weight: 200;
+    color: #131313;
+  }
+    
+  /* Carousel Section */
+.carousel-section {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+.carousel-section h3{
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+  }
+
+.bite {
+    font-family: 'Sedgwick Ave Display', sans-serif;
+    font-size: 40px;
+}
+  
+  /* How It Works Section */
+  .how-it-works {
+    padding: 30px;
+    background-color: #e1e1e1;
+    text-align: center;
+    border-radius: 30px;
+    box-shadow: 5px 6px 7px rgba(0, 0, 0, 0.25);
+  }
+  .how-it-works h3{
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 24px;
+    margin-bottom: 1rem;
+  }
+  .headind-edition{
+    font-family: 'Sedgwick Ave Display', sans-serif;
+    font-size: 24px;
+  }
+
+  .how-it-works p{
+    color: #131313;
+    font-size: 16px;
+    margin-bottom: 1rem;
+  }
+
+
+  /* Basic vs Pro User Section */
+  .user-comparison {
+   text-align: center;
+   margin-top: 2rem;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   padding: 0 1rem;
+  }
+  
+  .user-comparison h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 30px;
+    margin-bottom: 1rem;
+  }
+  .vs{
+    font-family: 'Sedgwick Ave Display', sans-serif;
+    font-size: 30px;
+  }
+  .comprasion{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .comprasion div{
+    width: 43%;
+  }
+
+  .user-comparison h4{
+    text-align: left;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+  }
+
+  .user-comparison ul {
+    list-style-type: none;
+    padding-left: 0;
+    text-align: left;
+  }
+
+  .user-comparison ul li {
+    margin-bottom: 0.5rem;
+    font-size: 15px;
+  }
+
+  /* Ready to Create Section */
+  .ready-to-create {
+    margin-top: 2rem;
+    padding: 0 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .ready-to-create h3{
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+    text-align: center;
+  }
+  
+  /* Sponsors Section */
+ .sponsor-section{
+  padding: 0 2rem;
+ }
+  
+  /* Footer */
+  footer {
+    padding: 20px;
+    text-align: center;
+    background-color: #131313;
+    color: #E1E1E1;
+  }
+  
+  footer p {
+    font-family: 'Montserrat', sans-serif;
+  }

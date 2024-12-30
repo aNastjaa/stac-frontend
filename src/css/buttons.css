@@ -1,0 +1,57 @@
+/*  Long Button Styling */
+.button-long {
+    width: 353px;
+    height: 45px;
+    background-color: #131313;
+    color: #E1E1E1;
+    border: 2px solid #E1E1E1;
+    border-radius: 30px;
+    font-size: 18px;
+    font-family: 'Bebas Neue', sans-serif;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .button-long:hover {
+    color: #131313;
+    background-color: #E1E1E1;
+    border: 2px solid #131313;
+  }
+  
+  .button-long:focus {
+    outline: none;
+  }
+  
+  /* CTA Button Styling */
+
+  .button-cta {
+    width: 103px;
+    height: 31px;
+    background-color: #e1e1e1;
+    color: #131313;
+    border: 2px solid #131313;
+    border-radius: 30px;
+    font-size: 16px;
+    font-family: 'Bebas Neue', sans-serif;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .button-cta:hover {
+    color: #e1e1e1;
+    background-color: #131313;
+    border: 2px solid #131313;
+  }
+
+  a
+  {
+    text-decoration: none;
+  }

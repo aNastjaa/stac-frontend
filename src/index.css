@@ -1,68 +1,166 @@
-:root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* Define Montserrat */
+@font-face {
+  font-family: 'Montserrat';
+  src: url('/fonts/Montserrat-VariableFont_wght.ttf') format('truetype-variations');
+  font-weight: 100 900; /* Specify the weight range of the font (100 to 900) */
+  font-style: normal;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
+/* Define Montserrat Italic as a variable font */
+@font-face {
+  font-family: 'Montserrat';
+  src: url('/fonts/Montserrat-Italic-VariableFont_wght.ttf') format('truetype-variations');
+  font-weight: 100 900; /* Specify the weight range for the italic font */
+  font-style: italic;
 }
-a:hover {
-  color: #535bf2;
+
+/* Define Bebas Neue */
+@font-face {
+  font-family: 'Bebas Neue';
+  src: url('/fonts/BebasNeue-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* Define Sedgwick Ave Display font */
+@font-face {
+  font-family: 'Sedgwick Ave Display';
+  src: url('/fonts/SedgwickAveDisplay-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* Global styles */
+/* Global Styles */
+*,
+*::after,
+*::before {
+    box-sizing: border-box;
+    margin: 0;
+    
+}
+
+html {
+    scroll-behavior: smooth;
 }
 
 body {
-  margin: 0;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 200;
+  padding: 0 1rem;
+  background-color: #E1E1E1;
+}
+
+.register-container {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.form-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.5rem;
+  text-align: center;
+  margin-bottom: 24px;
+  color: #E1E1E1; /* White text */
+}
+
+/* Styling the form */
+.form {
   display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  flex-direction: column;
+  padding: 1rem;
+  gap: 5px;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+/* Input Group */
+.input-group {
+  display: flex;
+  flex-direction: column;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
+.input-group label {
+  font-size: 1rem;
+  color: #E1E1E1; /* White text */
+  margin-bottom: 4px;
+}
+
+.input-group input {
+  padding: 1rem;
+  background-color: #1f1f1f; /* Darker gray background for input */
+  border: 2px solid #E1E1E1; /* White border */
+  border-radius: 20px;
+  color: #E1E1E1; /* White text */
+  font-size: 1rem;
+  opacity: 0.7;
+}
+
+.input-group input:focus {
+  outline: none;
+  border-color: #E1E1E1; /* White border on focus */
+}
+
+.input-group input::placeholder {
+  color: rgba(225, 225, 225, 0.5); /* Lighter placeholder text */
+}
+
+/* Error message styling */
+.error-message {
+  color: red; /* Red for error messages */
+  font-size: 0.875rem;
+  margin-top: 4px;
+}
+
+/* Button Styling */
+.submit-button {
+  padding: 1rem;
+  border: none;
+  border-radius: 30px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.125rem;
+  color: #E1E1E1; /* Dark gray text */
   cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  transition: all 0.3s ease-in-out;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+.submit-button:hover {
+  background-color: #CFCFCF; /* Lighter gray background on hover */
+}
+
+/* Checkbox styling */
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.checkbox-group label {
+  font-size: 0.875rem;
+  color: #E1E1E1; /* White text */
+}
+
+.checkbox-group input {
+  transform: scale(1.2); /* Slightly larger checkbox */
+}
+
+/* Error text styling */
+.error-text {
+  color: red; /* Red color for error text */
+  font-size: 0.875rem;
+  text-align: center;
+  margin-top: 12px;
+}
+
+.login-link {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.login-link a {
+  color: #E1E1E1; /* White text for login link */
+  text-decoration: none;
+}
+
+.login-link a:hover {
+  text-decoration: underline;
 }
