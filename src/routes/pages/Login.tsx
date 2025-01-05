@@ -1,79 +1,78 @@
-import { useState } from "react";
-import { useNavigate } from "react-router";
-import { useForm, SubmitHandler } from "react-hook-form";
-import { login } from "../../utils/api";
+import { useState } from 'react';
+import { login } from '../../utils/api'; // Import the login function
+import { useNavigate } from 'react-router';
 
-type FieldValues = {
-  email: string;
-  password: string;
-  rememberMe: boolean;
-};
+interface LoginProps {
+  csrfToken: string; // Pass CSRF token as a prop
+}
 
-type BackendErrors = Record<string, string[]>;
-
-const Login = () => {
+const Login = ({ csrfToken }: LoginProps) => {
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [rememberMe, setRememberMe] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
-  const [backendErrors, setBackendErrors] = useState<BackendErrors>({});
 
-  const {
-    register,
-    formState: { errors },
-    handleSubmit,
-  } = useForm<FieldValues>();
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
 
-  const onValid: SubmitHandler<FieldValues> = async (data) => {
-    setBackendErrors({}); // Clear previous errors
     try {
-      const response = await login(data);
+      const data = await login(email, password, rememberMe, csrfToken);
+      console.log('Logged in successfully', data.user);
 
-      if (response.success) {
-        alert("Login successful!");
-        navigate("/profile"); // Redirect to the profile page
-      } else {
-        setBackendErrors(response.errors || {});
-      }
-    } catch (error) {
-      console.error("Login error:", error);
-      alert("Login failed. Please check your credentials and try again.");
+      // Redirect to the profile page after successful login
+      navigate('/profile'); 
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred');
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit(onValid)}>
-      <div>
-        <label htmlFor="email">Email</label>
-        <input
-          id="email"
-          type="email"
-          {...register("email", {
-            required: "Email is required.",
-            pattern: { value: /\S+@\S+\.\S+/, message: "Invalid email format." },
-          })}
-        />
-        <p>{errors.email?.message}</p>
-        <p>{backendErrors.email?.[0]}</p>
-      </div>
+    <div className="login-container">
+      <h2>Login</h2>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label htmlFor="email">Email:</label>
+          <input
+            id="email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="password">Password:</label>
+          <input
+            id="password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <label>
+            <input
+              type="checkbox"
+              checked={rememberMe}
+              onChange={() => setRememberMe(!rememberMe)}
+            />
+            Remember me
+          </label>
+        </div>
+        <button type="submit" disabled={loading}>
+          {loading ? 'Logging in...' : 'Login'}
+        </button>
+      </form>
 
-      <div>
-        <label htmlFor="password">Password</label>
-        <input
-          id="password"
-          type="password"
-          {...register("password", { required: "Password is required." })}
-        />
-        <p>{errors.password?.message}</p>
-        <p>{backendErrors.password?.[0]}</p>
-      </div>
-
-      <div>
-        <label htmlFor="rememberMe">
-          <input id="rememberMe" type="checkbox" {...register("rememberMe")} />
-          Remember Me
-        </label>
-      </div>
-
-      <button type="submit">Log in</button>
-    </form>
+      {error && <p className="error-message">{error}</p>}
+    </div>
   );
 };
 

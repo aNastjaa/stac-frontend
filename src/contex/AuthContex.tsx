@@ -2,7 +2,7 @@ import { createContext, useState, ReactNode } from "react";
 
 // Types
 type Auth = {
-  id: number | null;
+  id: string | null;
   username: string | null;
   role: "admin" | "pro" | "basic" | null;
 };

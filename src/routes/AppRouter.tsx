@@ -2,7 +2,7 @@ import {
     createBrowserRouter,
     createRoutesFromElements,
     Route,
-  } from "react-router-dom";
+  } from "react-router";
   
   // Layouts
     import RootLayout from "./layouts/RootLayout";

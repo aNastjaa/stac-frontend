@@ -8,14 +8,15 @@ export default defineConfig({
   assetsInclude: ['**/*.woff2', '**/*.ttf', '**/*.woff'],
   server: {
     proxy: {
-      '/api': {
-        target: 'http://localhost:8000',
-        changeOrigin: true,
-        secure: true,
-      },
+      '/sanctum/csrf-cookie': 'http://localhost:8000', // Proxy CSRF cookie request to Laravel backend
+      '/api': 'http://localhost:8000', // Proxy other API requests to Laravel backend
     },
-    cors: true,
   },
+  build: {
+    outDir: 'public/build', // Output the built files in Laravel's public folder
+    assetsDir: 'assets',
+  },
+  publicDir: 'public',
 })
 
 
