@@ -1,12 +1,10 @@
 import { useState } from 'react';
 import { login } from '../../utils/api'; // Import the login function
 import { useNavigate } from 'react-router';
+import { useCsrf } from '../../contex/CsrfContex';
 
-interface LoginProps {
-  csrfToken: string; // Pass CSRF token as a prop
-}
-
-const Login = ({ csrfToken }: LoginProps) => {
+const Login = () => {
+  const { csrfToken } = useCsrf(); 
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [rememberMe, setRememberMe] = useState<boolean>(false);
@@ -36,6 +34,7 @@ const Login = ({ csrfToken }: LoginProps) => {
     <div className="login-container">
       <h2>Login</h2>
       <form onSubmit={handleSubmit}>
+      <input type="hidden" name="_token" id="token" value="{{ csrf_token() }}"/>
         <div>
           <label htmlFor="email">Email:</label>
           <input
@@ -77,3 +76,14 @@ const Login = ({ csrfToken }: LoginProps) => {
 };
 
 export default Login;
+
+
+// import axios from 'axios';
+// export const api = axios.create({
+//     baseURL: import.meta.env.VITE_API_URL,
+//     withCredentials: true,
+//     withXSRFToken: true,
+//     headers: {
+//         'Content-Type': 'application/json',
+//     },
+// });

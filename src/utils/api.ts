@@ -74,7 +74,7 @@
 export const setCsrfCookie = async (): Promise<void> => {
   try {
     // Send a GET request to Laravel to set the CSRF cookie
-    const response = await fetch('/sanctum/csrf-cookie', {
+    const response = await fetch('http://localhost:8000/sanctum/csrf-cookie', {
       method: 'GET',
       credentials: 'include', // Ensure credentials (cookies) are included
     });
@@ -102,7 +102,8 @@ export const getCsrfTokenFromCookie = (): string => {
     throw new Error('CSRF token not found in cookies. Make sure the cookie is set.');
   }
 
-  return csrfToken;
+  // Decode the cookie value in case it's URL encoded
+  return decodeURIComponent(csrfToken);
 };
 
 // Define types for the API response
@@ -112,24 +113,26 @@ interface LoginResponse {
     name: string;
     email: string;
   };
-  csrfToken: string;
+  token: string;
 }
-// Function to login the user
+
+// Function to make a login request with the CSRF token
 export const login = async (
   email: string,
   password: string,
   rememberMe: boolean,
-  csrfToken: string
+  csrfToken: string // CSRF token passed as argument
 ): Promise<LoginResponse> => {
-  
   const response = await fetch('/api/auth/login', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'X-CSRF-TOKEN': csrfToken, // Include CSRF token here
+      'X-CSRF-TOKEN': csrfToken, // Include CSRF token in the header
+      'Accept': 'application/json' 
     },
+    
     body: JSON.stringify({ email, password, remember_me: rememberMe }),
-    credentials: 'include', // Include cookies for session-based authentication
+    credentials: 'include', // Ensure cookies are included in the request
   });
 
   const data = await response.json();
@@ -138,7 +141,8 @@ export const login = async (
     throw new Error(data.message || 'An error occurred');
   }
 
-  return data; // Return the user and token
+  return data;
 };
+
 
 
