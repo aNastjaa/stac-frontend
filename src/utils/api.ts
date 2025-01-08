@@ -1,80 +1,9 @@
-// interface RegisterResponse {
-//   success: boolean;
-//   errors?: Record<string, string[]>; // Backend validation errors
-//   data?: {
-//     user: {
-//       id: string;
-//       username: string;
-//       email: string;
-//       role_id: string;
-//       created_at: string;
-//       updated_at: string;
-//     };
-//     token: string;
-//   };
-// }
-
-// export const fetchCsrf = async (): Promise<void> => {
-//   try {
-//     const response = await fetch("http://localhost:8000/sanctum/csrf-cookie", {
-//       credentials: "include", 
-//     });
-//     if (!response.ok) {
-//       console.error("Failed to fetch CSRF cookie:", response.statusText);
-//       throw new Error("Failed to fetch CSRF cookie");
-//     }
-//     console.log("CSRF cookie fetched successfully");
-//   } catch (error) {
-//     console.error("Error fetching CSRF cookie:", error);
-//     throw error;
-//   }
-// };
-
-// export const register = async (
-//   formData: FormData
-// ): Promise<RegisterResponse> => {
-//   await fetchCsrf();
-
-//   const token = document.cookie
-//     .split("; ")
-//     .find((row) => row.startsWith("XSRF-TOKEN="))
-//     ?.split("=")[1];
-
-//   if (!token) {
-//     throw new Error("CSRF token not found");
-//   }
-
-//   const response = await fetch("http://localhost:8000/api/auth/register", {
-//     method: "POST",
-//     body: formData,
-//     credentials: "include",
-//     headers: {
-//       "X-XSRF-TOKEN": decodeURIComponent(token),
-//     },
-//   });
-
-//   const responseBody = await response.json();
-
-//   if (!response.ok) {
-//     // Handle validation errors (status 422)
-//     if (response.status === 422) {
-//       return { success: false, errors: responseBody.errors };
-//     }
-
-//     // Throw error for other unexpected issues
-//     throw new Error(responseBody.message || "Registration failed");
-//   }
-
-//   return { success: true, data: responseBody };
-// };
-
-
-
-
+const API_URL = import.meta.env.VITE_API_URL;
+//Get CSRF Cookie
 export const setCsrfCookie = async (): Promise<void> => {
   try {
     // Send a GET request to Laravel to set the CSRF cookie
-    const response = await fetch('http://localhost:8000/sanctum/csrf-cookie', {
+    const response = await fetch(`${API_URL}/sanctum/csrf-cookie`, {
       method: 'GET',
       credentials: 'include', // Ensure credentials (cookies) are included
     });
@@ -84,13 +13,12 @@ export const setCsrfCookie = async (): Promise<void> => {
       throw new Error('Failed to set CSRF cookie');
     }
     
-    // Optionally, you can check the response headers or cookies here if needed
-    console.log('CSRF cookie set');
+    console.log('CSRF cookie set:', response.headers);
   } catch (error) {
     console.error('Error setting CSRF cookie', error);
   }
 };
-
+//Get CSRF Token from cookie
 export const getCsrfTokenFromCookie = (): string => {
   // Retrieve the CSRF token from the cookie
   const csrfToken = document.cookie
@@ -105,7 +33,50 @@ export const getCsrfTokenFromCookie = (): string => {
   // Decode the cookie value in case it's URL encoded
   return decodeURIComponent(csrfToken);
 };
+//REGISTER
+// Define types for the API response
+interface RegisterResponse {
+  success: boolean;
+  errors?: Record<string, string[]>; // Backend validation errors
+  data?: {
+    user: {
+      id: string;
+      username: string;
+      email: string;
+      role_id: string;
+      created_at: string;
+      updated_at: string;
+    };
+    csrfToken: string;
+  };
+}
+export const register = async (
+  formData: FormData
+): Promise<RegisterResponse> => {
+  const csrfToken = getCsrfTokenFromCookie();
 
+  const response = await fetch(`${API_URL}/api/auth/register`, {
+    method: "POST",
+    body: formData,
+    credentials: "include",
+    headers: {
+      "X-XSRF-TOKEN": csrfToken,
+    },
+  });
+
+  const responseBody = await response.json();
+
+  if (!response.ok) {
+    if (response.status === 422) {
+      return { success: false, errors: responseBody.errors };
+    }
+    throw new Error(responseBody.message || "Registration failed");
+  }
+
+  return { success: true, data: responseBody };
+};
+
+//LOGIN
 // Define types for the API response
 interface LoginResponse {
   user: {
@@ -113,7 +84,7 @@ interface LoginResponse {
     name: string;
     email: string;
   };
-  token: string;
+  csrfToken: string;
 }
 
 // Function to make a login request with the CSRF token
@@ -121,18 +92,22 @@ export const login = async (
   email: string,
   password: string,
   rememberMe: boolean,
-  csrfToken: string // CSRF token passed as argument
+  csrfToken: string // Expecting the token here
 ): Promise<LoginResponse> => {
-  const response = await fetch('/api/auth/login', {
+  // Ensure CSRF token is URL-decoded
+  const decodedCsrfToken = decodeURIComponent(csrfToken);
+
+  console.log('Decoded CSRF Token:', decodedCsrfToken); // Check the format here
+
+  const response = await fetch(`${API_URL}/api/auth/login`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'X-CSRF-TOKEN': csrfToken, // Include CSRF token in the header
-      'Accept': 'application/json' 
+      'X-XSRF-TOKEN': decodedCsrfToken, // Pass the decoded token
+      'Accept': 'application/json',
     },
-    
     body: JSON.stringify({ email, password, remember_me: rememberMe }),
-    credentials: 'include', // Ensure cookies are included in the request
+    credentials: 'include',
   });
 
   const data = await response.json();
@@ -141,7 +116,7 @@ export const login = async (
     throw new Error(data.message || 'An error occurred');
   }
 
-  return data;
+  return data; // Return the response data
 };
 
 

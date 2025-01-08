@@ -1,89 +1,94 @@
-import { useState } from 'react';
-import { login } from '../../utils/api'; // Import the login function
-import { useNavigate } from 'react-router';
-import { useCsrf } from '../../contex/CsrfContex';
+import { useState, useId } from "react";
+import { useNavigate } from "react-router";
+import { login } from "../../utils/api";
 
 const Login = () => {
-  const { csrfToken } = useCsrf(); 
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
+  const navigate = useNavigate();
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
   const [rememberMe, setRememberMe] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
-  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  // Generate unique IDs for the form fields
+  const emailId = useId();
+  const passwordId = useId();
+  const rememberMeId = useId();
+
+  const handleSubmit = async () => {
     setLoading(true);
     setError(null);
 
     try {
-      const data = await login(email, password, rememberMe, csrfToken);
-      console.log('Logged in successfully', data.user);
+      const csrfToken = document.cookie
+        .split("; ")
+        .find((row) => row.startsWith("XSRF-TOKEN="))?.split("=")[1];
 
-      // Redirect to the profile page after successful login
-      navigate('/profile'); 
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      if (!csrfToken) {
+        setError("CSRF token not found.");
+        setLoading(false);
+        return;
+      }
+
+      const response = await login(email, password, rememberMe, csrfToken);
+
+      if (response.user) {
+        alert("Login successful!");
+        navigate("/profile"); // Redirect to dashboard or homepage after successful login
+      } else {
+        setError("Invalid credentials or an error occurred.");
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      setError("An error occurred while logging in.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="login-container">
-      <h2>Login</h2>
-      <form onSubmit={handleSubmit}>
-      <input type="hidden" name="_token" id="token" value="{{ csrf_token() }}"/>
-        <div>
-          <label htmlFor="email">Email:</label>
-          <input
-            id="email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="password">Password:</label>
-          <input
-            id="password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>
-            <input
-              type="checkbox"
-              checked={rememberMe}
-              onChange={() => setRememberMe(!rememberMe)}
-            />
-            Remember me
-          </label>
-        </div>
-        <button type="submit" disabled={loading}>
-          {loading ? 'Logging in...' : 'Login'}
-        </button>
-      </form>
+    <form onSubmit={(e) => e.preventDefault()}>
+      <div>
+        <label htmlFor={emailId}>Email</label>
+        <input
+          id={emailId}
+          type="email"
+          placeholder="example@mail.com"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+      </div>
 
-      {error && <p className="error-message">{error}</p>}
-    </div>
+      <div>
+        <label htmlFor={passwordId}>Password</label>
+        <input
+          id={passwordId}
+          type="password"
+          placeholder="******"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+      </div>
+
+      <div>
+        <label htmlFor={rememberMeId}>
+          <input
+            type="checkbox"
+            id={rememberMeId}
+            checked={rememberMe}
+            onChange={(e) => setRememberMe(e.target.checked)}
+          />
+          Remember me
+        </label>
+      </div>
+
+      <button type="submit" disabled={loading} onClick={handleSubmit}>
+        {loading ? "Logging in..." : "Login"}
+      </button>
+
+      {error && <p>{error}</p>}
+    </form>
   );
 };
 
 export default Login;
-
-
-// import axios from 'axios';
-// export const api = axios.create({
-//     baseURL: import.meta.env.VITE_API_URL,
-//     withCredentials: true,
-//     withXSRFToken: true,
-//     headers: {
-//         'Content-Type': 'application/json',
-//     },
-// });

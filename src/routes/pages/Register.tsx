@@ -2,6 +2,7 @@ import { useId, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { register } from "../../utils/api";
+import { Link } from "react-router";
 
 type FieldValues = {
   username: string;
@@ -17,7 +18,7 @@ const Register = () => {
   const emailId = useId();
   const passwordId = useId();
   const passwordRepeatId = useId();
-  const navigate = useNavigate(); // Hook for navigation
+  const navigate = useNavigate();
 
   const [backendErrors, setBackendErrors] = useState<BackendErrors>({});
 
@@ -59,6 +60,7 @@ const Register = () => {
         <input
           id={usernameId}
           type="text"
+          placeholder="username"
           {...registerField("username", {
             required: "Username is required.",
             minLength: { value: 3, message: "Must be at least 3 characters." },
@@ -73,6 +75,7 @@ const Register = () => {
         <input
           id={emailId}
           type="email"
+          placeholder="example@mail.com"
           {...registerField("email", {
             required: "Email is required.",
             pattern: { value: /\S+@\S+\.\S+/, message: "Invalid email format." },
@@ -87,6 +90,7 @@ const Register = () => {
         <input
           id={passwordId}
           type="password"
+          placeholder="password"
           {...registerField("password", {
             required: "Password is required.",
             minLength: { value: 8, message: "Must be at least 8 characters." },
@@ -102,6 +106,7 @@ const Register = () => {
         <input
           id={passwordRepeatId}
           type="password"
+          placeholder="repeat your password"
           {...registerField("passwordRepeat", {
             required: "Please repeat your password.",
             validate: (value) =>
@@ -112,6 +117,12 @@ const Register = () => {
       </div>
 
       <button type="submit">Register</button>
+      <div>
+        <p>
+          Already have an account?{" "}
+          <Link to="/login">Log in</Link>
+        </p>
+      </div>
     </form>
   );
 };

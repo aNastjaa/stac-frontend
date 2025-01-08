@@ -5,7 +5,7 @@ import RootLayout from "./routes/layouts/RootLayout"; // RootLayout for unlogged
 
 // Pages
 import LandingPage from "./routes/pages/LandingPage"; // LandingPage for non-logged-in users
-//import Register from "./routes/pages/Register"; // Register page
+import Register from "./routes/pages/Register"; // Register page
 import Login from "./routes/pages/Login"; // Login page
 import { CsrfProvider } from "./contex/CsrfContex";
 
@@ -18,6 +18,10 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <LandingPage />, // Render LandingPage for non-logged-in users
+      },
+      {
+        path: "/register",
+        element: <Register />, // Pass an empty prop as placeholder
       },
       {
         path: "/login",
