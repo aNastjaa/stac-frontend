@@ -1,38 +1,57 @@
-// import { createContext, useState, ReactNode } from "react";
+// AuthContex.tsx
+import React, { createContext, useState, useEffect, ReactNode } from "react";
 
-// // Types
-// type Auth = {
-//   id: string | null;
-//   username: string | null;
-//   role: "admin" | "pro" | "basic" | null;
-// };
+// Types
+type Auth = {
+  id: string | null;
+  username: string | null;
+  role: "admin" | "pro" | "basic" | null;
+};
 
-// type AuthContextType = {
-//   auth: Auth;
-//   setAuth: React.Dispatch<React.SetStateAction<Auth>>;
-// };
+type AuthContextType = {
+  auth: Auth;
+  setAuth: React.Dispatch<React.SetStateAction<Auth>>;
+};
 
-// const defaultAuth: Auth = {
-//   id: null,
-//   username: null,
-//   role: null,
-// };
+// Default Auth state
+const defaultAuth: Auth = {
+  id: null,
+  username: null,
+  role: null,
+};
 
-// // Default values
-// const defaultAuthContext: AuthContextType = {
-//   auth: defaultAuth,
-//   setAuth: () => {},
-// };
+// Default context state
+const defaultAuthContext: AuthContextType = {
+  auth: defaultAuth,
+  setAuth: () => {},
+};
 
-// // Context
-// export const AuthContext = createContext<AuthContextType>(defaultAuthContext);
+// Context creation
+export const AuthContext = createContext<AuthContextType>(defaultAuthContext);
 
-// export const AuthProvider = ({ children }: { children: ReactNode }) => {
-//   const [auth, setAuth] = useState<Auth>(defaultAuth);
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
+  const [auth, setAuth] = useState<Auth>(defaultAuth);
 
-//   return (
-//     <AuthContext.Provider value={{ auth, setAuth }}>
-//       {children}
-//     </AuthContext.Provider>
-//   );
-// };
+  // Load user from local storage (if any)
+  useEffect(() => {
+    const storedUser = localStorage.getItem("auth");
+    if (storedUser) {
+      setAuth(JSON.parse(storedUser)); // Set user from local storage
+    }
+  }, []);
+
+  // Store auth in local storage on change
+  useEffect(() => {
+    if (auth.id) {
+      localStorage.setItem("auth", JSON.stringify(auth)); // Save user to local storage
+    } else {
+      localStorage.removeItem("auth"); // Clear user data if logged out
+    }
+  }, [auth]);
+
+  return (
+    <AuthContext.Provider value={{ auth, setAuth }}>
+      {children} 
+    </AuthContext.Provider>
+  );
+};

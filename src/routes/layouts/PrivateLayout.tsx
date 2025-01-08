@@ -6,6 +6,7 @@ const PrivateLayout = () => {
   const { auth } = useContext(AuthContext);
 
   if (!auth?.id) {
+    // Redirect to login if the user is not authenticated
     return <Navigate to="/login" replace />;
   }
 
@@ -15,7 +16,7 @@ const PrivateLayout = () => {
         <h1>Welcome, {auth.username || "User"}</h1>
       </header>
       <main>
-        <Outlet />
+        <Outlet /> {/* Render the children components here */}
       </main>
     </div>
   );

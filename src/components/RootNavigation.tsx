@@ -5,7 +5,7 @@ import { X } from "lucide-react";
 import "../css/landingPageMenu.css"; 
 
 // Props for the full-screen menu
-function LandingPageMenu({ isOpen, closeMenu }: { isOpen: boolean, closeMenu: () => void }) {
+function RootNavigation({ isOpen, closeMenu }: { isOpen: boolean, closeMenu: () => void }) {
   return (
     <div className={`landing-page-menu ${isOpen ? "open" : ""}`}>
       <div className="menu-content">
@@ -27,4 +27,4 @@ function LandingPageMenu({ isOpen, closeMenu }: { isOpen: boolean, closeMenu: ()
   );
 }
 
-export default LandingPageMenu;
+export default RootNavigation;

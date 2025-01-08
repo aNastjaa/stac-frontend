@@ -1,6 +1,6 @@
 import { Menu } from "lucide-react"; // Import the burger menu icon
 import { useState } from "react";
-import LandingPageMenu from "../components/LandingPageMenu"; // Import LandingPageMenu component
+import LandingPageMenu from "../components/RootNavigation"; // Import LandingPageMenu component
 import "../css/navigation.css";
 
 function Navbar() {

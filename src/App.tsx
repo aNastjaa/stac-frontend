@@ -1,40 +1,14 @@
-import { createBrowserRouter, RouterProvider } from "react-router";
-
-// Layouts
-import RootLayout from "./routes/layouts/RootLayout"; // RootLayout for unlogged users
-
-// Pages
-import LandingPage from "./routes/pages/LandingPage"; // LandingPage for non-logged-in users
-import Register from "./routes/pages/Register"; // Register page
-import Login from "./routes/pages/Login"; // Login page
+import { RouterProvider } from "react-router";
+import { AuthProvider } from "./contex/AuthContex";
 import { CsrfProvider } from "./contex/CsrfContex";
-
-
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <RootLayout />, // Render RootLayout for non-logged-in users
-    children: [
-      {
-        path: "/",
-        element: <LandingPage />, // Render LandingPage for non-logged-in users
-      },
-      {
-        path: "/register",
-        element: <Register />, // Pass an empty prop as placeholder
-      },
-      {
-        path: "/login",
-        element: <Login />, // Pass an empty prop as placeholder
-      },
-    ],
-  },
-]);
+import  Router  from "./routes/Router";
 
 const App = () => {
   return (
     <CsrfProvider>
-      <RouterProvider router={router} />
+      <AuthProvider>
+        <RouterProvider router={Router} />
+      </AuthProvider>
     </CsrfProvider>
   );
 };

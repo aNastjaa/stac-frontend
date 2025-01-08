@@ -33,6 +33,7 @@ export const getCsrfTokenFromCookie = (): string => {
   // Decode the cookie value in case it's URL encoded
   return decodeURIComponent(csrfToken);
 };
+
 //REGISTER
 // Define types for the API response
 interface RegisterResponse {
@@ -114,6 +115,12 @@ export const login = async (
 
   if (!response.ok) {
     throw new Error(data.message || 'An error occurred');
+  }
+
+  // Store the token and user data in localStorage
+  if (data.token) {
+    localStorage.setItem("auth_token", data.token); // Store token in localStorage
+    localStorage.setItem("auth_user", JSON.stringify(data.user)); // Store user data
   }
 
   return data; // Return the response data
