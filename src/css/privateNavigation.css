@@ -1,0 +1,96 @@
+/* Private navigation full-screen menu */
+.private-navigation-menu {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Center the menu */
+    background-image: url('/img/nav-menu-bg.jpg'); /* Set the background image */
+    background-size: cover;
+    background-position: center center; /* Ensure the background image is centered */
+    color: #e3e3e3;
+    width: 100vw; /* Adjust the menu width to your liking */
+    height: 100vh; /* Adjust the height of the menu */
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none; /* Make it invisible and unclickable by default */
+    transition: opacity 0.5s ease, transform 0.5s ease; /* Smooth transition for appearing */
+  }
+  
+  .private-navigation-menu.open {
+    opacity: 1;
+    pointer-events: auto; /* Make it visible and clickable when opened */
+    transform: translate(-50%, -50%) scale(1.05); /* Slightly scale for effect when open */
+  }
+
+  .nav-menu-content{
+    display: flex;
+    justify-content: space-between;
+    padding: 0 2rem;
+  }
+  
+  /* Positioning the logo */
+  .logo {
+    color: #e3e3e3;
+    font-size: calc(40px + 2vw); /* Responsive font size */
+    position: absolute;
+    top: 20px;
+    left: 20px; /* Position logo on the top-left corner */
+    z-index: 1001; /* Ensure logo is above the menu */
+    font-family: 'Sedgwick Ave Display', sans-serif;
+  }
+  
+  /* Close button */
+  .close-btn {
+    background: none;
+    border: none;
+    color: #e3e3e3;
+    font-size: 30px;
+    cursor: pointer;
+    position: absolute;
+    top: 20px;
+    right: 20px; /* Position the close button on the top-right corner */
+    z-index: 1001; /* Ensure the close button is above the menu */
+  }
+  
+  /* Menu content */
+  .menu-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center; /* Center all content in the menu */
+  }
+  
+  /* List of links */
+  .private-navigation-menu nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .private-navigation-menu nav ul li {
+    margin: 15px 0;
+  }
+  
+  .private-navigation-menu nav ul li a {
+    color: #e3e3e3;
+    text-decoration: none;
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 48px;
+    letter-spacing: 5px;
+    position: relative;
+    transition: transform 0.3s ease, text-decoration 0.3s ease; /* Smooth transitions */
+  }
+  
+  /* Hover effect */
+  .private-navigation-menu nav ul li a:hover {
+    transform: scale(1.2); /* Apply scaling on hover */
+  }
+  
+  /* Active link with underline */
+  .private-navigation-menu nav ul li a.active {
+    text-decoration: underline; /* Underline the active link */
+  }
+  

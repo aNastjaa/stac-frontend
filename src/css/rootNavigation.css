@@ -1,18 +1,19 @@
 /* Navbar Styling */
 .navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   margin-top: 1rem;
   padding: 0.1rem 2rem;
-  /* position: fixed; */
   background-color: #e1e1e1;
   border-radius: 30px;
   z-index: 100;
   font-family: 'Bebas Neue', sans-serif;
 }
 
-.logo {
+.nav-content{
+  display: flex;
+  justify-content: space-between;
+}
+
+.logo-navbar {
   font-family: 'Sedgwick Ave Display', sans-serif;
   font-size: calc(40px + 2vw); /* Responsive font size */
   color: #131313;

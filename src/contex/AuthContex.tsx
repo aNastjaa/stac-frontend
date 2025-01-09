@@ -1,5 +1,4 @@
-// AuthContex.tsx
-import React, { createContext, useState, useEffect, ReactNode } from "react";
+import { createContext, useState, ReactNode, useEffect } from "react";
 
 // Types
 type Auth = {
@@ -51,7 +50,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <AuthContext.Provider value={{ auth, setAuth }}>
-      {children} 
+      {children} {/* Render children components */}
     </AuthContext.Provider>
   );
 };

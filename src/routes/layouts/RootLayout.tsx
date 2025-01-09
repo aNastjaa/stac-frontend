@@ -1,12 +1,12 @@
 import { Outlet } from "react-router";
-import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
+import RootNavbar from "../../components/RootNavbar";
 
 const RootLayout = () => {
   return (
     <div>
       <header>
-        <Navbar /> {/* Render Navbar for root layout */}
+        <RootNavbar/> {/* Render Navbar for root layout */}
       </header>
       <main>
         <Outlet /> {/* Render the LandingPage here for non-logged-in users */}

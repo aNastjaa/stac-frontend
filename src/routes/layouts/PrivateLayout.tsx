@@ -1,6 +1,8 @@
 import { Navigate, Outlet } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../../contex/AuthContex";
+import Footer from "../../components/Footer";
+import PrivateNavbar from "../../components/PrivateNavbar";
 
 const PrivateLayout = () => {
   const { auth } = useContext(AuthContext);
@@ -13,11 +15,12 @@ const PrivateLayout = () => {
   return (
     <div>
       <header>
-        <h1>Welcome, {auth.username || "User"}</h1>
+        <PrivateNavbar /> {/* Render PrivateNavbar for private layout */}
       </header>
       <main>
         <Outlet /> {/* Render the children components here */}
       </main>
+      <Footer />
     </div>
   );
 };
