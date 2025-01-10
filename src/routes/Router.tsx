@@ -15,6 +15,7 @@ import ArtWorks from "./pages/ArtWorks"; // ArtWorks page
 import SponsorChallenges from "./pages/SponsorChallenges"; // SponsorChallenges page
 import AdminDashboard from "./pages/AdminDashboard"; // Admin Dashboard page
 import NotFound from "./pages/NotFound"; // NotFound page
+import EditProfile from "../components/EditProfile";
 
 const router = createBrowserRouter([
   // Public Routes
@@ -48,6 +49,10 @@ const router = createBrowserRouter([
       {
         path: "/profile",
         element: <UserProfile />,
+      },
+      {
+        path: "/edit-profile",
+        element: <EditProfile />, // EditProfile page
       },
       {
         path: "/artworks",
