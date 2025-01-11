@@ -1,13 +1,14 @@
 import { Link } from "react-router";
-import "../css/buttons.css"; // Import the CSS for the button styling
+import "../css/buttons.css"; 
 
-// ButtonLong component that can be reused throughout the app
+
 export function ButtonLong({
   text,
   onClick,
 }: {
   text: string;
-  onClick?: () => void;  // Define the onClick prop
+  onClick?: () => void;
+  disabled?: boolean; 
 }) {
   return (
     <button className="button-long" onClick={onClick}>
@@ -25,4 +26,18 @@ export const ButtonCTA = ({ text, link }: { text: string; link: string }) => {
     </Link>
   );
 };
+
+export function ButtonPrimary({
+  text,
+  onClick,
+}: {
+  text: string;
+  onClick?: () => void; 
+}) {
+  return (
+    <button className="button-primary" onClick={onClick}>
+      {text}
+    </button>
+  );
+}
 

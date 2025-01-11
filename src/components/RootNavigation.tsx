@@ -1,25 +1,30 @@
 import { Link as LinkIcon } from "lucide-react";
-import { Link } from "react-router"; 
-import { ButtonLong } from "../components/Buttons"; 
-import { X } from "lucide-react"; 
-import "../css/landingPageMenu.css"; 
+import { Link } from "react-router-dom";
+import { ButtonLong } from "../components/Buttons";
+import { X } from "lucide-react";
+import "../css/landingPageMenu.css";
 
-// Props for the full-screen menu
-function RootNavigation({ isOpen, closeMenu }: { isOpen: boolean, closeMenu: () => void }) {
+interface RootNavigationProps {
+  isOpen: boolean;
+  closeMenu: () => void;
+}
+
+function RootNavigation({ isOpen, closeMenu }: RootNavigationProps) {
   return (
     <div className={`landing-page-menu ${isOpen ? "open" : ""}`}>
       <div className="menu-content">
-      <LinkIcon size={150} color="#E1E1E1" style={{ opacity: 0.2 }} /> 
+        <LinkIcon size={150} color="#E3E3E3" style={{ opacity: 0.2 }} />
         <h1>Explore the app</h1>
-        <p>Now your creativity lives in one place—
-            showcased, celebrated, and always evolving.</p>
+        <p>
+          Now your creativity lives in one place— showcased, celebrated, and always evolving.
+        </p>
         <button className="close-btn" onClick={closeMenu}>
-          <X size={30} color="#E1E1E1" /> 
+          <X size={30} color="#E3E3E3" />
         </button>
-        <Link to="/register">
+        <Link to="/register" onClick={closeMenu}>
           <ButtonLong text="Create Account" />
         </Link>
-        <Link to="/login">
+        <Link to="/login" onClick={closeMenu}>
           <ButtonLong text="Log In" />
         </Link>
       </div>

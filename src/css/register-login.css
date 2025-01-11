@@ -1,0 +1,167 @@
+.main-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; 
+    margin: auto 0;
+  }
+  .register-header{
+    text-align: center;
+    font-family: "Bebas Neue";
+    font-size: calc(2rem + 1vw);
+    margin-top: 2rem;
+    letter-spacing: 1px;
+  }
+  .register-form {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 2rem;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    flex: 1; 
+    margin-bottom: 2rem;
+  }
+  
+/* Styling for input fields*/
+.input-field {
+    position: relative;
+    
+  }
+  
+  .input-field input {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    background-color: #e3e3e3;
+    color: #131313;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    outline: none;
+    transition: all 0.3s ease;
+  }
+  
+  /* Placeholder styling for inputs */
+  .input-field input::placeholder {
+    color: #131313;
+    opacity: 0.5; /* 50% opacity */
+  }
+  
+  /* Label styling */
+  .input-field label {
+    font-family: 'Montserrat', sans-serif;
+    color: #e3e3e3;
+    font-size: 0.9rem;
+    position: absolute;
+    top: -20px;
+    left: 10px;
+    padding: 0 5px;
+    transition: all 0.3s ease;
+  }
+  
+  /* On focus input styling */
+  .input-field input:focus {
+    border-color: #131313; /* Change border color when input is focused */
+    transform: scale(1.02); /* Slightly scale the input on focus */
+  }
+  
+  .input-field input:focus + label {
+    color: #131313; /* Change label color on focus */
+  }
+
+  .button-position{
+    display: flex;
+    justify-content: center;
+  }
+
+  .login-link a{
+    text-decoration: underline;
+    color: #e3e3e3;
+    font-family: "Montserrat";
+    font-weight: 500;
+    font-size: 0.9rem;
+  }
+   
+
+/* Styling for error messages */
+.input-field small {
+    color: red; 
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+    display: none; 
+  }
+  
+  
+  .input-field.has-error small {
+    display: block; 
+  }
+  
+  
+  .input-field.has-error input {
+    border-color: red; 
+  }
+
+/* ___________________________________________________________________________ */
+/* Log in styling */
+/* ___________________________________________________________________________ */
+
+.login-header{
+    text-align: center;
+    font-family: "Bebas Neue";
+    font-size: calc(2rem + 1vw);
+    margin-top: 2rem;
+    letter-spacing: 1px;
+  }
+  .login-form {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 2rem;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    flex: 1; 
+    margin-bottom: 2rem;
+  }
+.register-link{
+    width: 100%;
+    padding: 0;
+  }
+  .register-link a{
+    text-decoration: underline;
+    color: #e3e3e3;
+    font-family: "Montserrat";
+    font-weight: 500;
+    font-size: 0.9rem;
+  }
+
+  .remember-me{
+    padding: 0 1rem;
+  }
+
+  /* Styling for the checkbox */
+.remember-me-checkbox {
+    width: 20px; 
+    height: 20px; 
+    border-radius: 50%;
+    border: 2px solid #e3e3e3; 
+    background-color: #131313; 
+    margin-right: 10px; 
+    position: relative;
+    transition: all 0.3s ease; 
+  }
+  
+  /* Styling for the label */
+  .remember-me-label {
+    font-family: 'Montserrat', sans-serif;
+    color: #e3e3e3;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center; /* Align checkbox and label text */
+  }
+  
+  .footer.hidden {
+    display: none;
+  }

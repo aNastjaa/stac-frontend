@@ -1,27 +1,31 @@
-import { Menu } from "lucide-react"; // Import the burger menu icon
 import { useState } from "react";
-import LandingPageMenu from "./RootNavigation"; // Import LandingPageMenu component
+import { Menu } from "lucide-react";
 import "../css/privateNavigation.css";
+import RootNavigation from "./RootNavigation";
 
-function RootNavbar() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false); // State to control the full-screen menu visibility
+// Define the props interface
+interface RootNavbarProps {
+  isDarkMode: boolean; // Prop to handle dark mode
+}
 
+function RootNavbar({ isDarkMode }: RootNavbarProps) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  // Toggle the menu
   const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen); // Toggle the full-screen menu
+    setIsOpen(!isOpen);
   };
 
   return (
-    <nav className="navbar">
+    <nav className={`navbar ${isDarkMode ? "dark" : "light"}`}>
       <div className="nav-content">
         <div className="logo-navbar">stac</div>
-
-        {/* Burger Menu Icon */}
         <div className="menu-icon" onClick={toggleMenu}>
-          <Menu size={40} color="#131313" /> {/* Burger icon from lucide-react */}
+          <Menu size={40} color={isDarkMode ? "#e3e3e3" : "#131313"} />
         </div>
       </div>
-      {/* Render FullScreenMenu when burger menu is clicked */}
-      <LandingPageMenu isOpen={isMenuOpen} closeMenu={toggleMenu} />
+
+      {isOpen && <RootNavigation isOpen={isOpen} closeMenu={toggleMenu} isDarkMode={isDarkMode} />}
     </nav>
   );
 }

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { register } from "../../utils/api";
 import { Link } from "react-router";
+import { ButtonLong } from "../../components/Buttons";
 
 type FieldValues = {
   username: string;
@@ -54,76 +55,82 @@ const Register = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onValid)}>
-      <div>
-        <label htmlFor={usernameId}>Username</label>
-        <input
-          id={usernameId}
-          type="text"
-          placeholder="username"
-          {...registerField("username", {
-            required: "Username is required.",
-            minLength: { value: 3, message: "Must be at least 3 characters." },
-          })}
-        />
-        <p>{errors.username?.message}</p>
-        <p>{backendErrors.username?.[0]}</p>
+    <>
+      <div className="main-wrapper">
+        <h1 className="register-header">Sign Up ✍️</h1>
+        <form className="register-form" onSubmit={handleSubmit(onValid)}>
+          <div className={`input-field ${errors.username ? "has-error" : ""}`}>
+            <label htmlFor={usernameId}>Username</label>
+            <input
+              id={usernameId}
+              type="text"
+              placeholder="username"
+              {...registerField("username", {
+                required: "Username is required.",
+                minLength: { value: 3, message: "Must be at least 3 characters." },
+              })}
+            />
+            <small>{errors.username?.message}</small>
+            <small>{backendErrors.username?.[0]}</small>
+          </div>
+  
+          <div className={`input-field ${errors.email ? "has-error" : ""}`}>
+            <label htmlFor={emailId}>Email</label>
+            <input
+              id={emailId}
+              type="email"
+              placeholder="example@mail.com"
+              {...registerField("email", {
+                required: "Email is required.",
+                pattern: { value: /\S+@\S+\.\S+/, message: "Invalid email format." },
+              })}
+            />
+            <small>{errors.email?.message}</small>
+            <small>{backendErrors.email?.[0]}</small>
+          </div>
+  
+          <div className={`input-field ${errors.password ? "has-error" : ""}`}>
+            <label htmlFor={passwordId}>Password</label>
+            <input
+              id={passwordId}
+              type="password"
+              placeholder="password"
+              {...registerField("password", {
+                required: "Password is required.",
+                minLength: { value: 8, message: "Must be at least 8 characters." },
+              })}
+            />
+            <small>{errors.password?.message}</small>
+            {backendErrors.password &&
+              backendErrors.password.map((err, index) => <p key={index}>{err}</p>)}
+          </div>
+  
+          <div className={`input-field ${errors.passwordRepeat ? "has-error" : ""}`}>
+            <label htmlFor={passwordRepeatId}>Repeat Password</label>
+            <input
+              id={passwordRepeatId}
+              type="password"
+              placeholder="repeat your password"
+              {...registerField("passwordRepeat", {
+                required: "Please repeat your password.",
+                validate: (value) =>
+                  value === watch("password") || "Passwords do not match.",
+              })}
+            />
+            <small>{errors.passwordRepeat?.message}</small>
+          </div>
+          <div className="button-position">
+            <ButtonLong text="Sign Up" onClick={handleSubmit(onValid)} />
+          </div>
+          <div className="login-link">
+            <p>
+              Already have an account?{" "}
+              <Link to="/login">Log in</Link>
+            </p>
+          </div>
+        </form>
       </div>
-
-      <div>
-        <label htmlFor={emailId}>Email</label>
-        <input
-          id={emailId}
-          type="email"
-          placeholder="example@mail.com"
-          {...registerField("email", {
-            required: "Email is required.",
-            pattern: { value: /\S+@\S+\.\S+/, message: "Invalid email format." },
-          })}
-        />
-        <p>{errors.email?.message}</p>
-        <p>{backendErrors.email?.[0]}</p>
-      </div>
-
-      <div>
-        <label htmlFor={passwordId}>Password</label>
-        <input
-          id={passwordId}
-          type="password"
-          placeholder="password"
-          {...registerField("password", {
-            required: "Password is required.",
-            minLength: { value: 8, message: "Must be at least 8 characters." },
-          })}
-        />
-        <p>{errors.password?.message}</p>
-        {backendErrors.password &&
-          backendErrors.password.map((err, index) => <p key={index}>{err}</p>)}
-      </div>
-
-      <div>
-        <label htmlFor={passwordRepeatId}>Repeat Password</label>
-        <input
-          id={passwordRepeatId}
-          type="password"
-          placeholder="repeat your password"
-          {...registerField("passwordRepeat", {
-            required: "Please repeat your password.",
-            validate: (value) =>
-              value === watch("password") || "Passwords do not match.",
-          })}
-        />
-        <p>{errors.passwordRepeat?.message}</p>
-      </div>
-
-      <button type="submit">Register</button>
-      <div>
-        <p>
-          Already have an account?{" "}
-          <Link to="/login">Log in</Link>
-        </p>
-      </div>
-    </form>
+    </>
   );
 };
 

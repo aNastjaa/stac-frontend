@@ -1,5 +1,6 @@
 import { ButtonCTA } from "../../components/Buttons";
 import Carousel1 from "../../components/Carousel1";
+import SponsorCarousel from "../../components/SponsorCarousel";
 //import SponsorCarousel from "../../components/SponsorCarousel";
 import "../../css/landingPage.css";
 
@@ -72,10 +73,10 @@ const LandingPage = () => {
       </section>
 
       {/* Sponsors Section (Carousel2) */}
-      {/* <section className="sponsors-section">
+      <section className="sponsors-section">
         <h2 className="bite">Sponsors</h2>
         <SponsorCarousel />
-      </section> */}
+      </section>
     </div>
   );
 };

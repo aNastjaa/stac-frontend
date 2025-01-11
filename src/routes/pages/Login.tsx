@@ -1,7 +1,9 @@
-import { useState, useId } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { login } from "../../utils/api";
+import { ButtonLong } from "../../components/Buttons";
+import "../../css/register-login.css";
 
 type FormData = {
   email: string;
@@ -15,9 +17,9 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
 
   // Generate unique IDs for the form fields
-  const emailId = useId();
-  const passwordId = useId();
-  const rememberMeId = useId();
+  // const emailId = useId();
+  // const passwordId = useId();
+  // const rememberMeId = useId();
 
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
 
@@ -57,47 +59,58 @@ const Login = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <div>
-        <label htmlFor={emailId}>Email</label>
-        <input
-          id={emailId}
-          type="email"
-          placeholder="example@mail.com"
-          {...register("email", { required: "Email is required" })}
-        />
-        {errors.email && <span>{errors.email.message}</span>}
-      </div>
-
-      <div>
-        <label htmlFor={passwordId}>Password</label>
-        <input
-          id={passwordId}
-          type="password"
-          placeholder="******"
-          {...register("password", { required: "Password is required" })}
-        />
-        {errors.password && <span>{errors.password.message}</span>}
-      </div>
-
-      <div>
-        <label htmlFor={rememberMeId}>
+    <div className="main-wrapper">
+      <h1 className="login-header">Hey, wellcome 👋</h1>
+      <form className="login-form" onSubmit={handleSubmit(onSubmit)}>
+        
+        <div className={`input-field ${errors.email ? "has-error" : ""}`}>
+          <label htmlFor="email" className="input-label">Email</label>
           <input
-            type="checkbox"
-            id={rememberMeId}
-            {...register("rememberMe")}
+            id="email"
+            type="email"
+            placeholder="example@mail.com"
+            className="input-field-input"
+            {...register("email", { required: "Email is required" })}
           />
-          Remember me
-        </label>
-      </div>
-
-      <button type="submit" disabled={loading}>
-        {loading ? "Logging in..." : "Login"}
-      </button>
-
-      {error && <p>{error}</p>}
-    </form>
+          {errors.email && <small className="error-message">{errors.email.message}</small>}
+        </div>
+  
+        <div className={`input-field ${errors.password ? "has-error" : ""}`}>
+          <label htmlFor="password" className="input-label">Password</label>
+          <input
+            id="password"
+            type="password"
+            placeholder="At least 8 characters"
+            className="input-field-input"
+            {...register("password", { required: "Password is required" })}
+          />
+          {errors.password && <small className="error-message">{errors.password.message}</small>}
+        </div>
+  
+        <div className="remember-me">
+          <label className="remember-me-label">
+            <input
+              type="checkbox"
+              {...register("rememberMe")}
+              className="remember-me-checkbox"
+            />
+            Remember me
+          </label>
+        </div>
+  
+        <div className="button-position">
+          <ButtonLong text={loading ? "Logging in..." : "Login"} disabled={loading} />
+        </div>
+  
+        {error && <p className="error-message">{error}</p>}
+  
+        <footer className="register-link">
+          <p>Don't have an account yet? <a href="/signup" className="footer-link-text">Create account</a></p>
+        </footer>
+      </form>
+    </div>
   );
+  
 };
 
 export default Login;

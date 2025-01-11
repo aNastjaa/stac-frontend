@@ -1,60 +1,60 @@
 /* Fullscreen Menu for Landing Page */
 .landing-page-menu {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: #131313;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 999;
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.5s ease;
-  }
-  
-  /* Menu Content */
-  .menu-content {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    align-items: center;
-    max-width: 500px;
-  }
-  
-  .close-btn {
-    color: #E1E1E1;
-    background: none;
-    border: none;
-    font-size: 30px;
-    position: absolute;
-    top: 10px;
-    right: 20px;
-    cursor: pointer;
-  }
-  
-  /* When the menu is open */
-  .landing-page-menu.open {
-    opacity: 1;
-    visibility: visible;
-  }
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #131313; /* Dark background for the entire menu */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.5s ease;
+}
 
-  h1{
-    color: #E1E1E1;
-    margin: 0;
-    font-size: calc(32px + 1vw);
-    letter-spacing: 1px;
+/* Menu Content */
+.menu-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+  max-width: 500px;
+  background-color: #131313; /* Dark background for the content */
+  color: #e3e3e3; /* White text */
+}
 
-  }
-  
-  p {
-    font-family: 'Montserrat', sans-serif;
-    color: #E1E1E1;
-    text-align: center;
-    padding: 0 1rem;
-    font-size: calc(16px + 0.1vw);
-  }
-  
-  
+/* Close button */
+.close-btn {
+  color: #E1E1E1;
+  background: none;
+  border: none;
+  font-size: 30px;
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  cursor: pointer;
+}
+
+/* When the menu is open */
+.landing-page-menu.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+h1 {
+  color: #E1E1E1; /* White color for the heading */
+  margin: 0;
+  font-size: calc(32px + 1vw);
+  letter-spacing: 1px;
+}
+
+p {
+  font-family: 'Montserrat', sans-serif;
+  color: #E1E1E1; /* White text for paragraph */
+  text-align: center;
+  padding: 0 1rem;
+  font-size: calc(16px + 0.1vw);
+}

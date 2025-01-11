@@ -6,11 +6,17 @@
   border-radius: 30px;
   z-index: 100;
   font-family: 'Bebas Neue', sans-serif;
+  display: flex;
+  justify-content: center;
+  
 }
 
 .nav-content{
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  max-width: 900px;
+  width: 100%;
 }
 
 .logo-navbar {
@@ -41,4 +47,15 @@
   z-index: 200;
 }
 
+/* Dark mode */
+
+/* Navbar Dark Mode */
+.navbar.dark {
+  background-color: #131313;
+  color: #e3e3e3;
+}
+
+.navbar.dark .logo-navbar {
+  color: #e3e3e3;
+}
 
