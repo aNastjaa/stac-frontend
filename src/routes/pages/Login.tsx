@@ -16,11 +16,6 @@ const Login = () => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // Generate unique IDs for the form fields
-  // const emailId = useId();
-  // const passwordId = useId();
-  // const rememberMeId = useId();
-
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
 
   // Handle login form submission
@@ -42,8 +37,9 @@ const Login = () => {
       const response = await login(data.email, data.password, data.rememberMe, csrfToken);
 
       if (response.user) {
-        // Assuming login is successful, store user info in local storage
-        localStorage.setItem("auth", JSON.stringify(response.user));
+        // Store the token in localStorage if login is successful
+        localStorage.setItem("auth_token", response.token); // Store token
+        localStorage.setItem("auth_user", JSON.stringify(response.user)); // Store user data
 
         alert("Login successful!");
         navigate("/profile"); // Redirect to profile page
@@ -110,7 +106,6 @@ const Login = () => {
       </form>
     </div>
   );
-  
 };
 
 export default Login;

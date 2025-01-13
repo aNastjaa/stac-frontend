@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getUserIdFromLocalStorage, getProfileIdByUserId, getUserProfileByProfileId, getAvatarById } from '../../utils/api';  // Import necessary API functions
-import type { UserProfile } from '../../utils/api'; 
+import { getUserIdFromLocalStorage, getProfileIdByUserId, getUserProfileByProfileId, getAvatarById } from '../../utils/api';
 import { CircleUserRound } from 'lucide-react';  // Circle icon from Lucide
 import '../../css/userProfile.css';
 import { ButtonPrimary } from '../../components/Buttons';
+import { UserProfileType } from '../../utils/types';
 
 const UserProfile = () => {
-  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [profile, setProfile] = useState<UserProfileType | null>(null);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null); // Store avatar URL
   const [loading, setLoading] = useState<boolean>(true);
   const [username, setUsername] = useState<string | null>(null);

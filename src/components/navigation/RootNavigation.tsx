@@ -1,12 +1,13 @@
 import { Link as LinkIcon } from "lucide-react";
 import { Link } from "react-router-dom";
-import { ButtonLong } from "../components/Buttons";
+import { ButtonLong } from "../Buttons";
 import { X } from "lucide-react";
-import "../css/landingPageMenu.css";
+import "../../css/landingPageMenu.css";
 
 interface RootNavigationProps {
   isOpen: boolean;
   closeMenu: () => void;
+  isDarkMode: boolean;  // Add this line to accept the isDarkMode prop
 }
 
 function RootNavigation({ isOpen, closeMenu }: RootNavigationProps) {

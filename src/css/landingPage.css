@@ -1,7 +1,7 @@
 /* Hero Section */
 
 .landing-page{
-  padding: 0 1rem;
+  padding:  1rem;
 }
 .hero-section {
     margin-top: 1rem;
@@ -34,6 +34,7 @@
     font-size: 18px;
     font-weight: 200;
     color: #131313;
+    text-align: center;
   }
     
   /* Carousel Section */
@@ -42,6 +43,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 1rem;
     margin-bottom: 1rem;
   }
 .carousel-section h3{
@@ -68,6 +70,10 @@
     font-family: 'Bebas Neue', sans-serif;
     font-size: 24px;
     margin-bottom: 1rem;
+  }
+  .bold{
+    font-weight: 600;
+    margin: 0.5rem;
   }
   .headind-edition{
     font-family: 'Sedgwick Ave Display', sans-serif;
@@ -151,6 +157,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 1rem;
   padding: 2rem;
  }
   

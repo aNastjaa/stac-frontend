@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Menu } from "lucide-react";
-import "../css/privateNavigation.css";
-import RootNavigation from "./RootNavigation";
+import "../../css/rootNavigation.css";
+import RootNavigation from "../navigation/RootNavigation";
 
 // Define the props interface
 interface RootNavbarProps {

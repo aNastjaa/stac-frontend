@@ -3,23 +3,23 @@
     position: fixed;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%); /* Center the menu */
-    background-image: url('/img/nav-menu-bg.jpg'); /* Set the background image */
+    transform: translate(-50%, -50%); 
+    background-image: url('/img/nav-menu-bg.jpg'); 
     background-size: cover;
-    background-position: center center; /* Ensure the background image is centered */
+    background-position: center center; 
     color: #e3e3e3;
-    width: 100vw; /* Adjust the menu width to your liking */
-    height: 100vh; /* Adjust the height of the menu */
+    width: 100vw; 
+    height: 100vh; 
     z-index: 1000;
     opacity: 0;
-    pointer-events: none; /* Make it invisible and unclickable by default */
-    transition: opacity 0.5s ease, transform 0.5s ease; /* Smooth transition for appearing */
+    pointer-events: none; 
+    transition: opacity 0.5s ease, transform 0.5s ease; 
   }
   
   .private-navigation-menu.open {
     opacity: 1;
-    pointer-events: auto; /* Make it visible and clickable when opened */
-    transform: translate(-50%, -50%) scale(1.05); /* Slightly scale for effect when open */
+    pointer-events: auto; 
+    transform: translate(-50%, -50%) scale(1.05); 
   }
 
   .nav-menu-content{
@@ -32,11 +32,11 @@
   /* Positioning the logo */
   .logo {
     color: #e3e3e3;
-    font-size: calc(40px + 2vw); /* Responsive font size */
+    font-size: calc(40px + 2vw); 
     position: absolute;
     top: 20px;
-    left: 20px; /* Position logo on the top-left corner */
-    z-index: 1001; /* Ensure logo is above the menu */
+    left: 20px; 
+    z-index: 1001; 
     font-family: 'Sedgwick Ave Display', sans-serif;
   }
   
@@ -49,8 +49,8 @@
     cursor: pointer;
     position: absolute;
     top: 20px;
-    right: 20px; /* Position the close button on the top-right corner */
-    z-index: 1001; /* Ensure the close button is above the menu */
+    right: 20px; 
+    z-index: 1001; 
   }
   
   /* Menu content */
@@ -61,7 +61,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    text-align: center; /* Center all content in the menu */
+    text-align: center; 
   }
   
   /* List of links */
@@ -82,16 +82,16 @@
     font-size: 48px;
     letter-spacing: 5px;
     position: relative;
-    transition: transform 0.3s ease, text-decoration 0.3s ease; /* Smooth transitions */
+    transition: transform 0.3s ease, text-decoration 0.3s ease; 
   }
   
   /* Hover effect */
   .private-navigation-menu nav ul li a:hover {
-    transform: scale(1.2); /* Apply scaling on hover */
+    transform: scale(1.2); 
   }
   
   /* Active link with underline */
   .private-navigation-menu nav ul li a.active {
-    text-decoration: underline; /* Underline the active link */
+    text-decoration: underline; 
   }
   

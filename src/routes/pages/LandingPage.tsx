@@ -27,16 +27,16 @@ const LandingPage = () => {
       <section className="how-it-works">
         <h3>How it works:<br />
           <span className="headind-edition">Create, showcase, and collaborate with artists worldwide.</span></h3>
-          <p>✔️ Join the Community
-              Sign Up for free and become part of a vibrant community of artists.
+          <p><span className="bold">✔️ Join the Community</span><br/>
+               Sign Up for free and become part of a vibrant community of artists.
           </p>
           <p>
-              ✔️ Create for the Monthly Theme
-              Submit your artwork inspired by the monthly theme and let your creativity shine.
+          <span className="bold">✔️ Create for the Monthly Theme</span><br/>
+               Submit your artwork inspired by the monthly theme and let your creativity shine.
           </p>
           <p>
-              ✔️ Collaborate with Brands 
-              Upgrade to Pro and participate in exclusive sponsor challenges to showcase your work to global brands.
+          <span className="bold">✔️ Collaborate with Brands </span><br/>
+               Upgrade to Pro and participate in exclusive sponsor challenges to showcase your work to global brands.
           </p>
       </section>
 

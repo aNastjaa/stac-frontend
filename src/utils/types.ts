@@ -24,7 +24,7 @@ export interface CustomError {
     updated_at: string;
   }
   
-  export interface UserProfile {
+  export interface UserProfileType {
     username: string;
     avatar_id?: string | null;
     avatar_url: string | null;

@@ -1,4 +1,4 @@
-import "../css/footer.css";
+import "../../css/footer.css";
 
 interface FooterProps {
   isDarkMode: boolean;  // Prop to handle dark mode

@@ -1,4 +1,6 @@
-import { ArtworkResponse, Theme, UploadResponse, UserProfile } from "./types";
+import { ArtworkResponse, Theme, UploadResponse, UserProfileType,} from "./types";
+//sasha@gmail.com
+//La;G7,8bP&V7
 
 export const API_URL = import.meta.env.VITE_API_URL;
 
@@ -99,17 +101,19 @@ interface LoginResponse {
     email: string;
   };
   csrfToken: string;
+  token: string;
 }
+
 export const login = async (
   email: string,
   password: string,
   rememberMe: boolean,
-  csrfToken: string // Expecting the token here
+  csrfToken: string // Expecting CSRF token from the frontend
 ): Promise<LoginResponse> => {
   // Ensure CSRF token is URL-decoded
   const decodedCsrfToken = decodeURIComponent(csrfToken);
-
-  console.log('Decoded CSRF Token:', decodedCsrfToken); 
+  
+  console.log('Decoded CSRF Token:', decodedCsrfToken);
 
   const response = await fetch(`${API_URL}/api/auth/login`, {
     method: 'POST',
@@ -119,7 +123,7 @@ export const login = async (
       'Accept': 'application/json',
     },
     body: JSON.stringify({ email, password, remember_me: rememberMe }),
-    credentials: 'include',
+    credentials: 'include', // Include credentials (cookies)
   });
 
   const data = await response.json();
@@ -150,7 +154,7 @@ export const getUserIdFromLocalStorage = (): string | null => {
   return null;
 };
 // Function to get user profile by profileId
-export const getUserProfileByProfileId = async (profileId: string): Promise<UserProfile | null> => {
+export const getUserProfileByProfileId = async (profileId: string): Promise<UserProfileType | null> => {
   try {
     const csrfToken = getCsrfTokenFromCookie();
     const decodedCsrfToken = decodeURIComponent(csrfToken);
@@ -176,33 +180,33 @@ export const getUserProfileByProfileId = async (profileId: string): Promise<User
   }
 };
 
-// Function to fetch profileId first using userId and then fetch profile data
-export const getProfileData = async (): Promise<UserProfile | null> => {
-  try {
-    const storedUser = localStorage.getItem('auth_user');
-    if (!storedUser) {
-      throw new Error('User not found in localStorage');
-    }
+// // Function to fetch profileId first using userId and then fetch profile data
+// export const getProfileData = async (): Promise<UserProfile | null> => {
+//   try {
+//     const storedUser = localStorage.getItem('auth_user');
+//     if (!storedUser) {
+//       throw new Error('User not found in localStorage');
+//     }
 
-    const { id: userId } = JSON.parse(storedUser); // Get user ID from localStorage
-    if (!userId) {
-      throw new Error('User ID is missing');
-    }
+//     const { id: userId } = JSON.parse(storedUser); // Get user ID from localStorage
+//     if (!userId) {
+//       throw new Error('User ID is missing');
+//     }
 
-    // Get the profile ID using userId
-    const profileId = await getProfileIdByUserId(userId);
-    if (!profileId) {
-      throw new Error('Profile ID not found for the user');
-    }
+//     // Get the profile ID using userId
+//     const profileId = await getProfileIdByUserId(userId);
+//     if (!profileId) {
+//       throw new Error('Profile ID not found for the user');
+//     }
 
-    // Fetch the profile data using profileId
-    return await getUserProfileByProfileId(profileId);
+//     // Fetch the profile data using profileId
+//     return await getUserProfileByProfileId(profileId);
 
-  } catch (error) {
-    console.error('Error fetching user profile:', error);
-    throw error;
-  }
-};
+//   } catch (error) {
+//     console.error('Error fetching user profile:', error);
+//     throw error;
+//   }
+// };
 // Function to get the profileId by userId
 export const getProfileIdByUserId = async (userId: string): Promise<string | null> => {
   try {
@@ -271,7 +275,7 @@ export const getProfileIdByUserId = async (userId: string): Promise<string | nul
 //   }
 // };
 // Function to create user profile (POST method)
-export const createUserProfile = async (profileData: UserProfile): Promise<UserProfile> => {
+export const createUserProfile = async (profileData: UserProfileType): Promise<UserProfileType> => {
   try {
     const csrfToken = getCsrfTokenFromCookie();
 
@@ -298,7 +302,7 @@ export const createUserProfile = async (profileData: UserProfile): Promise<UserP
   }
 };
 // Function to update user profile (PUT method)
-export const updateUserProfile = async (profileData: UserProfile): Promise<UserProfile> => {
+export const updateUserProfile = async (profileData: UserProfileType): Promise<UserProfileType> => {
   try {
     const csrfToken = getCsrfTokenFromCookie();
 

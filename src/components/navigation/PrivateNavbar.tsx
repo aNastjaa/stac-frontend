@@ -1,7 +1,7 @@
 import { Menu } from "lucide-react"; // Burger menu icon from lucide-react
 import { useState } from "react";
 import PrivateNavigation from "./PrivateNavigation"; // Import PrivateNavigation component
-import "../css/rootNavigation.css";
+import "../../css/privateNavigation.css";
 
 function PrivateNavbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false); // State to control the full-screen menu visibility

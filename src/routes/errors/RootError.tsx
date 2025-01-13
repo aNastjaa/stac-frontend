@@ -6,11 +6,11 @@ const RootError = () => {
   if (isRouteErrorResponse(error)) {
     return (
       <>
-        <h1 className="text-center text-4xl font-bold">Oops!</h1>
-        <h2 className="text-center text-xl font-bold my-4">
+        <h1 className="error-header">Oops!</h1>
+        <h2 className="error-subheader">
           Status Code: {error.status}
         </h2>
-        <p className="text-center">{error.statusText}</p>
+        <p className="error-text">{error.statusText}</p>
       </>
     );
   }

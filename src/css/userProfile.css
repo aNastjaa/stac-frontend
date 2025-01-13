@@ -34,6 +34,7 @@
     align-items: center;
     margin-top: 20px;
     justify-content: space-around;
+    
   }
 
   .profile-stats {
@@ -41,10 +42,12 @@
     display: flex;
     flex-direction: row;
     justify-content: center;
+    gap: 1rem;
 
   }
   .profile-stats p {
     color: #131313;
+    text-align: center;
   }
   
   .profile-info h2 {
@@ -116,7 +119,7 @@
     padding: 2rem 0; 
   }
   
-  .close-btn {
+  /* .close-btn {
     background: none;
     border: none;
     cursor: pointer;
@@ -125,7 +128,7 @@
     justify-content: center; 
     padding: 0; 
     margin: 0;
-  }
+  } */
   
   .avatar-section {
     text-align: center;
@@ -171,7 +174,7 @@
     align-items: center;
   }
 
-  .full-name-input .bio-input input[type="text"], textarea {
+  .full-name-input input, .bio-input textarea {
     width: 70%;
     padding: 1rem;
     font-family: "Montserrat";
