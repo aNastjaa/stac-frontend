@@ -52,7 +52,7 @@ const Login = () => {
       }
     } catch (error) {
       console.error("Login error:", error);
-      setError("An error occurred while logging in.");
+      setError("Invalid credentials, check your email and password and try again.");
     } finally {
       setLoading(false);
     }
@@ -60,7 +60,7 @@ const Login = () => {
 
   return (
     <div className="main-wrapper">
-      <h1 className="login-header">Hey, wellcome 👋</h1>
+      <h1 className="login-header">Hey, welcome 👋</h1>
       <form className="login-form" onSubmit={handleSubmit(onSubmit)}>
         
         <div className={`input-field ${errors.email ? "has-error" : ""}`}>
@@ -105,7 +105,7 @@ const Login = () => {
         {error && <p className="error-message">{error}</p>}
   
         <footer className="register-link">
-          <p>Don't have an account yet? <a href="/signup" className="footer-link-text">Create account</a></p>
+          <p>Don't have an account yet? <a href="/register" className="footer-link-text">Create account</a></p>
         </footer>
       </form>
     </div>

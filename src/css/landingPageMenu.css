@@ -27,13 +27,13 @@
 }
 
 /* Close button */
-.close-btn {
+.close-button {
   color: #E1E1E1;
   background: none;
   border: none;
   font-size: 30px;
   position: absolute;
-  top: 10px;
+  top: 20px;
   right: 20px;
   cursor: pointer;
 }
@@ -44,14 +44,14 @@
   visibility: visible;
 }
 
-h1 {
+.menu-content h1 {
   color: #E1E1E1; /* White color for the heading */
   margin: 0;
   font-size: calc(32px + 1vw);
   letter-spacing: 1px;
 }
 
-p {
+.menu-content p {
   font-family: 'Montserrat', sans-serif;
   color: #E1E1E1; /* White text for paragraph */
   text-align: center;

@@ -1,7 +1,10 @@
+import { ArtworkResponse, Theme, UploadResponse, UserProfile } from "./types";
+
 export const API_URL = import.meta.env.VITE_API_URL;
 
-
+//-------------------------------------------------------------------------------------------------------------
 //Get CSRF Cookie
+//-------------------------------------------------------------------------------------------------------------
 export const setCsrfCookie = async (): Promise<void> => {
   try {
     // Send a GET request to Laravel to set the CSRF cookie
@@ -40,7 +43,9 @@ export const getAuthToken = (): string | null => {
   return localStorage.getItem("auth_token");  
 };
 
+//-------------------------------------------------------------------------------------------------------------
 //REGISTER
+//-------------------------------------------------------------------------------------------------------------
 // Define types for the API response
 interface RegisterResponse {
   success: boolean;
@@ -83,7 +88,9 @@ export const register = async (
   return { success: true, data: responseBody };
 };
 
+//-------------------------------------------------------------------------------------------------------------
 //LOGIN
+//-------------------------------------------------------------------------------------------------------------
 // Define types for the API response
 interface LoginResponse {
   user: {
@@ -130,7 +137,9 @@ export const login = async (
   return data; // Return the response data
 };
 
-//GET USER BY ID----------------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------------------
+//GET USER BY ID
+//-------------------------------------------------------------------------------------------------------------
 // Function to fetch the user ID from localStorage
 export const getUserIdFromLocalStorage = (): string | null => {
   const storedUser = localStorage.getItem('auth_user');
@@ -221,63 +230,46 @@ export const getProfileIdByUserId = async (userId: string): Promise<string | nul
     throw error;
   }
 };
+
+
+//-------------------------------------------------------------------------------------------------------------
+//USER PROFILE
 //-------------------------------------------------------------------------------------------------------------
 
-//USER PROFILE
-export interface UserProfile {
-  username: string;
-  avatar_id?: string | null;
-  avatar_url: string | null;
-  posts_count: number;
-  comments_count: number;
-  likes_count: number;
-  full_name: string | null;
-  bio: string | null;
-  external_links?: string[];  // Optional field
-}
-export interface UserProfileResponse {
-  profile: UserProfile;
-}
-export interface UploadResponse {
-  file_url: string;
-  file_type: string;
-}
-
 // Function to fetch user profile (GET method)
-export const getUserProfile = async (): Promise<UserProfile | null> => {
-  try {
-    const csrfToken = getCsrfTokenFromCookie();
-    const decodedCsrfToken = decodeURIComponent(csrfToken);
+// export const getUserProfile = async (): Promise<UserProfile | null> => {
+//   try {
+//     const csrfToken = getCsrfTokenFromCookie();
+//     const decodedCsrfToken = decodeURIComponent(csrfToken);
 
-    const response = await fetch(`${API_URL}/api/users/profile`, {
-      method: 'GET',
-      headers: {
-        'X-XSRF-TOKEN': decodedCsrfToken,
-        'Accept': 'application/json',
-      },
-      credentials: 'include',
-    });
+//     const response = await fetch(`${API_URL}/api/users/profile`, {
+//       method: 'GET',
+//       headers: {
+//         'X-XSRF-TOKEN': decodedCsrfToken,
+//         'Accept': 'application/json',
+//       },
+//       credentials: 'include',
+//     });
 
-    if (!response.ok) {
-      throw new Error('Failed to fetch profile');
-    }
+//     if (!response.ok) {
+//       throw new Error('Failed to fetch profile');
+//     }
 
-    const result = await response.json();
-    return result.profile ? {
-      username: result.profile.username || '',
-      avatar_url: result.profile.avatar_url || null,
-      posts_count: result.profile.posts_count || 0,
-      comments_count: result.profile.comments_count || 0,
-      likes_count: result.profile.likes_count || 0,
-      full_name: result.profile.full_name || null,
-      bio: result.profile.bio || null
-    } : null;
-  } catch (error) {
-    console.error('Error fetching profile', error);
-    throw error;
-  }
-};
-
+//     const result = await response.json();
+//     return result.profile ? {
+//       username: result.profile.username || '',
+//       avatar_url: result.profile.avatar_url || null,
+//       posts_count: result.profile.posts_count || 0,
+//       comments_count: result.profile.comments_count || 0,
+//       likes_count: result.profile.likes_count || 0,
+//       full_name: result.profile.full_name || null,
+//       bio: result.profile.bio || null
+//     } : null;
+//   } catch (error) {
+//     console.error('Error fetching profile', error);
+//     throw error;
+//   }
+// };
 // Function to create user profile (POST method)
 export const createUserProfile = async (profileData: UserProfile): Promise<UserProfile> => {
   try {
@@ -305,7 +297,6 @@ export const createUserProfile = async (profileData: UserProfile): Promise<UserP
     throw error;
   }
 };
-
 // Function to update user profile (PUT method)
 export const updateUserProfile = async (profileData: UserProfile): Promise<UserProfile> => {
   try {
@@ -333,9 +324,6 @@ export const updateUserProfile = async (profileData: UserProfile): Promise<UserP
     throw error;
   }
 };
-export interface StoreUploadRequest {
-  file: File;
-}
 // Function to upload an avatar
 export const uploadAvatar = async (file: File): Promise<UploadResponse> => {
   try {
@@ -363,17 +351,13 @@ export const uploadAvatar = async (file: File): Promise<UploadResponse> => {
     throw error;
   }
 };
-// Define strict types for the avatar response
-export interface AvatarResponse {
-  file_url: string;
-}
 // Function to get the avatar by upload ID from the uploads table
-export const getAvatarById = async (uploadId: string): Promise<{ file_url: string } | null> => {
+export const getAvatarById = async (upload: string): Promise<{ file_url: string } | null> => {
   try {
     const csrfToken = getCsrfTokenFromCookie();
     const decodedCsrfToken = decodeURIComponent(csrfToken);
 
-    const response = await fetch(`${API_URL}/api/uploads/${uploadId}`, {
+    const response = await fetch(`${API_URL}/api/uploads/${upload}`, {
       method: 'GET',
       headers: {
         'X-XSRF-TOKEN': decodedCsrfToken,
@@ -425,7 +409,6 @@ export const changePassword = async (
     throw error;
   }
 };
-
 // Delete User Account (DELETE Request)
 export const deleteUserAccount = async (): Promise<void> => {
   try {
@@ -450,7 +433,6 @@ export const deleteUserAccount = async (): Promise<void> => {
     throw error;
   }
 };
-
 // Logout User (POST Request)
 export const logout = async (): Promise<void> => {
   try {
@@ -474,3 +456,70 @@ export const logout = async (): Promise<void> => {
     throw error;
   }
 };
+
+//-------------------------------------------------------------------------------------------------------------
+//POST (Artworks routing)
+//-------------------------------------------------------------------------------------------------------------
+// Fetch the current theme for the artwork
+export const fetchCurrentTheme = async (): Promise<Theme | null> => {
+  try {
+    const csrfToken = getCsrfTokenFromCookie(); // Get the CSRF token from the cookies
+    const authToken = localStorage.getItem("auth_token"); // Retrieve the auth token from localStorage
+
+    if (!authToken) {
+      throw new Error('Auth token is missing');
+    }
+
+    const response = await fetch(`${API_URL}/api/themes`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-XSRF-TOKEN': csrfToken, 
+        'Authorization': `Bearer ${authToken}`, 
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch current theme');
+    }
+
+    const themeData: Theme[] = await response.json(); 
+
+    if (themeData.length > 0) {
+      return themeData[0]; 
+    }
+
+    return null; 
+  } catch (error) {
+    console.error('Error fetching current theme:', error);
+    throw error;
+  }
+};
+// Submit artwork
+export const submitArtwork = async (
+  formData: FormData,
+  csrfToken: string
+): Promise<ArtworkResponse> => {
+  try {
+    const response = await fetch(`${API_URL}/api/artworks`, {
+      method: 'POST',
+      headers: {
+        'X-XSRF-TOKEN': csrfToken, 
+      },
+      body: formData,
+      credentials: 'include', 
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to submit artwork');
+    }
+
+    return await response.json(); 
+  } catch (error) {
+    console.error('Error submitting artwork', error);
+    throw error;
+  }
+};
+
+
+

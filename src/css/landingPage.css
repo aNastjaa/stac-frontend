@@ -1,4 +1,8 @@
 /* Hero Section */
+
+.landing-page{
+  padding: 0 1rem;
+}
 .hero-section {
     margin-top: 1rem;
     display: flex;
@@ -150,14 +154,3 @@
   padding: 2rem;
  }
   
-  /* Footer */
-  footer {
-    padding: 20px;
-    text-align: center;
-    background-color: #131313;
-    color: #E1E1E1;
-  }
-  
-  footer p {
-    font-family: 'Montserrat', sans-serif;
-  }

@@ -18,8 +18,8 @@ function RootNavigation({ isOpen, closeMenu }: RootNavigationProps) {
         <p>
           Now your creativity lives in one place— showcased, celebrated, and always evolving.
         </p>
-        <button className="close-btn" onClick={closeMenu}>
-          <X size={30} color="#E3E3E3" />
+        <button className="close-button" onClick={closeMenu}>
+          <X size={40} color="#E3E3E3" />
         </button>
         <Link to="/register" onClick={closeMenu}>
           <ButtonLong text="Create Account" />
