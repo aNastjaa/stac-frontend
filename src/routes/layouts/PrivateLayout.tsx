@@ -5,7 +5,7 @@ import Footer from "../../components/navigation/Footer";
 import PrivateNavbar from "../../components/navigation/PrivateNavbar";
 
 const PrivateLayout = () => {
-  const { auth } = useContext(AuthContext);
+  const { auth, setAuth } = useContext(AuthContext); // Destructure setAuth to update context
   const [loading, setLoading] = useState(true); // State to track if we are loading auth data
 
   useEffect(() => {
@@ -20,12 +20,19 @@ const PrivateLayout = () => {
     if (storedUser && storedToken) {
       const user = JSON.parse(storedUser);
       console.log('Loaded Auth:', user);
-      // You can add a check here to make sure user data is valid before setting auth
+
+      // Set the auth context with the loaded user data
+      setAuth({
+        id: user.id,
+        username: user.username,
+        role: user.role_id,
+      });
+
       setLoading(false);
     } else {
       setLoading(false);
     }
-  }, []);
+  }, [setAuth]);
 
   if (loading) {
     return <div>Loading...</div>; // Show loading spinner or message

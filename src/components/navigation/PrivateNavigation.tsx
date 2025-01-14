@@ -19,7 +19,7 @@ function PrivateNavigation({ isOpen, closeMenu }: { isOpen: boolean; closeMenu: 
 
   return (
     <div className={`private-navigation-menu ${isOpen ? "open" : ""}`}>
-      <div className="menu-content">
+      <div className="private-menu-content">
         <div className="nav-menu-content">
             <div className="logo">stac</div>
             <button className="close-btn" onClick={closeMenu}>

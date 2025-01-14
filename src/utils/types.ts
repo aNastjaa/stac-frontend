@@ -37,5 +37,6 @@ export interface CustomError {
   }
   export interface UploadResponse {
     file_url: string;
-    file_type: string;
+    file_type?: string;
+    avatar_url?: string;
   }

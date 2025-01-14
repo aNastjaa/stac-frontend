@@ -34,27 +34,27 @@
     color: #e3e3e3;
     font-size: calc(40px + 2vw); 
     position: absolute;
-    top: 20px;
-    left: 20px; 
+    top: 50px;
+    left: 50px; 
     z-index: 1001; 
     font-family: 'Sedgwick Ave Display', sans-serif;
   }
   
   /* Close button */
-  .close-btn {
+  .private-menu-content .close-btn {
     background: none;
     border: none;
     color: #e3e3e3;
     font-size: 30px;
     cursor: pointer;
     position: absolute;
-    top: 20px;
-    right: 20px; 
+    top: 50px;
+    right: 30px; 
     z-index: 1001; 
   }
   
   /* Menu content */
-  .menu-content {
+  .private-menu-content {
     width: 100%;
     height: 100%;
     display: flex;

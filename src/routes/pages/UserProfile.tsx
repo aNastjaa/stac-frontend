@@ -4,11 +4,11 @@ import { getUserIdFromLocalStorage, getProfileIdByUserId, getUserProfileByProfil
 import { CircleUserRound } from 'lucide-react';  // Circle icon from Lucide
 import '../../css/userProfile.css';
 import { ButtonPrimary } from '../../components/Buttons';
-import { UserProfileType } from '../../utils/types';
+import { UploadResponse, UserProfileType } from '../../utils/types';
 
 const UserProfile = () => {
   const [profile, setProfile] = useState<UserProfileType | null>(null);
-  const [avatarUrl, setAvatarUrl] = useState<string | null>(null); // Store avatar URL
+  const [avatarUrl, setAvatarUrl] = useState<string>(''); // Initially set as an empty string
   const [loading, setLoading] = useState<boolean>(true);
   const [username, setUsername] = useState<string | null>(null);
   const navigate = useNavigate();
@@ -31,25 +31,28 @@ const UserProfile = () => {
 
     const fetchProfileData = async () => {
       try {
-        const profileId = await getProfileIdByUserId(userId);
-        if (profileId) {
-          const userProfile = await getUserProfileByProfileId(profileId);
-          setProfile(userProfile);
-
-          // If avatar_id exists in the profile, fetch avatar using getAvatarById
-          if (userProfile && userProfile.avatar_id) {
-            const avatarData = await getAvatarById(userProfile.avatar_id);
-            setAvatarUrl(avatarData?.file_url || null); // Set avatar URL
+          const profileId = await getProfileIdByUserId(userId);
+          if (profileId) {
+              const userProfile = await getUserProfileByProfileId(profileId);
+              setProfile(userProfile);
+  
+              // If avatar_id exists in the profile, fetch avatar using getAvatarById
+              if (userProfile && userProfile.avatar_id) {
+                  const avatarData: UploadResponse | null = await getAvatarById(userProfile.avatar_id);
+                  console.log('Avatar data:', avatarData);
+  
+                  // Set avatar URL directly without additional string manipulation
+                  setAvatarUrl(avatarData?.avatar_url || ''); 
+              }
           }
-        }
-        setLoading(false);
+          setLoading(false);
       } catch (error) {
-        console.error('Error fetching profile data', error);
-        setLoading(false);
-        navigate('/edit-profile');
+          console.error('Error fetching profile data', error);
+          setLoading(false);
+          navigate('/edit-profile');
       }
-    };
-
+  };
+  
     fetchProfileData();
   }, [navigate]);
 
