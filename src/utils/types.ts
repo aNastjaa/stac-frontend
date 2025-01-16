@@ -1,11 +1,10 @@
-export interface CustomError {
-    message: string;
-    response?: {
-      data: {
-        message: string;
-      };
-    };
-  }
+export interface ErrorMessages {
+  username?: string;
+  email?: string;
+  password?: string;
+  role?: string;
+}
+
   
   export interface Theme {
     id: string;

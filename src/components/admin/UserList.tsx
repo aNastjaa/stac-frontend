@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
-import { User } from '../../utils/types';
-import { fetchUsers, createUser, deleteUser, API_URL } from '../../utils/api/admin';
-import { setCsrfCookie, getCsrfTokenFromCookie } from '../../utils/api';
+import { ErrorMessages, User } from '../../utils/types';
+import { fetchUsers, createUser, deleteUser, updateUserRole } from '../../utils/api/admin';
+import { setCsrfCookie } from '../../utils/api';
+import { ButtonLong } from '../../components/Buttons'; // Assuming this is the correct import path
+import '../../css/adminDasboard.css'
 
 interface UserListProps {
   users: User[];
-  setUsers: React.Dispatch<React.SetStateAction<User[]>>; // Add the function to update users list
+  setUsers: React.Dispatch<React.SetStateAction<User[]>>;
 }
 
 const UserList = ({ users, setUsers }: UserListProps) => {
@@ -13,15 +15,14 @@ const UserList = ({ users, setUsers }: UserListProps) => {
     username: '',
     email: '',
     password: '',
-    role: 'basic', // Default role for new user
+    role: 'basic',
   });
+  const [errorMessages] = useState<ErrorMessages>({});
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
     const loadUsers = async () => {
-      // First, ensure that the CSRF cookie is set
       await setCsrfCookie();
-      
-      // Then fetch the users from the API
       const fetchedUsers = await fetchUsers();
       setUsers(fetchedUsers);
     };
@@ -29,113 +30,118 @@ const UserList = ({ users, setUsers }: UserListProps) => {
     loadUsers();
   }, [setUsers]);
 
-  // Handle Create User
+  //Create user
   const handleCreateUser = async () => {
     try {
       const user = await createUser(newUser);
-      setUsers((prevUsers) => [...prevUsers, user]); // Add the newly created user to the list
-      setNewUser({ username: '', email: '', password: '', role: 'basic' }); // Reset the form
+
+      setUsers((prevUsers) => [...prevUsers, user]);
+      setNewUser({ username: '', email: '', password: '', role: 'basic' });
+
+      // Show a success alert after the user is created
+    alert('User created successfully!');
+
     } catch (error) {
+      setErrorMessage('Error creating user');
       console.error('Error creating user:', error);
     }
   };
 
-  // Handle Update User Role
+  //Update user role
   const handleUpdateRole = async (userId: string, newRole: string) => {
     try {
-      // Get the CSRF token from the cookies
-      const csrfToken = getCsrfTokenFromCookie(); 
-
-      // Send the PUT request to update the user role
-      const response = await fetch(`${API_URL}/api/admin/users/${userId}/role`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-XSRF-TOKEN': csrfToken, // Include CSRF token in the request headers
-        },
-        credentials: 'include', // Ensure credentials (cookies) are included
-        body: JSON.stringify({
-          role: newRole, // Pass the updated role in the body
-        }),
-      });
-
-      // Handle the response
-      if (!response.ok) {
-        throw new Error('Failed to update user role');
-      }
-
-      const updatedUser = await response.json();
-      
-      // Update the user in the frontend state
+      const updatedUser = await updateUserRole(userId, newRole);
       setUsers((prevUsers) =>
         prevUsers.map((user) =>
-          user.id === updatedUser.user.id ? { ...user, role: updatedUser.user.role } : user
+          user.id === updatedUser.id ? { ...user, role: updatedUser.role } : user
         )
       );
-
-      // Show alert after successfully updating role
       alert(`User role updated to ${newRole} successfully!`);
-
-      console.log('User role updated successfully:', updatedUser);
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Error updating user role:', error);
     }
   };
 
-  // Handle Delete User
+  //Delete user
   const handleDeleteUser = async (userId: string) => {
     try {
-      await deleteUser(userId);
-      setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId)); // Remove the deleted user from the list
-    } catch (error) {
+      const result = await deleteUser(userId);
+      setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
+      console.log('User deleted successfully:', result);
+
+      // Show a success alert after the user is created
+    alert('User deleted successfully!');
+    
+    } catch (error: unknown) {
       console.error('Error deleting user:', error);
     }
   };
 
   return (
-    <div>
-      <h2>User Management</h2>
+    <div className="user-management-container">
+      <h2 className="admin-header">User Management</h2>
 
       {/* Create User Form */}
-      <div>
-        <input
-          type="text"
-          placeholder="Username"
-          value={newUser.username}
-          onChange={(e) => setNewUser({ ...newUser, username: e.target.value })}
-        />
-        <input
-          type="email"
-          placeholder="Email"
-          value={newUser.email}
-          onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={newUser.password}
-          onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
-        />
-        <select
-          value={newUser.role}
-          onChange={(e) => setNewUser({ ...newUser, role: e.target.value })}
-        >
-          <option value="basic">Basic</option>
-          <option value="pro">Pro</option>
-          <option value="admin">Admin</option>
-        </select>
-        <button onClick={handleCreateUser}>Create User</button>
+      <div className="admin-form">
+        <div className="input-field">
+          <input
+            className={`admin-input ${errorMessages.username ? 'has-error' : ''}`}
+            type="text"
+            placeholder="Username"
+            value={newUser.username}
+            onChange={(e) => setNewUser({ ...newUser, username: e.target.value })}
+          />
+          {errorMessages.username && <small>{errorMessages.username}</small>}
+        </div>
+
+        <div className="input-field">
+          <input
+            className={`admin-input ${errorMessages.email ? 'has-error' : ''}`}
+            type="email"
+            placeholder="Email"
+            value={newUser.email}
+            onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
+          />
+          {errorMessages.email && <small>{errorMessages.email}</small>}
+        </div>
+
+        <div className="input-field">
+          <input
+            className={`admin-input ${errorMessages.password ? 'has-error' : ''}`}
+            type="password"
+            placeholder="Password"
+            value={newUser.password}
+            onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
+          />
+          {errorMessages.password && <small>{errorMessages.password}</small>}
+        </div>
+
+        <div className="input-field">
+          <select
+            className={`admin-input ${errorMessages.role ? 'has-error' : ''}`}
+            value={newUser.role}
+            onChange={(e) => setNewUser({ ...newUser, role: e.target.value })}
+          >
+            <option value="basic">Basic</option>
+            <option value="pro">Pro</option>
+            <option value="admin">Admin</option>
+          </select>
+          {errorMessages.role && <small>{errorMessages.role}</small>}
+        </div>
+
+        <ButtonLong text="Create User" onClick={handleCreateUser} />
+        {errorMessage && <p className="backend-error">{errorMessage}</p>}
       </div>
 
       {/* User List */}
-      <ul>
+      <ul className="admin-list">
         {users && users.length > 0 ? (
           users.map((user) => (
             <li key={user.id}>
-              <div>
-                <div>
-                  {user.username} ({user.role ? user.role.name : 'No Role Assigned'})
-                </div>
+              <div className="admin-list-item">
+              <div className='user-info'>
+                {user.username} ({user.email}) - {user.role ? user.role.name : 'No Role Assigned'}
+              </div>
 
                 {/* Update User Role */}
                 <select

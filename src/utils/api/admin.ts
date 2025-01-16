@@ -1,10 +1,11 @@
+import { getCsrfTokenFromCookie, setCsrfCookie } from "../api";
 import { User } from "../types";
 
 export const API_URL = import.meta.env.VITE_API_URL;
 
 // --- Users Management ---
 
-// Get all users
+// Get all users(works)
 export const fetchUsers = async (): Promise<User[]> => {
     try {
       const response = await fetch(`${API_URL}/api/admin/users`, {
@@ -41,38 +42,98 @@ export const fetchUsers = async (): Promise<User[]> => {
     }
   };
   
-// Create a new user
+// Create a new user(works)
 export const createUser = async (userData: { username: string; email: string; password: string; role: string }) => {
-  const response = await fetch(`${API_URL}/api/admin/users`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(userData),
-  });
-  const data = await response.json();
-  return data.user;
-};
-
-// Update user role
-export const updateUserRole = async (userId: string, role: string) => {
-  const response = await fetch(`${API_URL}/users/${userId}/role`, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ role }),
-  });
-  const data = await response.json();
-  return data.user;
-};
+    try {
+      // First, ensure the CSRF token is set
+      await setCsrfCookie(); 
+  
+      // Get the CSRF token from the cookie
+      const csrfToken = getCsrfTokenFromCookie();
+  
+      const response = await fetch(`${API_URL}/api/admin/users`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-XSRF-TOKEN': csrfToken, // Pass the CSRF token in the header
+        },
+        body: JSON.stringify(userData),
+        credentials: 'include', // Include credentials (cookies)
+      });
+  
+      // Ensure the request was successful
+      if (!response.ok) {
+        throw new Error(`Failed to create user: ${response.statusText}`);
+      }
+  
+      const data = await response.json();
+      return data.user; // Return the user object
+    } catch (error) {
+      console.error('Error creating user:', error);
+      throw error; // Re-throw the error to handle it where the function is called
+    }
+  };
+  
+//Update user role
+  export const updateUserRole = async (userId: string, newRole: string) => {
+    try {
+      // Get CSRF token from cookie
+      const csrfToken = getCsrfTokenFromCookie();
+  
+      // Send the PUT request to update the user role
+      const response = await fetch(`${API_URL}/api/admin/users/${userId}/role`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-XSRF-TOKEN': csrfToken, // Include CSRF token
+        },
+        credentials: 'include', // Ensure credentials (cookies) are included
+        body: JSON.stringify({ role: newRole }), // Pass the updated role in the request body
+      });
+  
+      // Handle the response
+      if (!response.ok) {
+        throw new Error('Failed to update user role');
+      }
+  
+      const updatedUser = await response.json();
+      return updatedUser.user; // Return the updated user data
+    } catch (error) {
+      console.error('Error updating user role:', error);
+      throw error; // Re-throw error to be handled in the component
+    }
+  };
 
 // Delete user
 export const deleteUser = async (userId: string) => {
-  await fetch(`${API_URL}/users/${userId}`, {
-    method: 'DELETE',
-  });
-};
+    try {
+      // First, ensure the CSRF token is set
+      await setCsrfCookie(); 
+  
+      // Get the CSRF token from the cookie
+      const csrfToken = getCsrfTokenFromCookie();
+  
+      const response = await fetch(`${API_URL}/api/admin/users/${userId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-XSRF-TOKEN': csrfToken, // Pass the CSRF token in the header
+        },
+        credentials: 'include', // Include credentials (cookies)
+      });
+  
+      // Ensure the request was successful
+      if (!response.ok) {
+        throw new Error(`Failed to delete user: ${response.statusText}`);
+      }
+  
+      const data = await response.json();
+      return data; // You can return a success message or the deleted user info if necessary
+    } catch (error) {
+      console.error('Error deleting user:', error);
+      throw error; // Re-throw the error to handle it where the function is called
+    }
+  };
 
 // --- Sponsor Challenges Management ---
 
