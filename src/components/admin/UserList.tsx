@@ -3,7 +3,7 @@ import { ErrorMessages, User } from '../../utils/types';
 import { fetchUsers, createUser, deleteUser, updateUserRole } from '../../utils/api/admin';
 import { setCsrfCookie } from '../../utils/api';
 import { ButtonLong } from '../../components/Buttons'; // Assuming this is the correct import path
-import '../../css/adminDasboard.css'
+import '../../css/admin_dashboard_styling/usersList.css'
 
 interface UserListProps {
   users: User[];
@@ -83,6 +83,7 @@ const UserList = ({ users, setUsers }: UserListProps) => {
 
       {/* Create User Form */}
       <div className="admin-form">
+        <h3 className='admin-section-header'> Create new user </h3>
         <div className="input-field">
           <input
             className={`admin-input ${errorMessages.username ? 'has-error' : ''}`}
@@ -135,6 +136,7 @@ const UserList = ({ users, setUsers }: UserListProps) => {
 
       {/* User List */}
       <ul className="admin-list">
+      <h3 className='admin-section-header'> Update user role</h3>
         {users && users.length > 0 ? (
           users.map((user) => (
             <li key={user.id}>

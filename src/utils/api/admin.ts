@@ -1,5 +1,5 @@
 import { getCsrfTokenFromCookie, setCsrfCookie } from "../api";
-import { User } from "../types";
+import { SponsorChallenge, UploadResponse, User } from "../types";
 
 export const API_URL = import.meta.env.VITE_API_URL;
 
@@ -73,7 +73,7 @@ export const createUser = async (userData: { username: string; email: string; pa
       throw error; // Re-throw the error to handle it where the function is called
     }
   };
-  
+
 //Update user role
   export const updateUserRole = async (userId: string, newRole: string) => {
     try {
@@ -138,47 +138,183 @@ export const deleteUser = async (userId: string) => {
 // --- Sponsor Challenges Management ---
 
 // Get all sponsor challenges
-export const fetchSponsorChallenges = async () => {
-  const response = await fetch(`${API_URL}/sponsor-challenges`, {
-    method: 'GET',
-    credentials: 'include',
-  });
-  const data = await response.json();
-  return data.challenges;
+export const fetchSponsorChallenges = async (): Promise<SponsorChallenge[]> => {
+    try {
+      // Send GET request to fetch sponsor challenges
+      const response = await fetch(`${API_URL}/api/sponsor-challenges`, {
+        method: 'GET',
+        credentials: 'include', // Include credentials (cookies)
+      });
+  
+      const data = await response.json(); // Parse the response JSON
+  
+      // Log the entire fetched data for debugging
+      console.log('Fetched Sponsor Challenges:', data);
+  
+      // Check if the response was successful
+      if (!response.ok) {
+        throw new Error(data.message || 'Error fetching sponsor challenges');
+      }
+  
+      // If the response contains an array of challenges, return that
+      if (data && Array.isArray(data)) {
+        return data; // If the response is a list of sponsor challenges
+      }
+  
+      // If the response contains the `challenges` key, return that
+      if (data && data.challenges) {
+        return data.challenges;
+      }
+  
+      // Log error if the data structure is unexpected
+      console.error('Unexpected response structure:', data);
+      return [];
+    } catch (error) {
+      console.error('Error fetching sponsor challenges:', error);
+      return [];
+    }
 };
 
 // Create a sponsor challenge
-export const createSponsorChallenge = async (challengeData: { title: string; brief: string; brand_name: string; submission_deadline: string }) => {
-  const response = await fetch(`${API_URL}/sponsor-challenges`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(challengeData),
-  });
-  const data = await response.json();
-  return data.challenge;
+export const createSponsorChallenge = async (challengeData: {
+    title: string;
+    brief: string;
+    brand_name: string;
+    submission_deadline: string;
+    brand_logo_id?: string;
+  }): Promise<SponsorChallenge> => {
+    try {
+      const csrfToken = getCsrfTokenFromCookie(); // Get the CSRF token
+  
+      const response = await fetch(`${API_URL}/api/admin/sponsor-challenges`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-XSRF-TOKEN': csrfToken, // Pass the CSRF token in the header
+          'Accept': 'application/json', // Ensure the response is in JSON format
+        },
+        body: JSON.stringify(challengeData),
+        credentials: 'include', // Include credentials (cookies)
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to create sponsor challenge');
+      }
+  
+      const data = await response.json();
+      return data.challenge; // Return the created challenge data
+  
+    } catch (error) {
+      console.error('Error creating sponsor challenge:', error);
+      throw error;
+    }
 };
 
-// Update sponsor challenge
-export const updateSponsorChallenge = async (challengeId: string, challengeData: { title?: string; brief?: string; submission_deadline?: string }) => {
-  const response = await fetch(`${API_URL}/sponsor-challenges/${challengeId}`, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(challengeData),
-  });
-  const data = await response.json();
-  return data.challenge;
+//Upload brand logo
+export const uploadBrandLogo = async (file: File): Promise<UploadResponse> => {
+    try {
+      const csrfToken = getCsrfTokenFromCookie(); // Ensure CSRF token is fetched correctly
+      const formData = new FormData();
+      formData.append('file', file);
+  
+      const response = await fetch(`${API_URL}/api/uploads/brand-logo`, {
+        method: 'POST',
+        headers: {
+          'X-XSRF-TOKEN': csrfToken, // Pass CSRF token in the header
+        },
+        body: formData,
+        credentials: 'include',
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to upload brand logo');
+      }
+  
+      const result = await response.json();
+      return result; // Return the upload response, which includes the file URL and ID
+    } catch (error) {
+      console.error('Error uploading brand logo', error);
+      throw error;
+    }
 };
+
+ //Fetch url from brand logo id 
+ export const fetchBrandLogoUrl = async (logoId: string): Promise<string | null> => {
+    try {
+      const response = await fetch(`${API_URL}/api/uploads/${logoId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-XSRF-TOKEN': getCsrfTokenFromCookie(), // Ensure the CSRF token is included
+        },
+        credentials: 'include',
+      });
+  
+      // Log the response to see what is returned
+      console.log('Brand Logo URL response:', response);
+  
+      if (!response.ok) {
+        console.error('Failed to fetch brand logo URL:', response);
+        throw new Error('Failed to fetch brand logo URL');
+      }
+  
+      const data = await response.json();
+  
+      // Log the data to check the fetched content
+      console.log('Fetched Brand Logo Data:', data);
+  
+      return data?.file_url ? `${API_URL}${data.file_url}` : null;
+    } catch (error) {
+      console.error('Error fetching brand logo URL', error);
+      return null;
+    }
+  };
+// // Update sponsor challenge
+// export const updateSponsorChallenge = async (challengeId: string, challengeData: { title?: string; brief?: string; submission_deadline?: string }) => {
+//     await setCsrfCookie(); // Ensure CSRF token is set
+//     const response = await fetch(`${API_URL}/api/admin/sponsor-challenges/${challengeId}`, {
+//       method: 'PUT',
+//       headers: {
+//         'Content-Type': 'application/json',
+//       },
+//       body: JSON.stringify(challengeData),
+//       credentials: 'include',
+//     });
+//     const data = await response.json();
+//     return data.challenge;
+// };
 
 // Delete sponsor challenge
 export const deleteSponsorChallenge = async (challengeId: string) => {
-  await fetch(`${API_URL}/sponsor-challenges/${challengeId}`, {
-    method: 'DELETE',
-  });
-};
+    try {
+      // Ensure the CSRF token is set
+      await setCsrfCookie();
+  
+      // Get the CSRF token from the cookie
+      const csrfToken = getCsrfTokenFromCookie();
+  
+      const response = await fetch(`${API_URL}/api/admin/sponsor-challenges/${challengeId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-XSRF-TOKEN': csrfToken, // Pass the CSRF token in the header
+        },
+        credentials: 'include', // Include credentials (cookies)
+      });
+  
+      // Ensure the request was successful
+      if (!response.ok) {
+        throw new Error(`Failed to delete sponsor challenge: ${response.statusText}`);
+      }
+  
+      const data = await response.json();
+      return data; // Return the response or any relevant data (e.g., success message)
+    } catch (error) {
+      console.error('Error deleting sponsor challenge:', error);
+      throw error; // Re-throw the error to handle it where the function is called
+    }
+  };
+  
 
 // --- Post Management ---
 

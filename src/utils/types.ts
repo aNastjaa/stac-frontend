@@ -37,9 +37,11 @@ export interface ErrorMessages {
   }
 
   export interface UploadResponse {
+    id: string; 
     file_url: string;
     file_type?: string;
     avatar_url?: string;
+    brand_logo_url?: string;
   }
 
   export interface Role {
@@ -60,11 +62,11 @@ export interface ErrorMessages {
   export interface SponsorChallenge {
     id: string;
     title: string;
+    brand_logo?: string;
+    brand_logo_id: string;
     brief: string;
     brand_name: string;
-    brand_logo_id: string; 
-    submission_deadline: string; 
-    submissions: SponsorSubmission[]; 
+    submission_deadline: string;
   }
   
   export interface SponsorSubmission {
