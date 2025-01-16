@@ -1,30 +1,39 @@
-import { X } from "lucide-react";
-import { useLocation } from "react-router-dom"; // Get location using useLocation hook
-import { useState, useEffect } from "react"; // Import useState and useEffect for state management and side effects
-import { Link } from "react-router-dom";
+import { X } from "lucide-react"; // Close icon
+import { useLocation } from "react-router-dom"; // Hook to get current location
+import { useState, useEffect } from "react"; // For handling state and side-effects
+import { Link } from "react-router-dom"; // For navigation links
 
 function PrivateNavigation({ isOpen, closeMenu }: { isOpen: boolean; closeMenu: () => void }) {
-  const location = useLocation(); // Get the current location from React Router
-  const [activeLink, setActiveLink] = useState<string>(location.pathname); // Initialize active link with the current pathname
+  const location = useLocation(); // Get the current location
+  const [activeLink, setActiveLink] = useState<string>(location.pathname);
+  const [isAdmin, setIsAdmin] = useState<boolean>(false); // State to track admin role
 
-  // Update active link whenever the location changes (on page change)
   useEffect(() => {
-    setActiveLink(location.pathname); // Update active link to match the current location
-  }, [location]); // Dependency array ensures the effect runs whenever location changes
+    // Check if user is an admin from localStorage or context
+    const storedUser = localStorage.getItem("auth_user");
+    if (storedUser) {
+      const user = JSON.parse(storedUser);
+      if (user.role_name === "admin") {
+        setIsAdmin(true); // If admin role, set isAdmin to true
+      }
+    }
+
+    setActiveLink(location.pathname); // Update active link on route change
+  }, [location]);
 
   const handleLinkClick = (link: string) => {
-    setActiveLink(link); // Set the active link state
-    closeMenu(); // Close the menu on link click
+    setActiveLink(link); // Update active link when clicked
+    closeMenu(); // Close the menu
   };
 
   return (
     <div className={`private-navigation-menu ${isOpen ? "open" : ""}`}>
       <div className="private-menu-content">
         <div className="nav-menu-content">
-            <div className="logo">stac</div>
-            <button className="close-btn" onClick={closeMenu}>
+          <div className="logo">stac</div>
+          <button className="close-btn" onClick={closeMenu}>
             <X size={40} color="#e3e3e3" />
-            </button>
+          </button>
         </div>
         <nav>
           <ul>
@@ -55,6 +64,17 @@ function PrivateNavigation({ isOpen, closeMenu }: { isOpen: boolean; closeMenu: 
                 Profile
               </Link>
             </li>
+            {isAdmin && (
+              <li>
+                <Link
+                  to="/admin/dashboard"
+                  className={activeLink === "/admin/dashboard" ? "active" : ""}
+                  onClick={() => handleLinkClick("/admin/dashboard")}
+                >
+                  Admin Dashboard
+                </Link>
+              </li>
+            )}
           </ul>
         </nav>
       </div>

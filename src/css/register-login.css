@@ -23,6 +23,20 @@
     margin-bottom: 2rem;
   }
   
+  .register-link{
+    width: 100%;
+    padding: 0;
+    text-align: center;
+  }
+  .register-link a{
+    text-decoration: underline;
+    
+    color: #e3e3e3;
+    font-family: "Montserrat";
+    font-weight: 500;
+    font-size: 0.9rem;
+  }
+
 /* Styling for input fields*/
 .input-field {
     position: relative;
@@ -73,16 +87,7 @@
   .button-position{
     display: flex;
     justify-content: center;
-  }
-
-  .login-link a{
-    text-decoration: underline;
-    color: #e3e3e3;
-    font-family: "Montserrat";
-    font-weight: 500;
-    font-size: 0.9rem;
-  }
-   
+  }   
 
 /* Styling for error messages */
 .input-field small {
@@ -125,11 +130,12 @@
     flex: 1; 
     margin-bottom: 2rem;
   }
-.register-link{
+.login-link{
     width: 100%;
     padding: 0;
+    text-align: center;
   }
-  .register-link a{
+  .login-link a{
     text-decoration: underline;
     color: #e3e3e3;
     font-family: "Montserrat";
@@ -171,4 +177,12 @@
     font-family: "Montserrat";
     font-size: 0.9rem;
     text-align: center;
+  }
+
+  .backend-error {
+    color: red;
+    font-family: "Montserrat";
+    font-size: 0.9rem;
+    text-align: center;
+    font-weight: 600;
   }

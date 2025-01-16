@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getUserIdFromLocalStorage, getProfileIdByUserId, getUserProfileByProfileId, createUserProfile, updateUserProfile, uploadAvatar } from '../utils/api';  // Import necessary API functions
-import { ButtonLong, ButtonPrimary, ButtonCTA } from '../components/Buttons';  // Assuming you have ButtonLong, ButtonPrimary, and ButtonCTA components
-import type { UserProfile } from '../utils/api';  // Type-only import for UserProfile
+import { ButtonLong, ButtonPrimary, ButtonCTA } from '../components/Buttons';  // Assuming you have ButtonLong, ButtonPrimary, and ButtonCTA components 
 import '../css/userProfile.css';
 import { CircleUserRound} from 'lucide-react';  // Import CircleUserRound SVG from Lucide
+import { UserProfileType } from '../utils/types';
 
 const EditProfile = () => {
-  const [profile, setProfile] = useState<UserProfile>({
+  const [profile, setProfile] = useState<UserProfileType>({
     username: '',
     avatar_url: null,
     posts_count: 0,

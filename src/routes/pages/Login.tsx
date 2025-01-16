@@ -98,9 +98,9 @@ const Login = () => {
           <ButtonLong text={loading ? "Logging in..." : "Login"} disabled={loading} />
         </div>
   
-        {error && <p className="error-message">{error}</p>}
+        {error && <p className="backend-error">{error}</p>}
   
-        <footer className="register-link">
+        <footer className="login-link">
           <p>Don't have an account yet? <a href="/register" className="footer-link-text">Create account</a></p>
         </footer>
       </form>

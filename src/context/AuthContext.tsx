@@ -1,12 +1,14 @@
 import { createContext, useState, ReactNode, useEffect } from "react";
 
-// Types
+// Define types for Auth
 type Auth = {
   id: string | null;
   username: string | null;
-  role: "admin" | "pro" | "basic" | null;
+  email: string | null;
+  role_name: "admin" | "pro" | "basic" | null;
 };
 
+// Define the context type
 type AuthContextType = {
   auth: Auth;
   setAuth: React.Dispatch<React.SetStateAction<Auth>>;
@@ -16,7 +18,8 @@ type AuthContextType = {
 const defaultAuth: Auth = {
   id: null,
   username: null,
-  role: null,
+  email: null,
+  role_name: "basic",
 };
 
 // Default context state
@@ -25,7 +28,7 @@ const defaultAuthContext: AuthContextType = {
   setAuth: () => {},
 };
 
-// Context creation
+// Create context with the correct type
 export const AuthContext = createContext<AuthContextType>(defaultAuthContext);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
@@ -34,11 +37,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   // Load user and token from local storage (if any)
   useEffect(() => {
     const storedUser = localStorage.getItem("auth_user");
-    const token = localStorage.getItem("auth_token");
+    const storedToken = localStorage.getItem("auth_token");
 
-    if (storedUser && token) {
+    if (storedUser && storedToken) {
       const user = JSON.parse(storedUser);
-      setAuth(user); // Set user from local storage
+      setAuth({
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        role_name: user.role_name,
+      });
     }
   }, []);
 

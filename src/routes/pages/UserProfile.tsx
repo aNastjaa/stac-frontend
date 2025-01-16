@@ -8,7 +8,7 @@ import { UploadResponse, UserProfileType } from '../../utils/types';
 
 const UserProfile = () => {
   const [profile, setProfile] = useState<UserProfileType | null>(null);
-  const [avatarUrl, setAvatarUrl] = useState<string>(''); // Initially set as an empty string
+  const [avatarUrl, setAvatarUrl] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(true);
   const [username, setUsername] = useState<string | null>(null);
   const navigate = useNavigate();

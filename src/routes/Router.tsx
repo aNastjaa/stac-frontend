@@ -1,77 +1,127 @@
-// src/router.ts
-import { createBrowserRouter } from "react-router";
+import { createBrowserRouter } from 'react-router-dom';
+import React, { lazy } from 'react';
 
 // Layouts
-import RootLayout from "./layouts/RootLayout"; // RootLayout for non-logged-in users
-import PrivateLayout from "./layouts/PrivateLayout"; // PrivateLayout for authenticated users
-import AdminLayout from "./layouts/AdminLayout"; // AdminLayout for admin users
+const RootLayout = lazy(() => import('./layouts/RootLayout'));
+const PrivateLayout = lazy(() => import('./layouts/PrivateLayout'));
+const AdminLayout = lazy(() => import('./layouts/AdminLayout'));
 
 // Pages
-import LandingPage from "./pages/LandingPage"; // LandingPage for non-logged-in users
-import Register from "./pages/Register"; // Register page
-import Login from "./pages/Login"; // Login page
-import UserProfile from "./pages/UserProfile"; // User profile page
-import ArtWorks from "./pages/ArtWorks"; // ArtWorks page
-import SponsorChallenges from "./pages/SponsorChallenges"; // SponsorChallenges page
-import AdminDashboard from "./pages/AdminDashboard"; // Admin Dashboard page
-import NotFound from "./pages/NotFound"; // NotFound page
-import EditProfile from "../components/EditProfile";
+const LandingPage = lazy(() => import('./pages/LandingPage'));
+const Register = lazy(() => import('./pages/Register'));
+const Login = lazy(() => import('./pages/Login'));
+const UserProfile = lazy(() => import('./pages/UserProfile'));
+const ArtWorks = lazy(() => import('./pages/ArtWorks'));
+const SponsorChallenges = lazy(() => import('./pages/SponsorChallenges'));
+const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
+const NotFound = lazy(() => import('./pages/NotFound'));
+const EditProfile = lazy(() => import('../components/EditProfile'));
+
+// Loading Component
+import DotLoader from '../components/DotLoader'; // Import the updated DotLoader
 
 const router = createBrowserRouter([
-  // Public Routes
   {
     path: "/",
-    element: <RootLayout />, // Using RootLayout as a value
+    element: (
+      <React.Suspense fallback={<DotLoader />}>
+        <RootLayout />
+      </React.Suspense>
+    ),
     children: [
       {
         path: "/",
-        element: <LandingPage />,
+        element: (
+          <React.Suspense fallback={<DotLoader />}>
+            <LandingPage />
+          </React.Suspense>
+        ),
       },
       {
         path: "/register",
-        element: <Register />,
+        element: (
+          <React.Suspense fallback={<DotLoader />}>
+            <Register />
+          </React.Suspense>
+        ),
       },
       {
         path: "/login",
-        element: <Login />,
+        element: (
+          <React.Suspense fallback={<DotLoader />}>
+            <Login />
+          </React.Suspense>
+        ),
       },
       {
         path: "*",
-        element: <NotFound />,
+        element: (
+          <React.Suspense fallback={<DotLoader />}>
+            <NotFound />
+          </React.Suspense>
+        ),
       },
     ],
   },
 
   // Authenticated Routes
   {
-    element: <PrivateLayout />, // Only accessible if logged in
+    element: (
+      <React.Suspense fallback={<DotLoader />}>
+        <PrivateLayout />
+      </React.Suspense>
+    ),
     children: [
       {
         path: "/profile",
-        element: <UserProfile />,
+        element: (
+          <React.Suspense fallback={<DotLoader />}>
+            <UserProfile />
+          </React.Suspense>
+        ),
       },
       {
         path: "/edit-profile",
-        element: <EditProfile />, // EditProfile page
+        element: (
+          <React.Suspense fallback={<DotLoader />}>
+            <EditProfile />
+          </React.Suspense>
+        ),
       },
       {
         path: "/artworks",
-        element: <ArtWorks />,
+        element: (
+          <React.Suspense fallback={<DotLoader />}>
+            <ArtWorks />
+          </React.Suspense>
+        ),
       },
       {
         path: "/sponsor-challenges",
-        element: <SponsorChallenges />,
+        element: (
+          <React.Suspense fallback={<DotLoader />}>
+            <SponsorChallenges />
+          </React.Suspense>
+        ),
       },
     ],
   },
 
   // Admin Routes
   {
-    element: <AdminLayout />,
+    element: (
+      <React.Suspense fallback={<DotLoader />}>
+        <AdminLayout />
+      </React.Suspense>
+    ),
     children: [
       {
         path: "/admin/dashboard",
-        element: <AdminDashboard />,
+        element: (
+          <React.Suspense fallback={<DotLoader />}>
+            <AdminDashboard />
+          </React.Suspense>
+        ),
       },
     ],
   },

@@ -1,5 +1,5 @@
 import { useId, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { register } from "../../utils/api";
 import { Link } from "react-router";
@@ -122,7 +122,7 @@ const Register = () => {
           <div className="button-position">
             <ButtonLong text="Sign Up" onClick={handleSubmit(onValid)} />
           </div>
-          <div className="login-link">
+          <div className="register-link">
             <p>
               Already have an account?{" "}
               <Link to="/login">Log in</Link>

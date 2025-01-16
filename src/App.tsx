@@ -1,6 +1,6 @@
 import { RouterProvider } from "react-router";
-import { AuthProvider } from "./contex/AuthContex";
-import { CsrfProvider } from "./contex/CsrfContex";
+import { AuthProvider } from "./context/AuthContext";
+import { CsrfProvider } from "./context/CsrfContex";
 import  Router  from "./routes/Router";
 
 const App = () => {
