@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getUserIdFromLocalStorage, getProfileIdByUserId, getUserProfileByProfileId, getAvatarById } from '../../utils/api';
+import { getUserIdFromLocalStorage, getProfileIdByUserId, getUserProfileByProfileId, fetchAvatarUrl } from '../../utils/api';  // Use the new fetchAvatarUrl
 import { CircleUserRound } from 'lucide-react';  // Circle icon from Lucide
 import '../../css/userProfile.css';
 import { ButtonPrimary } from '../../components/Buttons';
-import { UploadResponse, UserProfileType } from '../../utils/types';
+import { UserProfileType } from '../../utils/types';
 
 const UserProfile = () => {
   const [profile, setProfile] = useState<UserProfileType | null>(null);
@@ -31,28 +31,29 @@ const UserProfile = () => {
 
     const fetchProfileData = async () => {
       try {
-          const profileId = await getProfileIdByUserId(userId);
-          if (profileId) {
-              const userProfile = await getUserProfileByProfileId(profileId);
-              setProfile(userProfile);
-  
-              // If avatar_id exists in the profile, fetch avatar using getAvatarById
-              if (userProfile && userProfile.avatar_id) {
-                  const avatarData: UploadResponse | null = await getAvatarById(userProfile.avatar_id);
-                  console.log('Avatar data:', avatarData);
-  
-                  // Set avatar URL directly without additional string manipulation
-                  setAvatarUrl(avatarData?.avatar_url || ''); 
-              }
+        const profileId = await getProfileIdByUserId(userId);
+        if (profileId) {
+          const userProfile = await getUserProfileByProfileId(profileId);
+          setProfile(userProfile);
+
+          // If avatar_id exists in the profile, fetch the avatar URL directly
+          if (userProfile && userProfile.avatar_id) {
+            // Directly fetch the avatar URL using avatar_id
+            const avatarUrl = await fetchAvatarUrl(userProfile.avatar_id);
+            console.log('Avatar URL:', avatarUrl);
+
+            // Set avatar URL
+            setAvatarUrl(avatarUrl || ''); 
           }
-          setLoading(false);
+        }
+        setLoading(false);
       } catch (error) {
-          console.error('Error fetching profile data', error);
-          setLoading(false);
-          navigate('/edit-profile');
+        console.error('Error fetching profile data', error);
+        setLoading(false);
+        navigate('/edit-profile');
       }
-  };
-  
+    };
+
     fetchProfileData();
   }, [navigate]);
 

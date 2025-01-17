@@ -179,33 +179,6 @@ export const getUserProfileByProfileId = async (profileId: string): Promise<User
   }
 };
 
-// // Function to fetch profileId first using userId and then fetch profile data
-// export const getProfileData = async (): Promise<UserProfile | null> => {
-//   try {
-//     const storedUser = localStorage.getItem('auth_user');
-//     if (!storedUser) {
-//       throw new Error('User not found in localStorage');
-//     }
-
-//     const { id: userId } = JSON.parse(storedUser); // Get user ID from localStorage
-//     if (!userId) {
-//       throw new Error('User ID is missing');
-//     }
-
-//     // Get the profile ID using userId
-//     const profileId = await getProfileIdByUserId(userId);
-//     if (!profileId) {
-//       throw new Error('Profile ID not found for the user');
-//     }
-
-//     // Fetch the profile data using profileId
-//     return await getUserProfileByProfileId(profileId);
-
-//   } catch (error) {
-//     console.error('Error fetching user profile:', error);
-//     throw error;
-//   }
-// };
 // Function to get the profileId by userId
 export const getProfileIdByUserId = async (userId: string): Promise<string | null> => {
   try {
@@ -321,7 +294,7 @@ export const updateUserProfile = async (profileData: UserProfileType): Promise<U
     }
 
     const result = await response.json();
-    return result.profile;
+    return result;
   } catch (error) {
     console.error('Error saving profile', error);
     throw error;
@@ -354,32 +327,63 @@ export const uploadAvatar = async (file: File): Promise<UploadResponse> => {
     throw error;
   }
 };
-// Function to get the avatar by upload ID from the uploads table
-export const getAvatarById = async (upload: string): Promise<{ file_url: string } | null> => {
+//Fetch avatar URL
+export const fetchAvatarUrl = async (avatarId: string): Promise<string | null> => {
   try {
-    const csrfToken = getCsrfTokenFromCookie();
-    const decodedCsrfToken = decodeURIComponent(csrfToken);
-
-    const response = await fetch(`${API_URL}/api/uploads/${upload}`, {
+    const response = await fetch(`${API_URL}/api/uploads/${avatarId}`, {
       method: 'GET',
       headers: {
-        'X-XSRF-TOKEN': decodedCsrfToken,
-        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'X-XSRF-TOKEN': getCsrfTokenFromCookie(), // Ensure the CSRF token is included
       },
       credentials: 'include',
     });
 
+    // Log the response to see what is returned
+    console.log('Avatar URL response:', response);
+
     if (!response.ok) {
-      throw new Error('Failed to fetch avatar');
+      console.error('Failed to fetch avatar URL:', response);
+      throw new Error('Failed to fetch avatar URL');
     }
 
-    const result = await response.json();
-    return result ? result : null;
+    const data = await response.json();
+
+    // Log the data to check the fetched content
+    console.log('Fetched Avatar Data:', data);
+
+    return data?.file_url ? `${API_URL}${data.file_url}` : null;
   } catch (error) {
-    console.error('Error fetching avatar by upload', error);
-    throw error;
+    console.error('Error fetching avatar URL', error);
+    return null;
   }
 };
+// Function to get the avatar by upload ID from the uploads table
+// export const getAvatarById = async (upload: string): Promise<{ file_url: string } | null> => {
+//   try {
+//     const csrfToken = getCsrfTokenFromCookie();
+//     const decodedCsrfToken = decodeURIComponent(csrfToken);
+
+//     const response = await fetch(`${API_URL}/api/uploads/${upload}`, {
+//       method: 'GET',
+//       headers: {
+//         'X-XSRF-TOKEN': decodedCsrfToken,
+//         'Accept': 'application/json',
+//       },
+//       credentials: 'include',
+//     });
+
+//     if (!response.ok) {
+//       throw new Error('Failed to fetch avatar');
+//     }
+
+//     const result = await response.json();
+//     return result ? result : null;
+//   } catch (error) {
+//     console.error('Error fetching avatar by upload', error);
+//     throw error;
+//   }
+// };
 // Change User Password
 export const changePassword = async (
   oldPassword: string,

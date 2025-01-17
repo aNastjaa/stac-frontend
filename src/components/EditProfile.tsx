@@ -1,15 +1,16 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { getUserIdFromLocalStorage, getProfileIdByUserId, getUserProfileByProfileId, createUserProfile, updateUserProfile, uploadAvatar } from '../utils/api';  // Import necessary API functions
+import { useNavigate } from 'react-router';
+import { getUserIdFromLocalStorage, getProfileIdByUserId, getUserProfileByProfileId, createUserProfile, updateUserProfile, uploadAvatar, fetchAvatarUrl } from '../utils/api';  // Import necessary API functions
 import { ButtonLong, ButtonPrimary, ButtonCTA } from '../components/Buttons';  // Assuming you have ButtonLong, ButtonPrimary, and ButtonCTA components 
 import '../css/userProfile.css';
-import { CircleUserRound} from 'lucide-react';  // Import CircleUserRound SVG from Lucide
+import { CircleUserRound } from 'lucide-react';  // Import CircleUserRound SVG from Lucide
 import { UserProfileType } from '../utils/types';
 
 const EditProfile = () => {
   const [profile, setProfile] = useState<UserProfileType>({
     username: '',
     avatar_url: null,
+    avatar_id: '',
     posts_count: 0,
     comments_count: 0,
     likes_count: 0,
@@ -22,10 +23,10 @@ const EditProfile = () => {
   const [isAvatarEditMode, setIsAvatarEditMode] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isNewProfile, setIsNewProfile] = useState<boolean>(false);
+  const [avatarUrls, setAvatarUrls] = useState<{ [key: string]: string | null }>({});
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Fetch user profile on mount
     const fetchProfile = async () => {
       try {
         const userId = getUserIdFromLocalStorage();
@@ -41,6 +42,12 @@ const EditProfile = () => {
           if (userProfile) {
             setProfile(userProfile);
             setIsNewProfile(false);  // Profile exists, it's not new
+
+            if (userProfile.avatar_url) {
+              // Fetch the avatar URL if available
+              const avatarUrl = await fetchAvatarUrl(userProfile.avatar_url);
+              setAvatarUrls({ [profileId]: avatarUrl });
+            }
           }
         } else {
           setIsNewProfile(true);  // No profile found, create a new one
@@ -70,31 +77,39 @@ const EditProfile = () => {
     try {
       let updatedProfile;
       if (isNewProfile) {
-        updatedProfile = await createUserProfile(profile);
+        updatedProfile = await createUserProfile({
+          ...profile,
+          avatar_id: avatarFile ? (await uploadAvatar(avatarFile)).id : profile.avatar_id, // Set avatar_id correctly
+        });
         alert('Profile created successfully!');
       } else {
-        updatedProfile = await updateUserProfile(profile);
+        updatedProfile = await updateUserProfile({
+          ...profile,
+          avatar_id: avatarFile ? (await uploadAvatar(avatarFile)).id : profile.avatar_id, // Set avatar_id correctly
+        });
         alert('Profile updated successfully!');
       }
-
+  
       setProfile(updatedProfile);
-
+  
       if (avatarFile) {
+        // Ensure avatarId is correctly set
         const uploadResponse = await uploadAvatar(avatarFile);  // Upload avatar
+        const avatarId = uploadResponse.id;  // Get the avatar ID from the response
         alert('Avatar uploaded successfully!');
         setProfile((prevProfile) => ({
           ...prevProfile,
-          avatar_url: uploadResponse.file_url,  // Update avatar URL in profile
+          avatar_id: avatarId,  // Set avatar_id in profile state
         }));
       }
-
+  
       navigate('/profile');
     } catch (error) {
       console.error('Error saving profile', error);
       setErrorMessage('Error saving profile');
     }
   };
-
+  
   const handleDeleteAvatar = async () => {
     try {
       alert('Avatar deleted successfully');
@@ -116,7 +131,7 @@ const EditProfile = () => {
           {avatarPreview ? (
             <img src={avatarPreview} alt="Avatar Preview" className="profile-avatar-thumbnail" />
           ) : profile.avatar_url ? (
-            <img src={profile.avatar_url} alt="User Avatar" className="profile-avatar" />
+            <img src={avatarUrls[profile.avatar_url] || ''} alt="User Avatar" className="profile-avatar" />
           ) : (
             <CircleUserRound color="#131313" size={100} />
           )}
