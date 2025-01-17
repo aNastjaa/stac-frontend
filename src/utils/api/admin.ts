@@ -1,5 +1,5 @@
 import { getCsrfTokenFromCookie, setCsrfCookie } from "../api";
-import { SponsorChallenge, UploadResponse, User } from "../types";
+import { Post, SponsorChallenge, Submission, UploadResponse, User } from "../types";
 
 export const API_URL = import.meta.env.VITE_API_URL;
 
@@ -315,55 +315,6 @@ export const deleteSponsorChallenge = async (challengeId: string) => {
     }
   };
   
-
-// --- Post Management ---
-
-// Get pending posts
-export const fetchPendingPosts = async () => {
-  const response = await fetch(`${API_URL}/pending-posts`, {
-    method: 'GET',
-  });
-  const data = await response.json();
-  return data.posts;
-};
-
-// Change post status
-export const changePostStatus = async (postId: string, status: 'approved' | 'rejected') => {
-  const response = await fetch(`${API_URL}/posts/${postId}/status`, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ status }),
-  });
-  const data = await response.json();
-  return data.post;
-};
-
-// --- Submission Management ---
-
-// Get pending submissions
-export const fetchPendingSubmissions = async () => {
-  const response = await fetch(`${API_URL}/pending-submissions`, {
-    method: 'GET',
-  });
-  const data = await response.json();
-  return data.submissions;
-};
-
-// Change submission status
-export const changeSubmissionStatus = async (submissionId: string, status: 'approved' | 'rejected') => {
-  const response = await fetch(`${API_URL}/sponsor-submissions/${submissionId}/status`, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ status }),
-  });
-  const data = await response.json();
-  return data.submission;
-};
-
 // --- Theme Management ---
 
 // Get all themes
@@ -407,4 +358,70 @@ export const deleteTheme = async (themeId: string) => {
   await fetch(`${API_URL}/themes/${themeId}`, {
     method: 'DELETE',
   });
+};
+
+// --- Post status Management  ---
+// Fetch pending posts
+export const fetchPendingPosts = async (): Promise<Post[]> => {
+  const response = await fetch(`${API_URL}/api/admin/pending-posts`, {
+    method: 'GET',
+    credentials: 'include',
+  });
+  if (!response.ok) {
+    throw new Error('Failed to fetch pending posts');
+  }
+  return response.json();
+};
+
+// Update post status
+export const updatePostStatus = async (postId: string, status: 'accepted' | 'rejected'): Promise<void> => {
+  await setCsrfCookie();
+  const csrfToken = getCsrfTokenFromCookie();
+
+  const response = await fetch(`${API_URL}/api/admin/posts/${postId}/status`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-XSRF-TOKEN': csrfToken,
+    },
+    body: JSON.stringify({ status }),
+    credentials: 'include',
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to update post status');
+  }
+};
+
+// --- Stubmission status Management  ---
+// Fetch pending submissions
+export const fetchPendingSubmissions = async (): Promise<Submission[]> => {
+  const response = await fetch(`${API_URL}/api/admin/pending-submissions`, {
+    method: 'GET',
+    credentials: 'include',
+  });
+  if (!response.ok) {
+    throw new Error('Failed to fetch pending submissions');
+  }
+  return response.json();
+};
+
+// Update submission status
+export const updateSubmissionStatus = async (submissionId: string, status: 'accepted' | 'rejected'): Promise<void> => {
+  await setCsrfCookie();
+  const csrfToken = getCsrfTokenFromCookie();
+
+  const response = await fetch(`${API_URL}/api/admin/sponsor-submissions/${submissionId}/status`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-XSRF-TOKEN': csrfToken,
+    },
+    body: JSON.stringify({ status }),
+    credentials: 'include',
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to update submission status');
+  }
 };

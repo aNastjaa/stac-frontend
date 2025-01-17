@@ -4,8 +4,7 @@ export interface ErrorMessages {
   password?: string;
   role?: string;
 }
-
-  
+ 
   export interface Theme {
     id: string;
     theme_name: string;  // Updated field name
@@ -81,8 +80,9 @@ export interface ErrorMessages {
   export interface Post {
     id: string;
     user_id: string;
+    user: string;
     theme_id: string;
-    title: string;
+    image_path: string;
     description: string;
     status: "pending" | "approved" | "rejected";
     created_at: string;
@@ -92,7 +92,9 @@ export interface ErrorMessages {
   export interface Submission {
     id: string;
     user_id: string;
-    sponsor_challenge_id: string; // Associated sponsor challenge
+    user: string;
+    image_path: string;
+    sponsor_challenge_id: string; 
     status: "pending" | "approved" | "rejected";
     description: string;
     created_at: string;

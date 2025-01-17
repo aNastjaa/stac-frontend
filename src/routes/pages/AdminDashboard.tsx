@@ -4,6 +4,8 @@ import { fetchUsers } from '../../utils/api/admin'; // Import the API function
 import { User } from '../../utils/types';
 import SponsorChallengeList from '../../components/admin/SponsorChallengeList';
 import { ButtonPrimary } from '../../components/Buttons';
+import SubmissionList from '../../components/admin/SubmissionList';
+import PostList from '../../components/admin/PostList';
 
 const AdminDashboard = () => {
   const [section, setSection] = useState<string>('users');
@@ -27,13 +29,17 @@ const AdminDashboard = () => {
     <div>
       <h1>Admin Dashboard</h1>
       <nav>
-        <ButtonPrimary onClick={() => handleSectionChange('users')} text='Users'/>
-        <ButtonPrimary onClick={() => handleSectionChange('sponsor-challenges')} text='Sponsor Challenges'/> {/* New button for Sponsor Challenges */}
+        <ButtonPrimary onClick={() => handleSectionChange('users')} text='Users' />
+        <ButtonPrimary onClick={() => handleSectionChange('sponsor-challenges')} text='Sponsor Challenges' />
+        <ButtonPrimary onClick={() => handleSectionChange('posts')} text='Posts' />
+        <ButtonPrimary onClick={() => handleSectionChange('submissions')} text='Submissions' />
       </nav>
 
       <div>
-        {section === 'users' && <UserList users={users} setUsers={setUsers} />} {/* Pass setUsers as a prop */}
-        {section === 'sponsor-challenges' && <SponsorChallengeList />} {/* Render SponsorChallengeList */}
+        {section === 'users' && <UserList users={users} setUsers={setUsers} />}
+        {section === 'sponsor-challenges' && <SponsorChallengeList />}
+        {section === 'posts' && <PostList />}
+        {section === 'submissions' && <SubmissionList />}
       </div>
     </div>
   );
