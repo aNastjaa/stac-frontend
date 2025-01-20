@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ButtonPrimary } from '../../components/Buttons';
+import { ButtonLong, ButtonPrimary } from '../../components/Buttons';
 import { Theme } from '../../utils/types';
 import { createTheme, updateTheme, archiveTheme, deleteTheme, fetchAllThemes } from '../../utils/api/admin';
 import { fetchCurrentTheme} from '../../utils/api'; 
@@ -83,12 +83,9 @@ const ThemeList = () => {
 
   const handleMoveToArchive = async (themeId: string) => {
     try {
-      setLoading(true); // Set loading to true when moving to archive
-      await archiveTheme(themeId);
-      setAllThemes(allThemes.filter((theme) => theme.id !== themeId));
-      if (currentTheme && currentTheme.id === themeId) {
-        setCurrentTheme(null); // Clear the current theme if archived
-      }
+      setLoading(true); 
+      await archiveTheme(themeId); 
+      setAllThemes(allThemes.filter((theme) => theme.id !== themeId)); 
       alert('Theme archived successfully');
     } catch (error) {
       console.error('Failed to archive theme', error);
@@ -133,11 +130,11 @@ const ThemeList = () => {
           onChange={(e) => setStartDate(e.target.value)}
           disabled={loading} // Disable input when loading
         />
-        <ButtonPrimary onClick={handleThemeCreation} text="Create Theme" disabled={loading} /> {/* Disable button when loading */}
+        <ButtonLong onClick={handleThemeCreation} text="Create Theme" disabled={loading} /> {/* Disable button when loading */}
       </div>
   
       <section className="current-theme">
-        <h3>Current Theme</h3>
+        <h3>Current Theme:</h3>
         {currentTheme ? (
           <div className='current-theme-info'>
             <p>Name: <span className='theme-name'>{currentTheme.theme_name}</span></p>
@@ -149,7 +146,7 @@ const ThemeList = () => {
       </section>
   
       <section className="all-themes">
-        <h3>All Themes</h3>
+        <h3>All Themes:</h3>
         {allThemes.length > 0 ? (
               <ul>
               {allThemes.map((theme) => (

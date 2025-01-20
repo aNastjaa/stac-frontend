@@ -5,6 +5,14 @@
     margin-top: 2rem;
 }
 
+.admin-challenges-header h2{
+    text-align: center;
+    font-family: "Bebas Neue", sans-serif;
+    font-size: calc(1.5rem + 1vw);
+    margin-top: 1rem;
+    letter-spacing: 1px;
+}
+
 .sponsor-challenge-card-list{
     list-style-type: none;
     margin: 2rem 0;

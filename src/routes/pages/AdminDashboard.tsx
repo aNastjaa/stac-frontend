@@ -7,6 +7,7 @@ import { ButtonPrimary } from '../../components/Buttons';
 import SubmissionList from '../../components/admin/SubmissionList';
 import PostList from '../../components/admin/PostList';
 import ThemeList from '../../components/admin/ThemeList';
+import "../../css/admin_dashboard_styling/adminDashboard.css"
 
 const AdminDashboard = () => {
   const [section, setSection] = useState<string>('users');
@@ -27,9 +28,9 @@ const AdminDashboard = () => {
   }, []);
 
   return (
-    <div>
+    <div className='admin-dashboard'>
       <h1>Admin Dashboard</h1>
-      <nav>
+      <nav className='admin-dashboard-nav'>
         <ButtonPrimary onClick={() => handleSectionChange('users')} text='Users' />
         <ButtonPrimary onClick={() => handleSectionChange('sponsor-challenges')} text='Sponsor Challenges' />
         <ButtonPrimary onClick={() => handleSectionChange('posts')} text='Posts' />

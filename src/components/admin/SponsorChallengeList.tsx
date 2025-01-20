@@ -98,7 +98,7 @@ const SponsorChallengeList = () => {
   };
 
   return (
-    <div>
+    <div className='admin-challenges-header'>
       <h2>Sponsor Challenges</h2>
 
       {/* Create Challenge Form */}

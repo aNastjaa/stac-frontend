@@ -459,14 +459,14 @@ export const archiveTheme = async (themeId: string): Promise<void> => {
     // Get the CSRF token from the cookie
     const csrfToken = getCsrfTokenFromCookie();
 
-    // Send the POST request to archive the theme
+    // Send the POST request to archive the theme by its ID
     const response = await fetch(`${API_URL}/api/archive/move`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'X-XSRF-TOKEN': csrfToken, // Pass the CSRF token in the header
       },
-      body: JSON.stringify({ theme: themeId }), // Send the theme ID to be archived
+      body: JSON.stringify({ theme_id: themeId }), // Send the theme_id to be archived
       credentials: 'include', // Include credentials (cookies)
     });
 
@@ -484,6 +484,7 @@ export const archiveTheme = async (themeId: string): Promise<void> => {
     throw error; // Re-throw the error to handle it where the function is called
   }
 };
+
 
 
 

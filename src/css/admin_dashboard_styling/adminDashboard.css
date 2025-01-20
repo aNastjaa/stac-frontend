@@ -1,0 +1,17 @@
+.admin-dashboard{
+margin: 2rem 0;
+text-align: center;
+}
+
+.admin-dashboard h1{
+    font-family: "Bebas neue";
+    font-size: calc(2.5rem + 0.3vw);
+    margin-bottom: 2rem;
+}
+
+.admin-dashboard-nav{
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
