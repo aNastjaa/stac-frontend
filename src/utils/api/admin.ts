@@ -1,5 +1,5 @@
 import { getCsrfTokenFromCookie, setCsrfCookie } from "../api";
-import { Post, SponsorChallenge, Submission, UploadResponse, User } from "../types";
+import { Post, SponsorChallenge, Submission, Theme, UploadResponse, User } from "../types";
 
 export const API_URL = import.meta.env.VITE_API_URL;
 
@@ -314,51 +314,178 @@ export const deleteSponsorChallenge = async (challengeId: string) => {
       throw error; // Re-throw the error to handle it where the function is called
     }
   };
+
+
+
   
 // --- Theme Management ---
 
-// Get all themes
-export const fetchThemes = async () => {
-  const response = await fetch(`${API_URL}/themes`, {
-    method: 'GET',
-    credentials: 'include',
-  });
-  const data = await response.json();
-  return data.themes;
+// Function to create a new theme
+//Function to fetch all themes 
+export const fetchAllThemes = async (): Promise<Theme[]> => {
+  try {
+    const csrfToken = getCsrfTokenFromCookie(); // Get the CSRF token from the cookies
+    const authToken = localStorage.getItem("auth_token"); // Retrieve the auth token from localStorage
+
+    if (!authToken) {
+      throw new Error('Auth token is missing');
+    }
+
+    const response = await fetch(`${API_URL}/api/themes`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-XSRF-TOKEN': csrfToken,
+        'Authorization': `Bearer ${authToken}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch all themes');
+    }
+
+    const themes: Theme[] = await response.json(); 
+    return themes; // Return all themes
+  } catch (error) {
+    console.error('Error fetching all themes:', error);
+    throw error;
+  }
+};
+export const createTheme = async (themeName: string, startDate: string) => {
+  try {
+    // First, ensure the CSRF token is set
+    await setCsrfCookie(); 
+
+    // Get the CSRF token from the cookie
+    const csrfToken = getCsrfTokenFromCookie();
+
+    // Prepare the theme data
+    const themeData = {
+      theme_name: themeName,
+      start_date: startDate,
+    };
+
+    // Send the POST request to create the theme
+    const response = await fetch(`${API_URL}/api/admin/themes`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-XSRF-TOKEN': csrfToken, // Pass the CSRF token in the header
+      },
+      body: JSON.stringify(themeData),
+      credentials: 'include', // Include credentials (cookies)
+    });
+
+    // Ensure the request was successful
+    if (!response.ok) {
+      throw new Error(`Failed to create theme: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data; // Return the created theme
+  } catch (error) {
+    console.error('Error creating theme:', error);
+    throw error; // Re-throw the error to handle it where the function is called
+  }
+};
+// Function to update a theme
+export const updateTheme = async (themeId: string, themeName: string, startDate: string) => {
+  try {
+    // Ensure the CSRF token is set only if not already available
+    const csrfToken = getCsrfTokenFromCookie();
+    if (!csrfToken) {
+      await setCsrfCookie();
+    }
+
+    const response = await fetch(`${API_URL}/api/admin/themes/${themeId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-XSRF-TOKEN': csrfToken || getCsrfTokenFromCookie(),
+      },
+      body: JSON.stringify({ theme_name: themeName, start_date: startDate }),
+      credentials: 'include', // Include credentials (cookies)
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to update theme: ${response.statusText}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Error updating theme:', error);
+    throw error; // Re-throw the error for the caller to handle
+  }
+};
+// Function to delete a theme
+export const deleteTheme = async (themeId: string): Promise<void> => {
+  try {
+    // Ensure the CSRF token is set
+    await setCsrfCookie();
+
+    // Get the CSRF token from the cookie
+    const csrfToken = getCsrfTokenFromCookie();
+
+    // Send the DELETE request to delete the theme
+    const response = await fetch(`${API_URL}/api/admin/themes/${themeId}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-XSRF-TOKEN': csrfToken, // Pass the CSRF token in the header
+      },
+      credentials: 'include', // Include credentials (cookies)
+    });
+
+    // Ensure the request was successful
+    if (!response.ok) {
+      throw new Error(`Failed to delete theme: ${response.statusText}`);
+    }
+
+    // Optionally, return a success message or deleted theme data if needed
+    const data = await response.json();
+    return data; // Return the deleted theme or any success response
+
+  } catch (error) {
+    console.error('Error deleting theme:', error);
+    throw error; // Re-throw the error to handle it where the function is called
+  }
+};
+// Function to archive a theme
+export const archiveTheme = async (themeId: string): Promise<void> => {
+  try {
+    // Ensure the CSRF token is set
+    await setCsrfCookie();
+
+    // Get the CSRF token from the cookie
+    const csrfToken = getCsrfTokenFromCookie();
+
+    // Send the POST request to archive the theme
+    const response = await fetch(`${API_URL}/api/archive/move`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-XSRF-TOKEN': csrfToken, // Pass the CSRF token in the header
+      },
+      body: JSON.stringify({ theme: themeId }), // Send the theme ID to be archived
+      credentials: 'include', // Include credentials (cookies)
+    });
+
+    // Ensure the request was successful
+    if (!response.ok) {
+      throw new Error(`Failed to archive theme: ${response.statusText}`);
+    }
+
+    // Optionally, return a success message or any data if needed
+    const data = await response.json();
+    return data; // Return the archived theme or any success response
+
+  } catch (error) {
+    console.error('Error archiving theme:', error);
+    throw error; // Re-throw the error to handle it where the function is called
+  }
 };
 
-// Create a new theme
-export const createTheme = async (themeData: { theme_name: string; start_date: string }) => {
-  const response = await fetch(`${API_URL}/themes`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(themeData),
-  });
-  const data = await response.json();
-  return data.theme;
-};
 
-// Update a theme
-export const updateTheme = async (themeId: string, themeData: { theme_name?: string; start_date?: string }) => {
-  const response = await fetch(`${API_URL}/themes/${themeId}`, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(themeData),
-  });
-  const data = await response.json();
-  return data.theme;
-};
-
-// Delete a theme
-export const deleteTheme = async (themeId: string) => {
-  await fetch(`${API_URL}/themes/${themeId}`, {
-    method: 'DELETE',
-  });
-};
 
 // --- Post status Management  ---
 // Fetch pending posts
@@ -392,6 +519,8 @@ export const updatePostStatus = async (postId: string, status: 'accepted' | 'rej
     throw new Error('Failed to update post status');
   }
 };
+
+
 
 // --- Stubmission status Management  ---
 // Fetch pending submissions

@@ -6,6 +6,7 @@ import SponsorChallengeList from '../../components/admin/SponsorChallengeList';
 import { ButtonPrimary } from '../../components/Buttons';
 import SubmissionList from '../../components/admin/SubmissionList';
 import PostList from '../../components/admin/PostList';
+import ThemeList from '../../components/admin/ThemeList';
 
 const AdminDashboard = () => {
   const [section, setSection] = useState<string>('users');
@@ -33,6 +34,7 @@ const AdminDashboard = () => {
         <ButtonPrimary onClick={() => handleSectionChange('sponsor-challenges')} text='Sponsor Challenges' />
         <ButtonPrimary onClick={() => handleSectionChange('posts')} text='Posts' />
         <ButtonPrimary onClick={() => handleSectionChange('submissions')} text='Submissions' />
+        <ButtonPrimary onClick={() => handleSectionChange('themes')} text="Themes" />
       </nav>
 
       <div>
@@ -40,6 +42,7 @@ const AdminDashboard = () => {
         {section === 'sponsor-challenges' && <SponsorChallengeList />}
         {section === 'posts' && <PostList />}
         {section === 'submissions' && <SubmissionList />}
+        {section === 'themes' && <ThemeList />}
       </div>
     </div>
   );

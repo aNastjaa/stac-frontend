@@ -33,6 +33,7 @@ export function ButtonPrimary({
 }: {
   text: string;
   onClick?: () => void; 
+  disabled?: boolean; 
 }) {
   return (
     <button className="button-primary" onClick={onClick}>
