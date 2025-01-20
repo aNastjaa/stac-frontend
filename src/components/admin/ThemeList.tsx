@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { ButtonLong, ButtonPrimary } from '../../components/Buttons';
 import { Theme } from '../../utils/types';
 import { createTheme, updateTheme, archiveTheme, deleteTheme, fetchAllThemes } from '../../utils/api/admin';
-import { fetchCurrentTheme} from '../../utils/api'; 
+import { fetchCurrentTheme} from '../../utils/api/artworks'; 
 import '../../css/admin_dashboard_styling/themesList.css';
 
 const ThemeList = () => {
