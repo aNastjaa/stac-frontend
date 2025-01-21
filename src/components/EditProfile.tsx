@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
-import { getUserIdFromLocalStorage, getProfileIdByUserId, getUserProfileByProfileId, createUserProfile, updateUserProfile, uploadAvatar, fetchAvatarUrl } from '../utils/api';  // Import necessary API functions
-import { ButtonLong, ButtonPrimary, ButtonCTA } from '../components/Buttons';  // Assuming you have ButtonLong, ButtonPrimary, and ButtonCTA components 
+import { getUserIdFromLocalStorage, getProfileIdByUserId, getUserProfileByProfileId, createUserProfile, updateUserProfile, uploadAvatar, fetchAvatarUrl, deleteUserAccount, logout, getCsrfTokenFromCookie } from '../utils/api';  
+import { ButtonLong, ButtonPrimary, ButtonCTA } from '../components/Buttons';  
 import '../css/userProfile.css';
-import { CircleUserRound } from 'lucide-react';  // Import CircleUserRound SVG from Lucide
+import { CircleUserRound } from 'lucide-react';  
 import { UserProfileType } from '../utils/types';
+
 
 const EditProfile = () => {
   const [profile, setProfile] = useState<UserProfileType>({
@@ -44,7 +45,6 @@ const EditProfile = () => {
             setIsNewProfile(false);  // Profile exists, it's not new
 
             if (userProfile.avatar_url) {
-              // Fetch the avatar URL if available
               const avatarUrl = await fetchAvatarUrl(userProfile.avatar_url);
               setAvatarUrls({ [profileId]: avatarUrl });
             }
@@ -67,7 +67,7 @@ const EditProfile = () => {
       setAvatarFile(file);
       const reader = new FileReader();
       reader.onloadend = () => {
-        setAvatarPreview(reader.result as string);  // Set preview of the selected avatar
+        setAvatarPreview(reader.result as string);
       };
       reader.readAsDataURL(file);
     }
@@ -79,13 +79,13 @@ const EditProfile = () => {
       if (isNewProfile) {
         updatedProfile = await createUserProfile({
           ...profile,
-          avatar_id: avatarFile ? (await uploadAvatar(avatarFile)).id : profile.avatar_id, // Set avatar_id correctly
+          avatar_id: avatarFile ? (await uploadAvatar(avatarFile)).id : profile.avatar_id,
         });
         alert('Profile created successfully!');
       } else {
         updatedProfile = await updateUserProfile({
           ...profile,
-          avatar_id: avatarFile ? (await uploadAvatar(avatarFile)).id : profile.avatar_id, // Set avatar_id correctly
+          avatar_id: avatarFile ? (await uploadAvatar(avatarFile)).id : profile.avatar_id,
         });
         alert('Profile updated successfully!');
       }
@@ -93,13 +93,12 @@ const EditProfile = () => {
       setProfile(updatedProfile);
   
       if (avatarFile) {
-        // Ensure avatarId is correctly set
-        const uploadResponse = await uploadAvatar(avatarFile);  // Upload avatar
-        const avatarId = uploadResponse.id;  // Get the avatar ID from the response
+        const uploadResponse = await uploadAvatar(avatarFile);  
+        const avatarId = uploadResponse.id;
         alert('Avatar uploaded successfully!');
         setProfile((prevProfile) => ({
           ...prevProfile,
-          avatar_id: avatarId,  // Set avatar_id in profile state
+          avatar_id: avatarId,
         }));
       }
   
@@ -109,7 +108,7 @@ const EditProfile = () => {
       setErrorMessage('Error saving profile');
     }
   };
-  
+
   const handleDeleteAvatar = async () => {
     try {
       alert('Avatar deleted successfully');
@@ -119,13 +118,44 @@ const EditProfile = () => {
     }
   };
 
+  const handleLogout = async () => {
+    try {
+      // Fetch the CSRF token from cookies
+      const csrfToken = getCsrfTokenFromCookie();
+      if (!csrfToken) {
+        throw new Error('CSRF token not found');
+      }
+  
+      // Call the logout function with the CSRF token
+      await logout(csrfToken);
+  
+      // Redirect to the login page
+      navigate('/login');
+      alert('Logged out successfully');
+    } catch (error) {
+      console.error('Error logging out:', error);
+      alert('Failed to log out');
+    }
+  };
+  
+
+  const handleDeleteAccount = async () => {
+    try {
+      await deleteUserAccount();
+      navigate('/login');
+      alert('Account deleted successfully');
+    } catch (error) {
+      console.error('Error deleting account', error);
+      alert('Failed to delete account');
+    }
+  };
+
   return (
     <div className="edit-profile">
       <div className="header-section">
         <h2>{profile.full_name ? 'Edit your profile' : 'Create your account'}</h2>
       </div>
 
-      {/* Avatar Section */}
       <div className="avatar-section">
         <div className="avatar-container">
           {avatarPreview ? (
@@ -147,7 +177,6 @@ const EditProfile = () => {
         </div>
       </div>
 
-      {/* Full Name Input */}
       <div className="full-name-input">
         <label>Full Name</label>
         <input
@@ -158,7 +187,6 @@ const EditProfile = () => {
         />
       </div>
 
-      {/* Bio Input */}
       <div className="bio-input">
         <label>Bio</label>
         <textarea
@@ -168,17 +196,19 @@ const EditProfile = () => {
         />
       </div>
 
-      {/* Links Section */}
       <div className="links-section">
         <label>Links</label>
         <ButtonCTA text="Upgrade to Pro" link="/" />
       </div>
 
-      {/* Save Button */}
       <ButtonLong text="Save" onClick={handleSaveProfile} />
-      
-      {/* Error Message */}
       {errorMessage && <p className="error-message">{errorMessage}</p>}
+
+      {/* Log Out and Delete Account Buttons */}
+      <div className="action-buttons-profile">
+        <ButtonPrimary text="Log Out" onClick={handleLogout} />
+        <ButtonPrimary className="delete-account-button" text="Delete Account" onClick={handleDeleteAccount} />
+      </div>
     </div>
   );
 };

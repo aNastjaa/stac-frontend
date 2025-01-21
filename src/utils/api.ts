@@ -441,26 +441,36 @@ export const deleteUserAccount = async (): Promise<void> => {
   }
 };
 // Logout User (POST Request)
-export const logout = async (): Promise<void> => {
+export const logout = async (csrfToken: string): Promise<void> => {
   try {
-    const csrfToken = getCsrfTokenFromCookie();
+    // Decode the CSRF token to handle any URL-encoded characters
+    const decodedCsrfToken = decodeURIComponent(csrfToken);
+
+    console.log('Decoded CSRF Token for Logout:', decodedCsrfToken);
 
     const response = await fetch(`${API_URL}/api/auth/logout`, {
-      method: "POST",
-      credentials: "include",
+      method: 'POST',
       headers: {
-        "X-XSRF-TOKEN": csrfToken,
+        'Content-Type': 'application/json',
+        'X-XSRF-TOKEN': decodedCsrfToken, 
+        'Accept': 'application/json',
       },
+      credentials: 'include',
     });
 
     if (!response.ok) {
-      throw new Error('Failed to log out');
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Failed to log out');
     }
+
+    // Remove authentication data from localStorage
+    localStorage.removeItem('auth_token');
+    localStorage.removeItem('auth_user');
 
     console.log('User logged out successfully');
   } catch (error) {
-    console.error('Error logging out', error);
-    throw error;
+    console.error('Error logging out:', error);
+    throw error; // Rethrow the error for further handling by the calling function
   }
 };
 //Get all the artworks related to user

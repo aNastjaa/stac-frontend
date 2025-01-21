@@ -38,13 +38,15 @@ export const ButtonCTA = ({
 export function ButtonPrimary({
   text,
   onClick,
+  className = '', 
 }: {
   text: string;
   onClick?: () => void; 
-  disabled?: boolean; 
+  disabled?: boolean;
+  className?: string; 
 }) {
   return (
-    <button className="button-primary" onClick={onClick}>
+    <button className={`button-primary ${className}`} onClick={onClick}>
       {text}
     </button>
   );
