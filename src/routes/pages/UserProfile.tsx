@@ -1,16 +1,18 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getUserIdFromLocalStorage, getProfileIdByUserId, getUserProfileByProfileId, fetchAvatarUrl } from '../../utils/api';  // Use the new fetchAvatarUrl
+import { getUserIdFromLocalStorage, getProfileIdByUserId, getUserProfileByProfileId, fetchAvatarUrl, fetchUserArtworks } from '../../utils/api';  // Use the new fetchUserArtworks
 import { CircleUserRound } from 'lucide-react';  // Circle icon from Lucide
 import '../../css/userProfile.css';
 import { ButtonPrimary } from '../../components/Buttons';
-import { UserProfileType } from '../../utils/types';
+import { UserProfileType, ArtworkResponse } from '../../utils/types';
+import ArtworkCard from '../../components/artworks/ArtworkCard';  // Assuming you have this component
 
 const UserProfile = () => {
   const [profile, setProfile] = useState<UserProfileType | null>(null);
   const [avatarUrl, setAvatarUrl] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(true);
   const [username, setUsername] = useState<string | null>(null);
+  const [artworks, setArtworks] = useState<ArtworkResponse[]>([]);  // State for artworks
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -31,21 +33,22 @@ const UserProfile = () => {
 
     const fetchProfileData = async () => {
       try {
+        // Fetch profile data using userId
         const profileId = await getProfileIdByUserId(userId);
         if (profileId) {
           const userProfile = await getUserProfileByProfileId(profileId);
           setProfile(userProfile);
 
-          // If avatar_id exists in the profile, fetch the avatar URL directly
           if (userProfile && userProfile.avatar_id) {
-            // Directly fetch the avatar URL using avatar_id
             const avatarUrl = await fetchAvatarUrl(userProfile.avatar_id);
-            console.log('Avatar URL:', avatarUrl);
-
-            // Set avatar URL
-            setAvatarUrl(avatarUrl || ''); 
+            setAvatarUrl(avatarUrl || '');
           }
         }
+
+        // Fetch artworks related to the user
+        const userArtworks = await fetchUserArtworks(userId);  // Corrected: Only pass userId
+        setArtworks(userArtworks);
+
         setLoading(false);
       } catch (error) {
         console.error('Error fetching profile data', error);
@@ -76,7 +79,6 @@ const UserProfile = () => {
             </div>
 
             <div className="profile-avatar-stats">
-              {/* Render avatar */}
               {avatarUrl ? (
                 <img src={avatarUrl} alt="User Avatar" className="profile-avatar" />
               ) : (
@@ -97,6 +99,22 @@ const UserProfile = () => {
               <p>{profile.bio || 'Bio Not Provided'}</p>
             </div>
           </div>
+          
+            {/* Display user artworks */}
+            <div className="user-artworks">
+              {artworks.length > 0 ? (
+                artworks.map((artwork) => (
+                  <ArtworkCard 
+                    key={artwork.id} 
+                    username={artwork.user.username} 
+                    imagePath={artwork.image_path} 
+                  />
+                ))
+              ) : (
+                <p>No artworks to display</p>
+              )}
+            </div>
+          
         </div>
       );
     }

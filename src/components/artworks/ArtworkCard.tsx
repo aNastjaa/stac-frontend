@@ -4,7 +4,6 @@ import "../../css/artworks/artworkCard.css";
 interface ArtworkCardProps {
   username: string;
   imagePath: string;
-
   loading?: 'lazy';
 }
 

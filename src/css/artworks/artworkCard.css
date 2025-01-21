@@ -37,9 +37,12 @@
     justify-content: center;
     align-items: center;
     overflow: hidden;
-    
+    transition: transform 0.3s ease-in-out;
   }
   
+  .artwork-image-container:hover{
+    transform: scale(1.2);
+  }
   /* Artwork image */
   .artwork-image {
     width: 100%;
