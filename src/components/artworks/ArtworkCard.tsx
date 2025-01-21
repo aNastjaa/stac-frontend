@@ -1,13 +1,16 @@
 import { Heart, MessageCircle } from 'lucide-react';
 import "../../css/artworks/artworkCard.css";
+import { ArtworkResponse } from '../../utils/types';
+
 
 interface ArtworkCardProps {
-  username: string;
-  imagePath: string;
-  loading?: 'lazy';
+  artwork: ArtworkResponse;  
 }
 
-const ArtworkCard = ({ username, imagePath }: ArtworkCardProps) => {
+const ArtworkCard = ({ artwork }: ArtworkCardProps) => {
+  const { username } = artwork.user; 
+  const imagePath = artwork.image_path;
+
   return (
     <div className="artwork-card">
       {/* Header */}

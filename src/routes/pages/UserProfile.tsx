@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { getUserIdFromLocalStorage, getProfileIdByUserId, getUserProfileByProfileId, fetchAvatarUrl, fetchUserArtworks } from '../../utils/api';  // Use the new fetchUserArtworks
 import { CircleUserRound } from 'lucide-react';  // Circle icon from Lucide
 import '../../css/userProfile.css';
-import { ButtonPrimary } from '../../components/Buttons';
+import { ButtonCTA, ButtonPrimary} from '../../components/Buttons';  // Added ButtonCta
 import { UserProfileType, ArtworkResponse } from '../../utils/types';
 import ArtworkCard from '../../components/artworks/ArtworkCard';  // Assuming you have this component
 
@@ -13,6 +13,7 @@ const UserProfile = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [username, setUsername] = useState<string | null>(null);
   const [artworks, setArtworks] = useState<ArtworkResponse[]>([]);  // State for artworks
+  const [role, setRole] = useState<string>('');  // State to hold user role
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -29,11 +30,11 @@ const UserProfile = () => {
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
       setUsername(parsedUser.username || 'there');
+      setRole(parsedUser.role_name || '');  // Set role from localStorage
     }
 
     const fetchProfileData = async () => {
       try {
-        // Fetch profile data using userId
         const profileId = await getProfileIdByUserId(userId);
         if (profileId) {
           const userProfile = await getUserProfileByProfileId(profileId);
@@ -48,7 +49,7 @@ const UserProfile = () => {
         // Fetch artworks related to the user
         const userArtworks = await fetchUserArtworks(userId);  // Corrected: Only pass userId
         setArtworks(userArtworks);
-
+        
         setLoading(false);
       } catch (error) {
         console.error('Error fetching profile data', error);
@@ -98,22 +99,33 @@ const UserProfile = () => {
             <div className="profile-bio">
               <p>{profile.bio || 'Bio Not Provided'}</p>
             </div>
-          </div>
-          
+        </div>
             {/* Display user artworks */}
             <div className="user-artworks">
               {artworks.length > 0 ? (
-                artworks.map((artwork) => (
-                  <ArtworkCard 
-                    key={artwork.id} 
-                    username={artwork.user.username} 
-                    imagePath={artwork.image_path} 
-                  />
-                ))
+                artworks.map((artwork) => <ArtworkCard key={artwork.id} artwork={artwork} />)
               ) : (
                 <p>No artworks to display</p>
               )}
             </div>
+
+            {/* Display Sponsor Challenges Section */}
+            <div className="sponsor-challenges">
+              <h3>Sponsor challenges</h3>
+              {role === 'basic' ? (
+                <>
+                  <p>Unlock Sponsor Challenges by upgrading to Pro! <br/> Only Pro users can submit their work and collaborate with top brands.</p>
+                  <ButtonCTA text="Upgrade to Pro" onClick={() => {}} link='/' /> {/* Placeholder button */}
+                </>
+              ) : (
+                <div>
+                  <p>Here are your Sponsor Submissions:</p>
+                  {/* Placeholder for future sponsor submissions */}
+                  <p>No submissions yet.</p>
+                </div>
+              )}
+            </div>
+
           
         </div>
       );

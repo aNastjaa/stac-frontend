@@ -147,29 +147,27 @@ const ArtWorks = () => {
         </div>
       )}
 
-      <section className='this-month-artworks'>
-        <h2 className='section-title'>This Month's Artworks</h2>
-        <div className="artworks-gallery">
-          {loading ? (
-            <DotLoader />
-          ) : (
-            visibleArtworks.length === 0 && <p className='no-artworks'>No artworks available.</p>
+        <section className='this-month-artworks'>
+          <h2 className='section-title'>This Month's Artworks</h2>
+          <div className="artworks-gallery">
+            {loading ? (
+              <DotLoader />
+            ) : (
+              visibleArtworks.length === 0 && <p className='no-artworks'>No artworks available.</p>
+            )}
+            {visibleArtworks
+              .filter((artwork) => artwork.status === 'accepted')
+              .map((artwork) => (
+                <ArtworkCard
+                  key={artwork.id}
+                  artwork={artwork} // Pass the whole artwork object
+                />
+              ))}
+          </div>
+          {hasMore && !loading && (
+            <ButtonPrimary onClick={loadMoreArtworks} text='See more'/>
           )}
-          {visibleArtworks
-            .filter((artwork) => artwork.status === 'accepted')
-            .map((artwork) => (
-              <ArtworkCard
-                key={artwork.id}
-                username={artwork.user.username} 
-                imagePath={artwork.image_path}
-                loading="lazy" 
-              />
-            ))}
-        </div>
-        {hasMore && !loading && (
-          <ButtonPrimary onClick={loadMoreArtworks} text='See more'/>
-        )}
-      </section>
+        </section>
     </div>
   );
 };
