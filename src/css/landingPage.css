@@ -53,7 +53,7 @@
 
 .bite {
     font-family: 'Sedgwick Ave Display', sans-serif;
-    font-size: 40px;
+    font-size: calc(2rem + 0.5vw);
 }
   
   /* How It Works Section */

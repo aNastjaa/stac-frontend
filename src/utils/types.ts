@@ -21,6 +21,14 @@ export interface ErrorMessages {
     status: string;
     created_at: string;
     updated_at: string;
+    user: { 
+      id: string;
+      username: string;
+    };
+    theme: { 
+      id: string;
+      theme_name: string;
+    };
   }
   
   export interface UserProfileType {

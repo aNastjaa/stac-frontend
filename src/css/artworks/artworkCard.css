@@ -1,0 +1,88 @@
+/* Artwork card */
+.artwork-card {
+    position: relative;
+    width: calc(32% - 0.5rem); /* Each card takes up 1/3 of the row width */
+    height: 0;
+    padding-bottom: 33.333%; /* This forces the cards to maintain a square aspect ratio */
+    margin: 0.25rem;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    background-color: #fff; /* Ensure cards have a background */
+  }
+  
+  /* Artwork card header */
+  .artwork-card-header {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background-color: rgba(0, 0, 0, 0.3);
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    z-index: 999;
+    font-family: "Bebas neue";
+    letter-spacing: 1px;
+  }
+  
+  /* Image container */
+  .artwork-image-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    
+  }
+  
+  /* Artwork image */
+  .artwork-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Make sure the image covers the entire container */
+    object-position: center; /* Center the image */
+  }
+  
+  /* Artwork card footer */
+  .artwork-card-footer {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    display: flex;
+    gap: 12px;
+  }
+  
+  /* Icon container */
+  .icon-container {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background-color: rgba(0, 0, 0, 0.3);
+    padding: 4px 6px;
+    border-radius: 4px;
+    color: #fff;
+  }
+  
+  /* Icon count */
+  .icon-count {
+    font-size: 0.85rem;
+  }
+  
+  /* Responsive design */
+  @media (max-width: 700px) {
+    .artwork-card {
+      padding-bottom: 50%; /* Maintain square aspect ratio */
+    }
+  }
+  
+  @media (max-width: 500px) {
+    .artwork-card {
+      width: 100%; /* One card per row on mobile */
+      padding-bottom: 100%; /* Maintain square aspect ratio */
+    }
+  }

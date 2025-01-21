@@ -1,6 +1,13 @@
 .admin-dashboard{
 margin: 2rem 0;
 text-align: center;
+display: flex;
+flex-direction: column;
+align-items: center;
+}
+
+.admin-sections{
+    width: 100%;
 }
 
 .admin-dashboard h1{
@@ -11,6 +18,7 @@ text-align: center;
 
 .admin-dashboard-nav{
     width: 100%;
+    max-width: 700px;
     display: flex;
     justify-content: space-around;
     flex-wrap: wrap;

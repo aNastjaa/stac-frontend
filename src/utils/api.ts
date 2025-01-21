@@ -1,4 +1,4 @@
-import { ArtworkResponse, Theme, UploadResponse, UserProfileType,} from "./types";
+import {Theme, UploadResponse, UserProfileType,} from "./types";
 //sasha@gmail.com
 //La;G7,8bP&V7
 
@@ -464,70 +464,37 @@ export const logout = async (): Promise<void> => {
   }
 };
 
-//-------------------------------------------------------------------------------------------------------------
-//POST (Artworks routing)
-//-------------------------------------------------------------------------------------------------------------
-// Fetch the current theme for the artwork
 export const fetchCurrentTheme = async (): Promise<Theme | null> => {
-  try {
-    const csrfToken = getCsrfTokenFromCookie(); // Get the CSRF token from the cookies
-    const authToken = localStorage.getItem("auth_token"); // Retrieve the auth token from localStorage
-
-    if (!authToken) {
-      throw new Error('Auth token is missing');
+    try {
+      const csrfToken = getCsrfTokenFromCookie(); // Get the CSRF token from the cookies
+      const authToken = localStorage.getItem("auth_token"); // Retrieve the auth token from localStorage
+  
+      if (!authToken) {
+        throw new Error('Auth token is missing');
+      }
+  
+      const response = await fetch(`${API_URL}/api/themes`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-XSRF-TOKEN': csrfToken, 
+          'Authorization': `Bearer ${authToken}`, 
+        },
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to fetch current theme');
+      }
+  
+      const themeData: Theme[] = await response.json(); 
+  
+      if (themeData.length > 0) {
+        return themeData[0]; 
+      }
+  
+      return null; 
+    } catch (error) {
+      console.error('Error fetching current theme:', error);
+      throw error;
     }
-
-    const response = await fetch(`${API_URL}/api/themes`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-XSRF-TOKEN': csrfToken, 
-        'Authorization': `Bearer ${authToken}`, 
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to fetch current theme');
-    }
-
-    const themeData: Theme[] = await response.json(); 
-
-    if (themeData.length > 0) {
-      return themeData[0]; 
-    }
-
-    return null; 
-  } catch (error) {
-    console.error('Error fetching current theme:', error);
-    throw error;
-  }
-};
-// Submit artwork
-export const submitArtwork = async (
-  formData: FormData,
-  csrfToken: string
-): Promise<ArtworkResponse> => {
-  try {
-    const response = await fetch(`${API_URL}/api/artworks`, {
-      method: 'POST',
-      headers: {
-        'X-XSRF-TOKEN': csrfToken, 
-      },
-      body: formData,
-      credentials: 'include', 
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to submit artwork');
-    }
-
-    return await response.json(); 
-  } catch (error) {
-    console.error('Error submitting artwork', error);
-    throw error;
-  }
-};
-
-//-------------------------------------------------------------------------------------------------------------
-//Admin Dashboard)
-//-------------------------------------------------------------------------------------------------------------
+  };

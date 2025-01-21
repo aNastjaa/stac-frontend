@@ -38,7 +38,7 @@ const AdminDashboard = () => {
         <ButtonPrimary onClick={() => handleSectionChange('themes')} text="Themes" />
       </nav>
 
-      <div>
+      <div className='admin-sections'>
         {section === 'users' && <UserList users={users} setUsers={setUsers} />}
         {section === 'sponsor-challenges' && <SponsorChallengeList />}
         {section === 'posts' && <PostList />}

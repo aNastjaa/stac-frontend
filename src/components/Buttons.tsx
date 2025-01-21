@@ -17,10 +17,18 @@ export function ButtonLong({
   );
 }
 
-export const ButtonCTA = ({ text, link }: { text: string; link: string }) => {
+export const ButtonCTA = ({
+  text,
+  link,
+  onClick,
+}: {
+  text: string;
+  link: string;
+  onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void; // Accept event
+}) => {
   return (
     <Link to={link}>
-      <button className="button-cta">
+      <button className="button-cta" onClick={onClick}>
         {text}
       </button>
     </Link>

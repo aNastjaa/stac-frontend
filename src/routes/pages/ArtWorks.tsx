@@ -1,140 +1,177 @@
-import { useState, useEffect } from 'react';
-import { fetchCurrentTheme, getCsrfTokenFromCookie, submitArtwork } from '../../utils/api'; // Ensure you have your API call
+import { useState, useEffect, useRef } from 'react';
 import { ArtworkResponse, Theme } from '../../utils/types';
+import { fetchCurrentTheme, submitArtwork, fetchArtworks } from '../../utils/api/artworks';
+import { ButtonCTA, ButtonLong, ButtonPrimary } from '../../components/Buttons';
+import ArtworkCard from '../../components/artworks/ArtworkCard';
+import { ImagePlus } from 'lucide-react';
+import "../../css/artworks/artworkPage.css";
+import { getCsrfTokenFromCookie } from '../../utils/api';
+import DotLoader from '../../components/DotLoader'; // Import DotLoader component
 
 const ArtWorks = () => {
   const [currentTheme, setCurrentTheme] = useState<Theme | null>(null);
-  const [error, setError] = useState<string | null>(null); // Error state for catching errors
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [description, setDescription] = useState<string>('');
-  const [submitError, setSubmitError] = useState<string | null>(null); // Handle errors during submission
-  const [submitSuccess, setSubmitSuccess] = useState<string | null>(null); // Handle success message
-  const [submittedArtwork, setSubmittedArtwork] = useState<ArtworkResponse | null>(null);
-  const [allArtworks, setAllArtworks] = useState<ArtworkResponse[]>([]); // State to store all artworks
+  const [allArtworks, setAllArtworks] = useState<ArtworkResponse[]>([]);
+  const [visibleArtworks, setVisibleArtworks] = useState<ArtworkResponse[]>([]);
+  const [showForm, setShowForm] = useState<boolean>(false);
+  const [hasMore, setHasMore] = useState(true);
+  const [loading, setLoading] = useState<boolean>(false); // Global loading state
 
-  // Fetch the current theme on component mount
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   useEffect(() => {
     const getTheme = async () => {
       try {
         const theme = await fetchCurrentTheme();
-        setCurrentTheme(theme); // If theme is found, set it in state
+        setCurrentTheme(theme);
       } catch (error) {
-        setError('Failed to fetch current theme');
         console.error('Error fetching theme:', error);
       }
     };
 
-    const getArtworks = async () => {
+    const loadArtworks = async () => {
+      setLoading(true); // Set loading state to true
       try {
-        const response = await fetch('/api/artworks');
-        const data = await response.json();
-        setAllArtworks(data); // Set the fetched artworks in state
+        const artworks = await fetchArtworks(); 
+        setAllArtworks(artworks); // Save all artworks data
+        setVisibleArtworks(artworks.slice(0, 9)); // Show first 9 posts initially
+        setHasMore(artworks.length > 9); // Check if there are more artworks
       } catch (error) {
-        setError('Failed to fetch artworks');
         console.error('Error fetching artworks:', error);
+      } finally {
+        setLoading(false); // Set loading state to false after fetching
       }
     };
 
     getTheme();
-    getArtworks(); // Fetch all artworks when the component mounts
+    loadArtworks();
   }, []);
 
-  // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
   
     if (!imageFile || !description) {
-      setSubmitError('Image and Description are required');
+      alert('Image and Description are required');
       return;
     }
   
     try {
-      const formData = new FormData();
-      formData.append('image', imageFile); // Append the image file to the FormData
-      formData.append('description', description); // Append the description
-      if (currentTheme) {
-        formData.append('theme_id', currentTheme.id); // Append the theme ID
-      }
-
-      // Get the CSRF token from cookies
       const csrfToken = getCsrfTokenFromCookie();
-  
-      // Call the submitArtwork function and pass the FormData and CSRF token
-      const response = await submitArtwork(formData, csrfToken);
-  
-      if (response) {
-        setSubmitSuccess('Artwork posted successfully!');
-        setSubmitError(null); // Reset the error message
-        setSubmittedArtwork(response); // Save the artwork response
-        setAllArtworks(prevState => [...prevState, response]); // Update the state with the new artwork
+      if (!csrfToken) {
+        throw new Error('CSRF token is missing');
       }
+  
+      const formData = new FormData();
+      formData.append('image', imageFile);
+      formData.append('description', description);
+      if (currentTheme) {
+        formData.append('theme_id', currentTheme.id);
+      }
+  
+      const newArtwork = await submitArtwork(formData, csrfToken);
+      setAllArtworks((prevState) => [...prevState, newArtwork]);
+      setVisibleArtworks((prevState) => [...prevState, newArtwork]); // Add new artwork to the visible list
+      setShowForm(false);
+      alert('Artwork posted successfully!');
     } catch (error) {
-      setSubmitError('Failed to submit artwork');
-      setSubmitSuccess(null); // Reset success message if submission fails
+      alert('Failed to submit artwork');
+      console.error('Error submitting artwork:', error);
+    }
+  };
+  
+  const handleIconClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
     }
   };
 
+  const loadMoreArtworks = () => {
+    setLoading(true); // Show loader while loading more artworks
+    const nextBatch = allArtworks.slice(visibleArtworks.length, visibleArtworks.length + 9);
+    setVisibleArtworks((prev) => [...prev, ...nextBatch]); // Load next 9 posts
+    setHasMore(allArtworks.length > visibleArtworks.length + nextBatch.length); // Check if there are more posts to load
+    setLoading(false); // Hide loader after loading is complete
+  };
+
   return (
-    <div>
-      {error && <div style={{ color: 'red' }}>{error}</div>}
+    <div className='artwork-page'>
+      <section className='artwork-submit-section'>
+        <h1 className='current-theme-title'>
+          Current Theme: <br /> <span className='current-theme-name'>{currentTheme ? currentTheme.theme_name : 'Loading...'}</span>
+        </h1>
+        <p className='current-theme-description'>
+          Capture the beauty and mystery of the horizon and what lies beyond it. Whether it’s a stunning landscape, 
+          a dream of what’s ahead, or a creative interpretation of what the horizon represents, this theme is your 
+          chance to showcase how you see and imagine it.
+        </p>
+        <ButtonLong onClick={() => setShowForm(true)} text='Submit' />
+      </section>
 
-      <h1>Current Theme: {currentTheme ? currentTheme.theme_name : 'Loading...'}</h1>
+      {showForm && (
+        <div className='modal-overlay'>
+          <div className='modal-content'>
+            <button className='close-button' onClick={() => setShowForm(false)}>&times;</button>
+            <h2>Submit Your Artwork</h2>
+            <form onSubmit={handleSubmit} className='artwork-submit-form'>
+              <div className='form-group artwork-image'>
+                <label className='form-label' onClick={handleIconClick}>
+                  <ImagePlus size={50} color="#131313" className="image-icon" />
+                </label>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  id="file-input"
+                  className='form-input'
+                  onChange={(e) => setImageFile(e.target.files ? e.target.files[0] : null)}
+                  style={{ display: 'none' }}
+                />
+                {imageFile && <img src={URL.createObjectURL(imageFile)} alt="Preview" className='image-preview' />}
+              </div>
 
-      {submitError && <div style={{ color: 'red' }}>{submitError}</div>}
-      {submitSuccess && <div style={{ color: 'green' }}>{submitSuccess}</div>}
+              <div className='form-group artwork-description'>
+                <label className='form-label'>Description:</label>
+                <textarea
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  placeholder="Enter artwork description"
+                  className='form-textarea'
+                />
+              </div>
 
-      {submittedArtwork && (
-        <div>
-          <h2>Submitted Artwork</h2>
-          {submittedArtwork.image_path && (
-            <img
-            src="http://localhost:8000/storage/artworks/pvc1wGH0NOslTOuM6Vaw88hdF9WLKW9M0WsF58U8.jpg"
-            alt="Submitted Artwork"
-            style={{ maxWidth: '100%', height: 'auto' }}
-          />
-          
-          
-          )}
-          <p>{submittedArtwork.description}</p>
+              <div className='form-group'>
+                <ButtonCTA text="Submit Artwork" link="#" onClick={handleSubmit} />
+              </div>
+            </form>
+          </div>
         </div>
       )}
 
-      <h2>All Artworks</h2>
-      {allArtworks.length === 0 && <p>No artworks available.</p>}
-      {allArtworks.map(artwork => (
-        <div key={artwork.id}>
-          <img
-            src={artwork.image_path}
-            alt="Artwork"
-            style={{ maxWidth: '100%', height: 'auto' }}
-          />
-          <p>{artwork.description}</p>
+      <section className='this-month-artworks'>
+        <h2 className='section-title'>This Month's Artworks</h2>
+        <div className="artworks-gallery">
+          {loading ? (
+            <DotLoader />
+          ) : (
+            visibleArtworks.length === 0 && <p className='no-artworks'>No artworks available.</p>
+          )}
+          {visibleArtworks
+            .filter((artwork) => artwork.status === 'accepted')
+            .map((artwork) => (
+              <ArtworkCard
+                key={artwork.id}
+                username={artwork.user.username} 
+                imagePath={artwork.image_path}
+                loading="lazy" 
+              />
+            ))}
         </div>
-      ))}
-
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Image:</label>
-          <input
-            type="file"
-            onChange={(e) => setImageFile(e.target.files ? e.target.files[0] : null)}
-          />
-        </div>
-
-        <div>
-          <label>Description:</label>
-          <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="Enter artwork description"
-          />
-        </div>
-
-        <div>
-          <button type="submit">Submit Artwork</button>
-        </div>
-      </form>
+        {hasMore && !loading && (
+          <ButtonPrimary onClick={loadMoreArtworks} text='See more'/>
+        )}
+      </section>
     </div>
   );
 };
+
 export default ArtWorks;

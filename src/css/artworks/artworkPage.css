@@ -1,0 +1,139 @@
+.artwork-page{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 1rem;
+}
+
+.artwork-submit-section{
+    width: 100%;
+    max-width: 700px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    margin-top: 2rem;
+    border-radius: 30px;
+    box-shadow: 5px 6px 7px rgba(0, 0, 0, 0.25);
+}
+
+.current-theme-title{
+    font-family: "Bebas Neue";
+    font-size: calc(1.5rem + 0.5vw);
+    letter-spacing: 1px;
+}
+
+.current-theme-name{
+    font-family: 'Sedgwick Ave Display', sans-serif;
+    font-size: calc(2.2rem + 0.5vw);
+}
+
+
+/* Section Styling */
+.this-month-artworks {
+    width: 100%;
+    margin-top: 3rem;
+  }
+  
+  .section-title {
+    font-family: 'Sedgwick Ave Display', sans-serif;
+    font-size: calc(2rem + 1vw);
+    margin-bottom: 2rem;
+  }
+  
+  /* Gallery Styling */
+  .artworks-gallery {
+    display: flex;
+    flex-wrap: wrap; 
+    justify-content: space-between; 
+    padding: 0 1rem;
+    max-width: 700px;
+    gap: 0.5rem; 
+    margin: 0 auto; 
+  }
+  
+/* Modal overlay */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+  }
+  
+  /* Modal content */
+  .modal-content {
+    background: #e3e3e3;
+    padding: 1rem;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 5px 6px 7px rgba(0, 0, 0, 0.25);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .modal-content h2{
+    font-family: "Bebas Neue";
+    letter-spacing: 1px;
+    margin-top: 1rem;
+  }
+  .artwork-submit-form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  /* Close button */
+  .close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: calc(2rem + 0.5vw);
+    background: none;
+    border: none;
+    color: #333;
+    cursor: pointer;
+  }
+  
+  /* File input styling */
+  .form-input {
+    display: none; /* Hide file input */
+  }
+  
+  .image-icon {
+    cursor: pointer;
+    margin-top: 10px;
+    width: 50px;
+    height: 50px;
+  }
+  
+  .image-preview {
+    max-width: 100px;
+    margin-top: 10px;
+  }
+  
+  /* Button styling */
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  .form-label {
+    font-weight: bold;
+  }
+  
+  .form-textarea {
+    width: 100%;
+    padding: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
