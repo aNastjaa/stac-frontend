@@ -15,7 +15,6 @@ export interface ErrorMessages {
   export interface ArtworkResponse {
     id: string;
     user_id: string;
-    theme_id: string;
     image_path: string;
     description: string;
     status: string;
@@ -24,11 +23,19 @@ export interface ErrorMessages {
     user: { 
       id: string;
       username: string;
+      avatar_url: string; 
     };
     theme: { 
       id: string;
       theme_name: string;
     };
+    likes: number;
+    comments: Array<{
+      id: string;
+      username: string;
+      text: string;
+      created_at: string;
+  }>; 
   }
   
   export interface UserProfileType {
