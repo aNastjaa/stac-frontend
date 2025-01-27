@@ -52,6 +52,9 @@ function FullScreenPost({ post, onClose }: FullScreenPostProps) {
     fetchAvatar();
   }, [avatarUrl, post.userId]);
 
+  console.log('Post Data:', post);
+
+
   return (
     <div className="fullscreen-post">
       {/* Close Button */}

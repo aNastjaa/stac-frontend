@@ -114,11 +114,12 @@ const ArtWorks = () => {
           imageUrl: selectedArtwork.image_path,
           username: selectedArtwork.user.username,
           avatarUrl: selectedArtwork.user.avatar_url,
-          userId: selectedArtwork.user.id, // Include userId here
-          themeName: currentTheme?.theme_name || '',
-          likes: selectedArtwork.likes || 0,
-          comments: selectedArtwork.comments || [],
+          userId: selectedArtwork.user.id,
+          themeName: selectedArtwork.theme.theme_name,
+          likes_count: selectedArtwork.likes,  // Map likes to likes_count
+          comments_count: selectedArtwork.comments.length,  // Map comments length to comments_count
           createdAt: selectedArtwork.created_at,
+          description: selectedArtwork.description,
         }}
         onClose={closeFullScreenPost}
       />
@@ -190,7 +191,8 @@ const ArtWorks = () => {
               <ArtworkCard
                 key={artwork.id}
                 artwork={artwork}
-                onClick={() => handlePostClick(artwork)} // Pass click handler directly to the ArtworkCard
+                onClick={() => handlePostClick(artwork)}
+                userId={artwork.user.id} 
               />
             ))}
         </div>
