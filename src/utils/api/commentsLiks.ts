@@ -138,3 +138,27 @@ export const likePost = async (postId: string): Promise<Like> => {
     }
   };
   
+// Function to check if the user has liked the post
+    export const checkIfUserLiked = async (postId: string): Promise<boolean> => {
+        try {
+        const response = await fetch(`${API_URL}/api/artworks/${postId}/likes/check`, {
+            method: "GET",
+            headers: {
+            "Content-Type": "application/json",
+            "X-XSRF-TOKEN": getCsrfTokenFromCookie(),
+            },
+            credentials: "include",
+        });
+    
+        if (!response.ok) {
+            throw new Error("Failed to check if user liked the post");
+        }
+    
+        const data = await response.json();
+        return data.liked;
+        } catch (error) {
+        console.error("Error checking if user liked the post:", error);
+        return false;
+        }
+    };
+  
