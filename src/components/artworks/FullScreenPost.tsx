@@ -1,16 +1,9 @@
-import { useState, useEffect } from 'react';
-import { X, Heart, MessageCircle, Send, CircleUserRound } from 'lucide-react';
-import '../../css/artworks/fullScreenPost.css';
-import { 
-  getProfileIdByUserId, 
-  getUserProfileByProfileId, 
-  fetchAvatarUrl 
-} from '../../utils/api';
-
-interface Comment {
-  username: string;
-  text: string;
-}
+import { useState, useEffect } from "react";
+import { X, MessageCircle, CircleUserRound } from "lucide-react";
+import "../../css/artworks/fullScreenPost.css";
+import { getProfileIdByUserId, getUserProfileByProfileId, fetchAvatarUrl } from "../../utils/api";
+import Likes from "./Likes";  // Import Likes Component
+import Comments from "./Comments";  // Import Comments Component
 
 interface Post {
   id: string;
@@ -18,42 +11,33 @@ interface Post {
   username: string;
   avatarUrl?: string;
   themeName: string;
-  likes: number;
-  comments: Comment[];
+  likes_count: number;
+  comments_count: number;
   createdAt: string;
   userId: string;
 }
 
 type FullScreenPostProps = {
-  post: Post;
+  post: Post; // Initial post data
   onClose: () => void;
+  currentUserId: string;
 };
 
-function FullScreenPost({ post, onClose }: FullScreenPostProps) {
-  const [newComment, setNewComment] = useState('');
-  const [comments, setComments] = useState(post.comments);
-  const [avatarUrl, setAvatarUrl] = useState<string>(post.avatarUrl || ''); // Use existing avatar if available
+function FullScreenPost({ post, onClose, currentUserId }: FullScreenPostProps) {
+  const [avatarUrl, setAvatarUrl] = useState<string>(post.avatarUrl || "");
+  const [likesCount, setLikesCount] = useState<number>(post.likes_count);
+  const [commentsCount, setCommentsCount] = useState<number>(post.comments_count);
 
+  // Fetch avatar logic
   useEffect(() => {
     const fetchAvatar = async () => {
       try {
         if (!avatarUrl && post.userId) {
-          console.log('Fetching avatar for user ID:', post.userId);
-
-          // Step 1: Fetch profile ID by user ID
           const profileId = await getProfileIdByUserId(post.userId);
-          console.log('Fetched profile ID:', profileId);
-
           if (profileId) {
-            // Step 2: Fetch user profile using profile ID
             const userProfile = await getUserProfileByProfileId(profileId);
-            console.log('Fetched user profile:', userProfile);
-
             if (userProfile?.avatar_id) {
-              // Step 3: Fetch avatar URL using avatar ID
               const fetchedAvatarUrl = await fetchAvatarUrl(userProfile.avatar_id);
-              console.log('Fetched avatar URL:', fetchedAvatarUrl);
-
               if (fetchedAvatarUrl) {
                 setAvatarUrl(fetchedAvatarUrl);
               }
@@ -61,19 +45,12 @@ function FullScreenPost({ post, onClose }: FullScreenPostProps) {
           }
         }
       } catch (error) {
-        console.error('Error fetching avatar URL:', error);
+        console.error("Error fetching avatar URL:", error);
       }
     };
 
     fetchAvatar();
   }, [avatarUrl, post.userId]);
-
-  const handleAddComment = () => {
-    if (newComment.trim()) {
-      setComments([...comments, { username: 'You', text: newComment }]);
-      setNewComment('');
-    }
-  };
 
   return (
     <div className="fullscreen-post">
@@ -102,42 +79,33 @@ function FullScreenPost({ post, onClose }: FullScreenPostProps) {
 
       {/* Post Actions */}
       <div className="post-actions">
-        <div className="icon-container-full-post">
-          <Heart size={26} color="#fff" />
-          <span className="icon-count">{post.likes}</span>
+        {/* Likes */}
+        <div className="icon-container-full-post" style={{ display: "flex", alignItems: "center" }}>
+        <Likes
+          postId={post.id}
+          currentUserId={currentUserId}
+          setLikesCount={setLikesCount}
+        />
+          <span className="icon-count">
+            {likesCount}
+          </span> {/* Display like count */}
         </div>
-        <div className="icon-container-full-post">
-          <MessageCircle size={26} color="#fff" />
-          <span className="icon-count">{comments.length}</span>
+
+        {/* Comments */}
+        <div className="icon-container-full-post" style={{ display: "flex", alignItems: "center" }}>
+          <MessageCircle size={26} color="#e3e3e3" />
+          <span className="icon-count">
+            {commentsCount}
+          </span> {/* Display comment count */}
         </div>
       </div>
 
       {/* Comments Section */}
       <div className="comments-section">
-        {comments.length > 0 ? (
-          <ul className="comments-list">
-            {comments.map((comment, index) => (
-              <li key={index}>
-                <strong>{comment.username}:</strong> {comment.text}
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className="placeholder">No comments yet. Be the first to comment!</p>
-        )}
-
-        {/* Comment Input */}
-        <div className="comment-input">
-          <input
-            type="text"
-            placeholder="Write a comment..."
-            value={newComment}
-            onChange={(e) => setNewComment(e.target.value)}
-          />
-          <button onClick={handleAddComment}>
-            <Send size={24} color="#fff" />
-          </button>
-        </div>
+        <Comments 
+          postId={post.id} 
+          currentUserId={currentUserId} 
+          setCommentsCount={setCommentsCount} />
       </div>
     </div>
   );

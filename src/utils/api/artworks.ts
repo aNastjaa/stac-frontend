@@ -95,5 +95,33 @@ export const fetchCurrentTheme = async (): Promise<Theme | null> => {
       throw error;
     }
   };
-
+// Get post data by id
+  export const fetchPostById = async (postId: string): Promise<ArtworkResponse> => {
+    try {
+      const csrfToken = getCsrfTokenFromCookie();
+      const authToken = localStorage.getItem('auth_token');
   
+      if (!authToken) {
+        throw new Error('Authentication token is missing');
+      }
+  
+      const response = await fetch(`${API_URL}/api/artworks/${postId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-XSRF-TOKEN': csrfToken,
+          'Authorization': `Bearer ${authToken}`,
+        },
+        credentials: 'include',
+      });
+  
+      if (!response.ok) {
+        throw new Error(`Error fetching post by ID: ${response.statusText}`);
+      }
+  
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching post by ID:', error);
+      throw error;
+    }
+  };

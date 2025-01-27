@@ -123,3 +123,23 @@
     margin-left: 5px;
   }
   
+  .comments-list{
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-start;
+    width: 100%;
+    padding: 0.5rem;
+}
+
+.delete-button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.delete-button:hover {
+  opacity: 0.8;
+}

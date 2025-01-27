@@ -116,3 +116,24 @@ export interface ErrorMessages {
     updated_at: string;
   }
   
+  export interface Comment {
+    id: string; 
+    user_id: string; 
+    post_id: string; 
+    comment_text: string; 
+    created_at: string; 
+    updated_at: string; 
+    user: {
+      id: string; 
+      username: string; 
+      avatar_url?: string | null; 
+    };
+  }
+
+  export interface Like {
+    id: string; 
+    user_id: string; 
+    post_id: string; 
+    created_at: string;
+    updated_at: string; 
+  }
