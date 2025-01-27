@@ -178,7 +178,6 @@ export const getUserProfileByProfileId = async (profileId: string): Promise<User
     throw error;
   }
 };
-
 // Function to get the profileId by userId
 export const getProfileIdByUserId = async (userId: string): Promise<string | null> => {
   try {
@@ -212,40 +211,6 @@ export const getProfileIdByUserId = async (userId: string): Promise<string | nul
 //USER PROFILE
 //-------------------------------------------------------------------------------------------------------------
 
-// Function to fetch user profile (GET method)
-// export const getUserProfile = async (): Promise<UserProfile | null> => {
-//   try {
-//     const csrfToken = getCsrfTokenFromCookie();
-//     const decodedCsrfToken = decodeURIComponent(csrfToken);
-
-//     const response = await fetch(`${API_URL}/api/users/profile`, {
-//       method: 'GET',
-//       headers: {
-//         'X-XSRF-TOKEN': decodedCsrfToken,
-//         'Accept': 'application/json',
-//       },
-//       credentials: 'include',
-//     });
-
-//     if (!response.ok) {
-//       throw new Error('Failed to fetch profile');
-//     }
-
-//     const result = await response.json();
-//     return result.profile ? {
-//       username: result.profile.username || '',
-//       avatar_url: result.profile.avatar_url || null,
-//       posts_count: result.profile.posts_count || 0,
-//       comments_count: result.profile.comments_count || 0,
-//       likes_count: result.profile.likes_count || 0,
-//       full_name: result.profile.full_name || null,
-//       bio: result.profile.bio || null
-//     } : null;
-//   } catch (error) {
-//     console.error('Error fetching profile', error);
-//     throw error;
-//   }
-// };
 // Function to create user profile (POST method)
 export const createUserProfile = async (profileData: UserProfileType): Promise<UserProfileType> => {
   try {
@@ -358,64 +323,38 @@ export const fetchAvatarUrl = async (avatarId: string): Promise<string | null> =
     return null;
   }
 };
-// Function to get the avatar by upload ID from the uploads table
-// export const getAvatarById = async (upload: string): Promise<{ file_url: string } | null> => {
+// Change User Password
+// export const changePassword = async (
+//   oldPassword: string,
+//   newPassword: string
+// ): Promise<void> => {
 //   try {
 //     const csrfToken = getCsrfTokenFromCookie();
-//     const decodedCsrfToken = decodeURIComponent(csrfToken);
 
-//     const response = await fetch(`${API_URL}/api/uploads/${upload}`, {
-//       method: 'GET',
+//     const response = await fetch(`${API_URL}/api/auth/update`, {
+//       method: 'PUT',
 //       headers: {
-//         'X-XSRF-TOKEN': decodedCsrfToken,
-//         'Accept': 'application/json',
+//         'X-XSRF-TOKEN': csrfToken,
+//         'Content-Type': 'application/json',
 //       },
+//       body: JSON.stringify({
+//         old_password: oldPassword,
+//         new_password: newPassword,
+//       }),
 //       credentials: 'include',
 //     });
 
 //     if (!response.ok) {
-//       throw new Error('Failed to fetch avatar');
+//       throw new Error('Failed to change password');
 //     }
 
 //     const result = await response.json();
-//     return result ? result : null;
+//     console.log('Password changed successfully', result);
 //   } catch (error) {
-//     console.error('Error fetching avatar by upload', error);
+//     console.error('Error changing password', error);
 //     throw error;
 //   }
 // };
-// Change User Password
-export const changePassword = async (
-  oldPassword: string,
-  newPassword: string
-): Promise<void> => {
-  try {
-    const csrfToken = getCsrfTokenFromCookie();
-
-    const response = await fetch(`${API_URL}/api/auth/update`, {
-      method: 'PUT',
-      headers: {
-        'X-XSRF-TOKEN': csrfToken,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        old_password: oldPassword,
-        new_password: newPassword,
-      }),
-      credentials: 'include',
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to change password');
-    }
-
-    const result = await response.json();
-    console.log('Password changed successfully', result);
-  } catch (error) {
-    console.error('Error changing password', error);
-    throw error;
-  }
-};
 // Delete User Account (DELETE Request)
 export const deleteUserAccount = async (): Promise<void> => {
   try {
@@ -503,7 +442,7 @@ export const fetchUserArtworks = async (userId: string): Promise<ArtworkResponse
     throw error;
   }
 };
-// export const fetchCurrentTheme = async (): Promise<Theme | null> => {
+
 //     try {
 //       const csrfToken = getCsrfTokenFromCookie(); // Get the CSRF token from the cookies
 //       const authToken = localStorage.getItem("auth_token"); // Retrieve the auth token from localStorage

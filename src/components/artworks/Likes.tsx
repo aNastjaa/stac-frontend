@@ -5,60 +5,51 @@ import { Like } from "../../utils/types";
 
 type LikesProps = {
   postId: string;
-  currentUserId: string;
+  userId: string; // Using userId here instead of currentUserId
   setLikesCount: React.Dispatch<React.SetStateAction<number>>; // Setter for likes count
 };
 
-function Likes({ postId, currentUserId, setLikesCount }: LikesProps) {
-  const [userHasLiked, setUserHasLiked] = useState(false);
+function Likes({ postId, userId, setLikesCount }: LikesProps) {
+  const [userHasLiked, setUserHasLiked] = useState<boolean>(false);
   const [likes, setLikes] = useState<Like[]>([]);
 
-  // Fetch likes and check if the current user has liked the post
   useEffect(() => {
     const loadLikes = async () => {
       try {
-        // Use checkIfUserLiked to determine if the current user has liked the post
+        // Check if the current user has liked the post
         const hasLiked = await checkIfUserLiked(postId);
-        console.log("Has current user liked this post?", hasLiked);
         setUserHasLiked(hasLiked);
 
-        // Fetch likes to set the likes count
+        // Fetch the likes to update the likes count
         const fetchedLikes = await fetchLikes(postId);
-        console.log("Fetched Likes: ", fetchedLikes);
-
         setLikesCount(fetchedLikes.length); // Update the likes count
-
-        setLikes(fetchedLikes); // Set the likes state
+        setLikes(fetchedLikes); // Update the likes state
       } catch (error) {
         console.error("Error fetching likes:", error);
       }
     };
 
     loadLikes();
-  }, [postId, currentUserId, setLikesCount]);
+  }, [postId, userId, setLikesCount]); // Re-run the effect when postId or userId changes
 
-  // Handle like toggle logic
   const handleLikeToggle = async () => {
     try {
-      console.log("User Has Liked Before Toggle: ", userHasLiked);
-
       if (userHasLiked) {
-        // If user has liked the post, unlike it
-        const userLike = likes.find((like) => like.user_id === currentUserId);
+        // If the user has liked the post, unlike it
+        const userLike = likes.find((like) => like.user_id === userId);
         if (userLike) {
           await unlikePost(postId, userLike.id);
-          setLikes((prevLikes) => prevLikes.filter((like) => like.id !== userLike.id)); // Remove from likes list
+          setLikes((prevLikes) => prevLikes.filter((like) => like.id !== userLike.id)); // Remove the like
         }
       } else {
-        // If user hasn't liked the post, like it
+        // If the user hasn't liked the post, like it
         const newLike = await likePost(postId);
-        setLikes((prevLikes) => [...prevLikes, newLike]); // Add new like to the list
+        setLikes((prevLikes) => [...prevLikes, newLike]); // Add the new like
       }
 
-      // Toggle the user's like state and update the likes count accordingly
+      // Toggle the like state and update the likes count
       setUserHasLiked((prev) => !prev);
-      setLikesCount((prevCount) => userHasLiked ? prevCount - 1 : prevCount + 1); // Adjust likes count based on the new state
-      console.log("User Has Liked After Toggle: ", !userHasLiked);
+      setLikesCount((prevCount) => userHasLiked ? prevCount - 1 : prevCount + 1); // Adjust likes count
     } catch (error) {
       console.error("Error toggling like:", error);
     }

@@ -1,145 +1,169 @@
 .fullscreen-post {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: #131313;
-    color: #e3e3e3;
-    z-index: 1000;
-    display: flex;
-    flex-direction: column;
-    padding: 1rem;
-  }
-  
-  .close-button {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: none;
-    border: none;
-    color: #fff;
-    cursor: pointer;
-  }
-  
-  .post-header {
-    display: flex;
-    align-items: center;
-    padding: 1rem;
-    margin-top: 1rem;
-  }
-  
-  .avatar {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    margin-right: 10px;
-    object-fit: cover;
-  }
-
-
-  
-  .username {
-    font-weight: bold;
-    text-align: left;
-    font-family: "Bebas Neue";
-    font-size: calc(1.3rem + 0.3vw);
-    letter-spacing: 1px;
-  }
-  
-  .theme-name {
-    font-size: 1,2rem;
-    color: #ccc;
-  }
-  
-  .post-image {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    
-  }
-  
-  .post-image img {
-    width: 100%;
-    height: auto;
-    border-radius: 20px;
-  }
-  
-  .post-actions {
-    display: flex;
-    justify-content: flex-start;
-    padding: 1rem;
-    gap: 1rem;
-  }
-
-  .icon-container-full-post{
-    display: flex;
-    align-items: center;
-    gap: 0.3rem;
-  }
-  
-  .action-item {
-    display: flex;
-    align-items: center;
-  }
-  
-  .action-item span {
-    margin-left: 5px;
-  }
-  
-  .comments-section {
-    padding: 10px;
-    border-top: 1px solid #444;
-  }
-  
-  .comments-list {
-    max-height: 200px;
-    overflow-y: auto;
-  }
-  
-  .placeholder {
-    color: #777;
-    padding: 1rem 0;
-  }
-  
-  .comment-input {
-    display: flex;
-    align-items: center;
-    margin-top: 10px;
-    
-  }
-  
-  .comment-input input {
-    flex: 1;
-    padding: 0.6rem;
-    border: 1px solid #e3e3e3;
-    border-radius: 20px;
-  }
-  .comment-input button {
-    background: none;
-    border: none;
-    color: #e3e3e3;
-    cursor: pointer;
-    margin-left: 5px;
-  }
-  
-  .comments-list{
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    align-items: flex-start;
-    width: 100%;
-    padding: 0.5rem;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #131313;
+  color: #e3e3e3;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  overflow-y: auto;  /* Enable scrolling for the full post container */
 }
 
-.delete-button {
-  background: transparent;
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+}
+
+.post-header {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  margin-top: 1rem;
+}
+
+.avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin-right: 10px;
+  object-fit: cover;
+}
+
+.username {
+  font-weight: bold;
+  text-align: left;
+  font-family: "Bebas Neue";
+  font-size: calc(1.3rem + 0.3vw);
+  letter-spacing: 1px;
+}
+
+.theme-name {
+  font-size: 1.2rem;  /* Fixed the comma to a dot */
+  color: #ccc;
+}
+
+.post-image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.post-image img {
+  width: 100%;
+  height: auto;
+  border-radius: 20px;
+}
+
+.post-description {
+  margin-top: 10px;
+  color: #e3e3e3;
+  font-size: 14px;
+  text-align: center;
+  max-width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.post-actions {
+  display: flex;
+  justify-content: flex-start;
+  padding: 1rem;
+  gap: 1rem;
+}
+
+.icon-container-full-post {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.action-item {
+  display: flex;
+  align-items: center;
+}
+
+.action-item span {
+  margin-left: 5px;
+}
+
+.comments-section {
+  padding: 10px;
+  border-top: 1px solid #444;
+  flex-grow: 1;  /* Allow comments section to take up the remaining space */
+}
+
+.comments-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: flex-start;
+  width: 100%;
+  padding: 0.5rem;
+}
+
+.comment {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.3rem;
+}
+
+.delete-comment-button {
+  color: red;
+  background-color: #131313;
   border: none;
   cursor: pointer;
-  padding: 0;
 }
 
-.delete-button:hover {
-  opacity: 0.8;
+.delete-comment-button:hover {
+  scale: 1.2;
+}
+
+.comment-input {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.comment-input input {
+  flex: 1;
+  padding: 0.6rem;
+  border: 1px solid #e3e3e3;
+  border-radius: 20px;
+}
+
+.comment-input button {
+  background: none;
+  border: none;
+  color: #e3e3e3;
+  cursor: pointer;
+  margin-left: 5px;
+}
+
+.placeholder {
+  color: #777;
+  padding: 1rem 0;
+}
+
+.read-more-button {
+  background: none;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  padding: 10px;
+  text-align: center;
+}
+
+.read-more-button:hover {
+  text-decoration: underline;
 }

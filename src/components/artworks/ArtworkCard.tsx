@@ -1,42 +1,95 @@
-import { Heart, MessageCircle } from 'lucide-react';
+import { useState, useEffect } from "react";
+import { Heart, MessageCircle } from "lucide-react";
 import "../../css/artworks/artworkCard.css";
-import { ArtworkResponse } from '../../utils/types';
-
+import { fetchLikes, fetchComments, likePost, unlikePost } from "../../utils/api/commentsLiks"; // Add relevant imports
+import { ArtworkResponse, Like } from "../../utils/types";
 
 interface ArtworkCardProps {
-  artwork: ArtworkResponse; 
-  onClick?: () => void;  
+  artwork: ArtworkResponse;
+  userId: string; // Passing userId to track likes
+  onClick?: () => void;
 }
 
-const ArtworkCard = ({ artwork, onClick }: ArtworkCardProps) => {
-  const { username } = artwork.user;
-  const imagePath = artwork.image_path;
+const ArtworkCard = ({ artwork, userId, onClick }: ArtworkCardProps) => {
+  const [likesCount, setLikesCount] = useState<number>(0);
+  const [commentsCount, setCommentsCount] = useState<number>(0);
+  const [userHasLiked, setUserHasLiked] = useState<boolean>(false); // Track if user has liked the post
+  const [likes, setLikes] = useState<Like[]>([]); // Track likes for the current post
+
+  useEffect(() => {
+    // Fetch the likes and comments count when the artwork is loaded
+    const loadCounts = async () => {
+      try {
+        // Fetch likes and comments count
+        const fetchedLikes = await fetchLikes(artwork.id);
+        setLikes(fetchedLikes);
+        setLikesCount(fetchedLikes.length);
+
+        const fetchedComments = await fetchComments(artwork.id);
+        setCommentsCount(fetchedComments.length);
+
+        // Check if the user has liked the post
+        const hasLiked = fetchedLikes.some((like) => like.user_id === userId);
+        setUserHasLiked(hasLiked);
+      } catch (error) {
+        console.error("Error fetching likes/comments:", error);
+      }
+    };
+
+    loadCounts();
+  }, [artwork.id, userId]); // Re-run when artwork or userId changes
+
+  const handleLikeToggle = async () => {
+    try {
+      if (userHasLiked) {
+        // If the user has liked, unlike it
+        const likeToRemove = likes.find((like) => like.user_id === userId);
+        if (likeToRemove) {
+          await unlikePost(artwork.id, likeToRemove.id); // Pass both postId and likeId
+          setLikesCount((prev) => prev - 1); // Decrease the like count
+          setLikes((prev) => prev.filter((like) => like.id !== likeToRemove.id)); // Remove like from state
+        }
+      } else {
+        // If the user hasn't liked, like it
+        const newLike = await likePost(artwork.id); // Only postId needed
+        setLikesCount((prev) => prev + 1); // Increase the like count
+        setLikes((prev) => [...prev, newLike]); // Add the new like to state
+      }
+      setUserHasLiked((prev) => !prev); // Toggle like status
+    } catch (error) {
+      console.error("Error toggling like:", error);
+    }
+  };
 
   return (
     <div className="artwork-card" onClick={onClick}>
-      {/* Header */}
+      {/* Artwork Header */}
       <div className="artwork-card-header">
-        @{username}
+        @{artwork.user.username}
       </div>
 
-      {/* Image */}
+      {/* Artwork Image */}
       <div className="artwork-image-container">
-        <img 
-        src={imagePath} 
-        alt="Artwork" 
-        className="artwork-image" 
-        loading="lazy"/>
+        <img
+          src={artwork.image_path}
+          alt="Artwork"
+          className="artwork-image"
+          loading="lazy"
+        />
       </div>
 
-      {/* Footer */}
+      {/* Artwork Footer with Like and Comment Count */}
       <div className="artwork-card-footer">
-        <div className="icon-container">
-          <Heart size={16} color="#fff" />
-          <span className="icon-count">100500</span>
+        {/* Likes Section */}
+        <div className="icon-container" onClick={handleLikeToggle}>
+          <Heart size={16} color={userHasLiked ? "red" : "#fff"} fill={userHasLiked ? "red" : "none"} />
+          <span className="icon-count">{likesCount}</span>
         </div>
+
+        {/* Comments Section */}
         <div className="icon-container">
           <MessageCircle size={16} color="#fff" />
-          <span className="icon-count">999</span>
+          <span className="icon-count">{commentsCount}</span>
         </div>
       </div>
     </div>

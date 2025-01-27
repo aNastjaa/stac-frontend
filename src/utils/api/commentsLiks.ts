@@ -1,8 +1,8 @@
-// API functions for handling comments
-
 import { API_URL, getCsrfTokenFromCookie } from "../api";
 import { Comment, Like } from "../types";
 
+
+// API functions for handling comments
 export const fetchComments = async (postId: string): Promise<Comment[]> => {
     try {
       const response = await fetch(`${API_URL}/api/artworks/${postId}/comments`, {
@@ -70,9 +70,9 @@ export const fetchComments = async (postId: string): Promise<Comment[]> => {
     }
   };
   
+  
   // API functions for handling likes
-
-export const likePost = async (postId: string): Promise<Like> => {
+  export const likePost = async (postId: string): Promise<Like> => {
     try {
       const response = await fetch(`${API_URL}/api/artworks/${postId}/likes`, {
         method: 'POST',
@@ -137,9 +137,8 @@ export const likePost = async (postId: string): Promise<Like> => {
       return [];
     }
   };
-  
-// Function to check if the user has liked the post
-    export const checkIfUserLiked = async (postId: string): Promise<boolean> => {
+
+  export const checkIfUserLiked = async (postId: string): Promise<boolean> => {
         try {
         const response = await fetch(`${API_URL}/api/artworks/${postId}/likes/check`, {
             method: "GET",
@@ -160,5 +159,5 @@ export const likePost = async (postId: string): Promise<Like> => {
         console.error("Error checking if user liked the post:", error);
         return false;
         }
-    };
-  
+  };
+   

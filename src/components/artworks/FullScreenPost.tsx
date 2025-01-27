@@ -8,6 +8,7 @@ import Comments from "./Comments";  // Import Comments Component
 interface Post {
   id: string;
   imageUrl: string;
+  description: string;
   username: string;
   avatarUrl?: string;
   themeName: string;
@@ -18,12 +19,11 @@ interface Post {
 }
 
 type FullScreenPostProps = {
-  post: Post; // Initial post data
+  post: Post; 
   onClose: () => void;
-  currentUserId: string;
 };
 
-function FullScreenPost({ post, onClose, currentUserId }: FullScreenPostProps) {
+function FullScreenPost({ post, onClose }: FullScreenPostProps) {
   const [avatarUrl, setAvatarUrl] = useState<string>(post.avatarUrl || "");
   const [likesCount, setLikesCount] = useState<number>(post.likes_count);
   const [commentsCount, setCommentsCount] = useState<number>(post.comments_count);
@@ -58,7 +58,7 @@ function FullScreenPost({ post, onClose, currentUserId }: FullScreenPostProps) {
       <button className="close-button" onClick={onClose}>
         <X size={36} color="#e3e3e3" />
       </button>
-
+  
       {/* Post Header */}
       <div className="post-header">
         {avatarUrl ? (
@@ -71,26 +71,33 @@ function FullScreenPost({ post, onClose, currentUserId }: FullScreenPostProps) {
           <p className="theme-name">Theme: {post.themeName}</p>
         </div>
       </div>
-
+  
       {/* Post Image */}
       <div className="post-image">
         <img src={post.imageUrl} alt="Post content" />
       </div>
-
+  
+      {/* Description Under Image */}
+      {post.description && (
+        <div className="post-description">
+          <p>{post.description}</p>
+        </div>
+      )}
+  
       {/* Post Actions */}
       <div className="post-actions">
         {/* Likes */}
         <div className="icon-container-full-post" style={{ display: "flex", alignItems: "center" }}>
-        <Likes
-          postId={post.id}
-          currentUserId={currentUserId}
-          setLikesCount={setLikesCount}
-        />
+          <Likes
+            postId={post.id}
+            userId={post.userId} 
+            setLikesCount={setLikesCount}
+          />
           <span className="icon-count">
             {likesCount}
           </span> {/* Display like count */}
         </div>
-
+  
         {/* Comments */}
         <div className="icon-container-full-post" style={{ display: "flex", alignItems: "center" }}>
           <MessageCircle size={26} color="#e3e3e3" />
@@ -99,13 +106,14 @@ function FullScreenPost({ post, onClose, currentUserId }: FullScreenPostProps) {
           </span> {/* Display comment count */}
         </div>
       </div>
-
+  
       {/* Comments Section */}
       <div className="comments-section">
         <Comments 
           postId={post.id} 
-          currentUserId={currentUserId} 
-          setCommentsCount={setCommentsCount} />
+          userId={post.userId} 
+          setCommentsCount={setCommentsCount} 
+        />
       </div>
     </div>
   );
