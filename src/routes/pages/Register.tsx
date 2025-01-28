@@ -22,6 +22,7 @@ const Register = () => {
   const passwordRepeatId = useId();
   const navigate = useNavigate();
 
+  const [passwordFocus, setPasswordFocus] = useState(false);
   const [backendErrors, setBackendErrors] = useState<BackendErrors>({});
 
   const {
@@ -74,7 +75,7 @@ const Register = () => {
             <small>{errors.username?.message}</small>
             <small>{backendErrors.username?.[0]}</small>
           </div>
-  
+
           <div className={`input-field ${errors.email ? "has-error" : ""}`}>
             <label htmlFor={emailId}>Email</label>
             <input
@@ -89,13 +90,14 @@ const Register = () => {
             <small>{errors.email?.message}</small>
             <small>{backendErrors.email?.[0]}</small>
           </div>
-  
+
           <div className={`input-field ${errors.password ? "has-error" : ""}`}>
             <label htmlFor={passwordId}>Password</label>
             <input
               id={passwordId}
               type="password"
               placeholder="password"
+              onFocus={() => setPasswordFocus(true)} // Show password requirements on focus
               {...registerField("password", {
                 required: "Password is required.",
                 minLength: { value: 8, message: "Must be at least 8 characters." },
@@ -104,8 +106,26 @@ const Register = () => {
             <small>{errors.password?.message}</small>
             {backendErrors.password &&
               backendErrors.password.map((err, index) => <p key={index}>{err}</p>)}
+            
+            {/* Show password requirements only when focused */}
+            {passwordFocus && (
+              <div className="password-requirements">
+                <p className={watch("password").length >= 8 ? "valid" : "invalid"}>
+                  Must be at least 8 characters.
+                </p>
+                <p className={/[A-Z]/.test(watch("password")) ? "valid" : "invalid"}>
+                  Must contain at least one capital letter.
+                </p>
+                <p className={/\d/.test(watch("password")) ? "valid" : "invalid"}>
+                  Must contain at least one number.
+                </p>
+                <p className={/[!@#$%^&*(),.?":{}|<>]/.test(watch("password")) ? "valid" : "invalid"}>
+                  Must contain at least one symbol.
+                </p>
+              </div>
+            )}
           </div>
-  
+
           <div className={`input-field ${errors.passwordRepeat ? "has-error" : ""}`}>
             <label htmlFor={passwordRepeatId}>Repeat Password</label>
             <input

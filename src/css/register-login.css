@@ -186,3 +186,35 @@
     text-align: center;
     font-weight: 600;
   }
+
+  .password-requirements{
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem;
+    gap: 0.5rem;
+    font-size: 14px;
+    font-weight: 400;
+  }
+
+  .password-requirements p {
+    display: flex;
+    align-items: center;
+  }
+  
+  .password-requirements .valid {
+    color: green;
+  }
+  
+  .password-requirements .invalid {
+    color: red;
+  }
+  
+  .password-requirements .valid::after {
+    content: " ✅";
+    margin-left: 0.5rem;
+  }
+  
+  /* .password-requirements .invalid::after {
+    content: " ❌";
+    margin-left: 0.5rem;
+  } */
