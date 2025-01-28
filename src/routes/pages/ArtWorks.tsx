@@ -3,7 +3,7 @@ import { ArtworkResponse, Theme } from '../../utils/types';
 import { fetchCurrentTheme, submitArtwork, fetchArtworks } from '../../utils/api/artworks';
 import { ButtonCTA, ButtonLong, ButtonPrimary } from '../../components/Buttons';
 import ArtworkCard from '../../components/artworks/ArtworkCard';
-import { ImagePlus } from 'lucide-react';
+import { ImagePlus, Info } from 'lucide-react';
 import "../../css/artworks/artworkPage.css";
 import { getCsrfTokenFromCookie } from '../../utils/api';
 import DotLoader from '../../components/DotLoader';
@@ -13,12 +13,14 @@ const ArtWorks = () => {
   const [currentTheme, setCurrentTheme] = useState<Theme | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [description, setDescription] = useState<string>('');
+  const [errorMessage, setErrorMessage] = useState<string | null>(null); // New state for error messages
   const [allArtworks, setAllArtworks] = useState<ArtworkResponse[]>([]);
   const [visibleArtworks, setVisibleArtworks] = useState<ArtworkResponse[]>([]);
   const [showForm, setShowForm] = useState<boolean>(false);
+  const [showInfo, setShowInfo] = useState<boolean>(false);
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState<boolean>(false);
-  const [selectedArtwork, setSelectedArtwork] = useState<ArtworkResponse | null>(null); // New state for full-screen post
+  const [selectedArtwork, setSelectedArtwork] = useState<ArtworkResponse | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -51,18 +53,18 @@ const ArtWorks = () => {
   }, []);
 
   const handlePostClick = (artwork: ArtworkResponse) => {
-    setSelectedArtwork(artwork); // Set selected post for full-screen view
+    setSelectedArtwork(artwork);
   };
 
   const closeFullScreenPost = () => {
-    setSelectedArtwork(null); // Close full-screen post
+    setSelectedArtwork(null);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!imageFile || !description) {
-      alert('Image and Description are required');
+      setErrorMessage('Image and Description are required');
       return;
     }
 
@@ -109,20 +111,20 @@ const ArtWorks = () => {
       {/* Render FullScreenPost if a post is selected */}
       {selectedArtwork && (
         <FullScreenPost
-        post={{
-          id: selectedArtwork.id,
-          imageUrl: selectedArtwork.image_path,
-          username: selectedArtwork.user.username,
-          avatarUrl: selectedArtwork.user.avatar_url,
-          userId: selectedArtwork.user.id,
-          themeName: selectedArtwork.theme.theme_name,
-          likes_count: selectedArtwork.likes,  // Map likes to likes_count
-          comments_count: (selectedArtwork.comments?.length ?? 0),   // Map comments length to comments_count
-          createdAt: selectedArtwork.created_at,
-          description: selectedArtwork.description,
-        }}
-        onClose={closeFullScreenPost}
-      />
+          post={{
+            id: selectedArtwork.id,
+            imageUrl: selectedArtwork.image_path,
+            username: selectedArtwork.user.username,
+            avatarUrl: selectedArtwork.user.avatar_url,
+            userId: selectedArtwork.user.id,
+            themeName: selectedArtwork.theme.theme_name,
+            likes_count: selectedArtwork.likes,
+            comments_count: (selectedArtwork.comments?.length ?? 0),
+            createdAt: selectedArtwork.created_at,
+            description: selectedArtwork.description,
+          }}
+          onClose={closeFullScreenPost}
+        />
       )}
 
       {/* Artwork submission form and gallery */}
@@ -161,17 +163,44 @@ const ArtWorks = () => {
 
               <div className="form-group artwork-description">
                 <label className="form-label">Description:</label>
-                <textarea
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  placeholder="Enter artwork description"
-                  className="form-textarea"
-                />
+                <div className="textarea-container">
+                  <textarea
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    placeholder="Enter artwork description"
+                    className="form-textarea"
+                  />
+                  <button
+                    className="info-button"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setShowInfo(true);
+                    }}
+                    aria-label="Show information"
+                  >
+                    <Info size={20} color="#888" />
+                  </button>
+                </div>
+                {errorMessage && <p className="error-message">{errorMessage}</p>}
               </div>
 
               <div className="form-group">
                 <ButtonCTA text="Submit Artwork" link="#" onClick={handleSubmit} />
               </div>
+
+              {showInfo && (
+                <div className="info-modal">
+                  <div className="info-modal-content">
+                    <button
+                      className="info-close-button"
+                      onClick={() => setShowInfo(false)}
+                    >
+                      &times;
+                    </button>
+                    <p>When you submit an artwork, it will be reviewed to ensure it matches the current theme. After approval, your artwork will appear on your profile for everyone to admire!</p>
+                  </div>
+                </div>
+              )}
             </form>
           </div>
         </div>
@@ -192,11 +221,14 @@ const ArtWorks = () => {
                 key={artwork.id}
                 artwork={artwork}
                 onClick={() => handlePostClick(artwork)}
-                userId={artwork.user.id} 
+                userId={artwork.user.id}
               />
             ))}
         </div>
-        {hasMore && !loading && <ButtonPrimary onClick={loadMoreArtworks} text="See more" />}
+
+        {hasMore && !loading && (
+          <ButtonPrimary onClick={loadMoreArtworks} text="Load More" />
+        )}
       </section>
     </div>
   );

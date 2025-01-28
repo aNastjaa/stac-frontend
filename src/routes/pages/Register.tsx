@@ -4,6 +4,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { register } from "../../utils/api";
 import { Link } from "react-router";
 import { ButtonLong } from "../../components/Buttons";
+import "../../css/register-login.css";
 
 type FieldValues = {
   username: string;

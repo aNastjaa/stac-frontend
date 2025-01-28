@@ -32,9 +32,9 @@ const ProfileStats = ({ artworks }: ProfileStatsProps) => {
 
   return (
     <div className="profile-stats">
-      <p>{postsCount} Posts</p>
-      <p>{commentsCount} Comments</p>
-      <p>{likesCount} Likes</p>
+      <p>{postsCount} <br/>Posts</p>
+      <p>{commentsCount} <br/>Comments</p>
+      <p>{likesCount} <br/>Likes</p>
     </div>
   );
 };
