@@ -36,9 +36,12 @@ export interface ErrorMessages {
       text: string;
       created_at: string;
   }>; 
+  comments_count?: number;
+  likes_count?: number;
   }
   
   export interface UserProfileType {
+    id: string;
     username: string;
     avatar_id?: string | null;
     avatar_url: string | null;
@@ -47,7 +50,13 @@ export interface ErrorMessages {
     likes_count: number;
     full_name: string | null;
     bio: string | null;
-    external_links?: string[];  // Optional field
+    external_links?: string[]; 
+  }
+
+  export interface UserProfileStatsType {
+    posts_count: number;
+    comments_count: number;
+    likes_count: number;
   }
 
   export interface UploadResponse {
@@ -67,7 +76,7 @@ export interface ErrorMessages {
     id: string;
     username: string;
     email: string;
-    role: Role; // The role information associated with the user
+    role: Role; 
     email_verified_at?: string | null;
     created_at: string;
     updated_at: string;

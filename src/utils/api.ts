@@ -1,4 +1,4 @@
-import {ArtworkResponse, UploadResponse, UserProfileType,} from "./types";
+import {ArtworkResponse, UploadResponse, UserProfileStatsType, UserProfileType,} from "./types";
 //sasha@gmail.com
 //La;G7,8bP&V7
 
@@ -443,36 +443,38 @@ export const fetchUserArtworks = async (userId: string): Promise<ArtworkResponse
   }
 };
 
-//     try {
-//       const csrfToken = getCsrfTokenFromCookie(); // Get the CSRF token from the cookies
-//       const authToken = localStorage.getItem("auth_token"); // Retrieve the auth token from localStorage
-  
-//       if (!authToken) {
-//         throw new Error('Auth token is missing');
-//       }
-  
-//       const response = await fetch(`${API_URL}/api/themes`, {
-//         method: 'GET',
-//         headers: {
-//           'Content-Type': 'application/json',
-//           'X-XSRF-TOKEN': csrfToken, 
-//           'Authorization': `Bearer ${authToken}`, 
-//         },
-//       });
-  
-//       if (!response.ok) {
-//         throw new Error('Failed to fetch current theme');
-//       }
-  
-//       const themeData: Theme[] = await response.json(); 
-  
-//       if (themeData.length > 0) {
-//         return themeData[0]; 
-//       }
-  
-//       return null; 
-//     } catch (error) {
-//       console.error('Error fetching current theme:', error);
-//       throw error;
-//     }
-//   };
+export const fetchUserStats = async (userId: string): Promise<UserProfileStatsType> => {
+  try {
+    const csrfToken = getCsrfTokenFromCookie();
+    const authToken = localStorage.getItem('auth_token');
+
+    if (!authToken) {
+      throw new Error('Authentication token is missing');
+    }
+
+    const response = await fetch(`${API_URL}/api/users/${userId}/stats`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-XSRF-TOKEN': csrfToken,
+        'Authorization': `Bearer ${authToken}`,
+      },
+      credentials: 'include',
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error fetching user stats: ${response.statusText}`);
+    }
+
+    const stats = await response.json();
+    
+    // Debugging the received stats to verify it's correct
+    console.log(stats);
+
+    return stats;
+  } catch (error) {
+    console.error('Error fetching user stats:', error);
+    throw error;
+  }
+};
+

@@ -117,7 +117,7 @@ const ArtWorks = () => {
           userId: selectedArtwork.user.id,
           themeName: selectedArtwork.theme.theme_name,
           likes_count: selectedArtwork.likes,  // Map likes to likes_count
-          comments_count: selectedArtwork.comments.length,  // Map comments length to comments_count
+          comments_count: (selectedArtwork.comments?.length ?? 0),   // Map comments length to comments_count
           createdAt: selectedArtwork.created_at,
           description: selectedArtwork.description,
         }}

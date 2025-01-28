@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { getUserIdFromLocalStorage, getProfileIdByUserId, getUserProfileByProfileId, createUserProfile, updateUserProfile, uploadAvatar, fetchAvatarUrl, deleteUserAccount, logout, getCsrfTokenFromCookie } from '../utils/api';  
-import { ButtonLong, ButtonPrimary, ButtonCTA } from '../components/Buttons';  
+import { ButtonLong, ButtonPrimary, ButtonCTA } from './Buttons';  
 import '../css/userProfile.css';
 import { CircleUserRound } from 'lucide-react';  
 import { UserProfileType } from '../utils/types';
@@ -9,6 +9,7 @@ import { UserProfileType } from '../utils/types';
 
 const EditProfile = () => {
   const [profile, setProfile] = useState<UserProfileType>({
+    id: '',
     username: '',
     avatar_url: null,
     avatar_id: '',
