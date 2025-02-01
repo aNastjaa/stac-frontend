@@ -1,24 +1,25 @@
-import { createBrowserRouter } from 'react-router-dom';
-import React, { lazy } from 'react';
+import { createBrowserRouter } from "react-router-dom";
+import React, { lazy } from "react";
 
 // Layouts
-const RootLayout = lazy(() => import('./layouts/RootLayout'));
-const PrivateLayout = lazy(() => import('./layouts/PrivateLayout'));
-const AdminLayout = lazy(() => import('./layouts/AdminLayout'));
+const RootLayout = lazy(() => import("./layouts/RootLayout"));
+const PrivateLayout = lazy(() => import("./layouts/PrivateLayout"));
+const AdminLayout = lazy(() => import("./layouts/AdminLayout"));
 
 // Pages
-const LandingPage = lazy(() => import('./pages/LandingPage'));
-const Register = lazy(() => import('./pages/Register'));
-const Login = lazy(() => import('./pages/Login'));
-const UserProfile = lazy(() => import('./pages/UserProfile'));
-const ArtWorks = lazy(() => import('./pages/ArtWorks'));
-const SponsorChallenges = lazy(() => import('./pages/SponsorChallenges'));
-const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
-const NotFound = lazy(() => import('./pages/NotFound'));
-const EditProfile = lazy(() => import('../components/EditProfile'));
+const LandingPage = lazy(() => import("./pages/LandingPage"));
+const Register = lazy(() => import("./pages/Register"));
+const Login = lazy(() => import("./pages/Login"));
+const UserProfile = lazy(() => import("./pages/UserProfile"));
+const ArtWorks = lazy(() => import("./pages/ArtWorks"));
+const SponsorChallenges = lazy(() => import("./pages/SponsorChallenges"));
+const ChallengeDetail = lazy(() => import("../components/challenges/ChallengeDetail")); // ✅ Added Challenge Detail
+const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+const EditProfile = lazy(() => import("../components/EditProfile"));
 
 // Loading Component
-import DotLoader from '../components/DotLoader'; // Import the updated DotLoader
+import DotLoader from "../components/DotLoader";
 
 const router = createBrowserRouter([
   {
@@ -101,6 +102,14 @@ const router = createBrowserRouter([
         element: (
           <React.Suspense fallback={<DotLoader />}>
             <SponsorChallenges />
+          </React.Suspense>
+        ),
+      },
+      {
+        path: "/sponsor-challenges/:challengeId", 
+        element: (
+          <React.Suspense fallback={<DotLoader />}>
+            <ChallengeDetail />
           </React.Suspense>
         ),
       },

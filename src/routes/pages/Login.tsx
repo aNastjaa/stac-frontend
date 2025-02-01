@@ -76,7 +76,7 @@ const Login = () => {
           <input
             id="password"
             type="password"
-            placeholder="At least 8 characters"
+            placeholder="Enter your password"
             className="input-field-input"
             {...register("password", { required: "Password is required" })}
           />

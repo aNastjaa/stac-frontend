@@ -1,0 +1,150 @@
+.sponsor-challenges-container{
+    padding: 0 1rem;
+}
+
+.hero-section {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem 2rem;
+    gap: 1rem;
+    border-radius: 30px;
+    box-shadow: 5px 6px 7px rgba(0, 0, 0, 0.25);
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  
+  .hero-section h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: calc(2rem + 0.3vw);
+    color: #131313;
+  }
+
+  .hero-section p {
+    font-size: 16px;
+    font-weight: 200;
+    color: #131313;
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+
+  .how-it-works, .update-to-pro{
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1rem;
+  }
+
+  .bite {
+    font-family: 'Sedgwick Ave Display';
+    font-size: calc(2rem + 0.5vw);
+    margin-top: 1rem;
+}
+
+.button-primary{
+    margin-top: 1rem;
+}
+
+.challenges-list h2 {
+    font-family: 'Sedgwick Ave Display';
+    font-size: calc(2.2rem + 0.3vw);
+    color: #131313;
+    text-align: center;
+    margin-top: 1 rem;
+}
+
+/* Challenges List */
+.challenges-list {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .challenge-item {
+    position: relative;
+    border-radius: 30px;
+    overflow: hidden;
+    width: 97%;
+    max-width: 700px;
+    box-shadow: 5px 6px 7px rgba(0, 0, 0, 0.25);
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .challenge-item:hover {
+    transform: scale(1.05);
+  }
+  
+  .brand-logo-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+  
+  .brand-logo-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .challenge-content {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    z-index: 1;
+    padding: 2rem 1rem;
+    border-radius: 30px;
+    min-height: 450px;
+    justify-content: space-between;
+    /* background-color: rgba(3, 3, 3, 0.662); */
+  }
+  
+  .brand-name {
+    font-size: calc(2rem + 0.3vw);
+    font-family: 'Bebas Neue';
+    letter-spacing: 1px;
+    color: #e3e3e3;
+  }
+  
+  .challenge-title {
+    font-size: 1.3rem;
+    font-weight: 500;
+    color: #e3e3e3;
+    margin-bottom: 1rem;
+  }
+  
+  .challenge-brief {
+    font-size: 1rem;
+    color: #e3e3e3;
+    margin-bottom: 1rem;
+    line-height: 1.4;
+    font-weight: 400;
+  }
+  
+  .deadline {
+    font-size: 0.9rem;
+    color: #e3e3e3;
+    margin-bottom: 1rem;
+  }
+  
+  .view-challenge-link {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 1rem;
+    color: #e3e3e3;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  
+  .view-challenge-link:hover {
+    text-decoration: underline;
+  }
+

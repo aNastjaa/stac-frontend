@@ -1,0 +1,192 @@
+.challange-details{
+    padding: 1rem;
+}
+
+.challenge-detail-container {
+    max-width: 700px;
+    margin: auto;
+    text-align: center;
+  }
+  
+  .hero-section {
+    position: relative;
+    padding: 20px;
+    border-radius: 30px;
+    margin-bottom: 20px;
+  }
+  
+  .brand-logo {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 10px;
+  }
+  
+  .brand-name {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  .challenge-detail-title {
+    font-size: calc(1.5rem + 0.3vw);
+    margin-bottom: 10px;
+    color: #131313;
+    font-family: 'Sedgwick Ave Display';
+    letter-spacing: 1px;
+  }
+  
+  .challenge-detail-brief {
+    font-size: 16px;
+    color:#131313;
+    margin-bottom: 10px;
+  }
+  
+  .deadline {
+    font-size: 14px;
+    font-weight: bold;
+    color: #d9534f;
+  }
+  
+/* Modal Overlay */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+  
+  /* Modal Content */
+  .modal-content {
+    background: #e3e3e3;
+    padding: 2rem;
+    border-radius: 30px;
+    width: 400px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    position: relative;
+  }
+  
+.modal-content h2{
+    font-family: "bebas Neue";
+    letter-spacing: 1px;
+}
+
+  /* Close Button */
+  .close-button {
+    position: absolute;
+    right: 15px;
+    top: 10px;
+    font-size: 36px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #131313;
+  }
+
+  .artwork-submit-form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+  
+  /* File Input Styling */
+  .form-input {
+    display: none;
+  }
+  
+  .image-icon {
+    cursor: pointer;
+    margin-top: 10px;
+    width: 50px;
+    height: 50px;
+  }
+  
+  .image-preview {
+    max-width: 100px;
+    margin-top: 10px;
+  }
+  
+  /* Form Layout */
+  .form-group {
+    margin-bottom: 20px;
+  }
+
+  .form-group.artwork-description{
+    width: 100%;
+  }
+  
+  .form-label {
+    font-weight: 500;
+  }
+  
+  /* Textarea Styling */
+  .form-detail-textarea {
+    width: 100%;
+    padding: 0.5rem 2rem;
+    border: 1px solid #131313;
+    background-color: #e3e3e3;
+    border-radius: 20px;
+    margin-top: 1rem;
+  }
+  
+  .textarea-container {
+    position: relative;
+  }
+  
+  /* Error Message */
+  .error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+  }
+  
+  /* Info Button */
+  .info-button {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+  }
+  
+  /* Info Modal */
+  .info-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #fff;
+    padding: 2rem 1rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    z-index: 1000;
+  }
+  
+  .info-modal-content {
+    text-align: center;
+  }
+  
+  .info-modal-content p {
+    margin-top: 1rem;
+  }
+  
+  /* Info Modal Close Button */
+  .info-close-button {
+    background: none;
+    border: none;
+    font-size: 24px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+  }
+  

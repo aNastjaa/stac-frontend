@@ -80,8 +80,7 @@ export interface ErrorMessages {
     email_verified_at?: string | null;
     created_at: string;
     updated_at: string;
-  }
-  
+  } 
   export interface SponsorChallenge {
     id: string;
     title: string;
@@ -90,17 +89,45 @@ export interface ErrorMessages {
     brief: string;
     brand_name: string;
     submission_deadline: string;
-  }
-  
-  export interface SponsorSubmission {
+  } 
+   export interface SponsorChallengeDetail {
+    id: string; 
+    title: string; 
+    description: string;  
+    start_date: string;  
+    end_date: string;  
+    submissions_count: number;
+    created_at: string; 
+    updated_at: string;
+    brand_logo?: string;
+    brand_logo_id: string;
+    brief: string;
+    brand_name: string;
+    submission_deadline: string;
+}
+  // export interface SponsorSubmission {
+  //   id: string;
+  //   challenge_id: string;
+  //   user_id: string;
+  //   status: "pending" | "accepted" | "rejected";
+  //   created_at: string;
+  //   updated_at: string;
+  // }
+  export interface Submission {
     id: string;
-    challenge_id: string;
     user_id: string;
-    status: "pending" | "accepted" | "rejected";
+    user: {
+      id: string;
+      username: string;
+      avatar_url?: string;
+    };
+    image_path: string;
+    sponsor_challenge_id: string; 
+    status: "pending" | "approved" | "rejected";
+    description: string;
     created_at: string;
     updated_at: string;
   }
-  
   export interface Post {
     id: string;
     user_id: string;
@@ -112,19 +139,6 @@ export interface ErrorMessages {
     created_at: string;
     updated_at: string;
   }
-  
-  export interface Submission {
-    id: string;
-    user_id: string;
-    user: string;
-    image_path: string;
-    sponsor_challenge_id: string; 
-    status: "pending" | "approved" | "rejected";
-    description: string;
-    created_at: string;
-    updated_at: string;
-  }
-  
   export interface Comment {
     id: string; 
     user_id: string; 
@@ -138,11 +152,18 @@ export interface ErrorMessages {
       avatar_url?: string | null; 
     };
   }
-
   export interface Like {
     id: string; 
     user_id: string; 
     post_id: string; 
     created_at: string;
+    updated_at: string; 
+  }
+  export interface VoteResponse {
+    submission_id: string;  
+    user_id: string; 
+    vote_type: 'upvote' | 'downvote'; 
+    total_votes: number;  
+    created_at: string;  
     updated_at: string; 
   }
