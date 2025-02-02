@@ -1,5 +1,5 @@
-import { API_URL, getCsrfTokenFromCookie } from "../api";
-import { SponsorChallenge, SponsorChallengeDetail,Submission, VoteResponse } from "../types";
+import { API_URL, getCsrfTokenFromCookie, getUserIdFromLocalStorage } from "../api";
+import { SponsorChallenge, SponsorChallengeDetail,Submission, Vote} from "../types";
 
 export const getChallenges = async (): Promise<SponsorChallenge[]> => {
     try {
@@ -101,7 +101,6 @@ export const getChallenges = async (): Promise<SponsorChallenge[]> => {
       throw error;
     }
   };
-  
     export const getSubmissions = async (challengeId: string): Promise<Submission[]> => {
     try {
       const csrfToken = getCsrfTokenFromCookie();
@@ -137,36 +136,120 @@ export const getChallenges = async (): Promise<SponsorChallenge[]> => {
       throw error;
     }
   };
-    export const voteOnSubmission = async (
-    challengeId: string,
-    submissionId: string
-  ): Promise<VoteResponse> => {
+  export const voteForSubmission = async (challengeId: string, submissionId: string): Promise<Vote> => {
     try {
       const csrfToken = getCsrfTokenFromCookie();
-      const authToken = localStorage.getItem('auth_token');
+      const authToken = localStorage.getItem("auth_token");
   
       if (!authToken) {
-        throw new Error('Authentication token is missing');
+        throw new Error("Authentication token is missing");
       }
   
       const response = await fetch(`${API_URL}/api/sponsor-challenges/${challengeId}/submissions/${submissionId}/votes`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'X-XSRF-TOKEN': csrfToken,
-          'Authorization': `Bearer ${authToken}`,
+          "Content-Type": "application/json",
+          "X-XSRF-TOKEN": csrfToken,
+          Authorization: `Bearer ${authToken}`,
         },
-        credentials: 'include',
+        credentials: "include",
       });
   
       if (!response.ok) {
-        throw new Error('Failed to vote on submission');
+        throw new Error(`Error voting: ${response.statusText}`);
       }
   
       return await response.json();
     } catch (error) {
-      console.error('Error voting on submission:', error);
+      console.error("Error voting for submission:", error);
       throw error;
     }
-  };
+  };  
+  export const removeVote = async (challengeId: string, submissionId: string): Promise<void> => {
+    try {
+      const csrfToken = getCsrfTokenFromCookie();
+      const authToken = localStorage.getItem("auth_token");
+  
+      if (!authToken) {
+        throw new Error("Authentication token is missing");
+      }
+  
+      const response = await fetch(`${API_URL}/api/sponsor-challenges/${challengeId}/submissions/${submissionId}/votes`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          "X-XSRF-TOKEN": csrfToken,
+          Authorization: `Bearer ${authToken}`,
+        },
+        credentials: "include",
+      });
+  
+      if (!response.ok) {
+        throw new Error(`Error removing vote: ${response.statusText}`);
+      }
+    } catch (error) {
+      console.error("Error removing vote:", error);
+      throw error;
+    }
+  };  
+  export const checkUserVote = async (challengeId: string, submissionId: string): Promise<boolean> => {
+    try {
+      const csrfToken = getCsrfTokenFromCookie();
+      const authToken = localStorage.getItem("auth_token");
+  
+      if (!authToken) {
+        throw new Error("Authentication token is missing");
+      }
+  
+      const response = await fetch(`${API_URL}/api/sponsor-challenges/${challengeId}/submissions/${submissionId}/votes`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "X-XSRF-TOKEN": csrfToken,
+          Authorization: `Bearer ${authToken}`,
+        },
+        credentials: "include",
+      });
+  
+      if (!response.ok) {
+        throw new Error(`Error checking vote status: ${response.statusText}`);
+      }
+  
+      const data = await response.json();
+      return data.some((vote: { user_id: string }) => vote.user_id === getUserIdFromLocalStorage());
+    } catch (error) {
+      console.error("Error checking vote status:", error);
+      return false;
+    }
+  };  
+  export const getVotesCount = async (submissionId: string): Promise<number> => {
+    try {
+      const csrfToken = getCsrfTokenFromCookie();
+      const authToken = localStorage.getItem("auth_token");
+  
+      if (!authToken) {
+        throw new Error("Authentication token is missing");
+      }
+  
+      const response = await fetch(`${API_URL}/api/sponsor-challenges/{challengeId}/submissions/${submissionId}/votes`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "X-XSRF-TOKEN": csrfToken,
+          Authorization: `Bearer ${authToken}`,
+        },
+        credentials: "include",
+      });
+  
+      if (!response.ok) {
+        throw new Error(`Error fetching votes count: ${response.statusText}`);
+      }
+  
+      const data = await response.json();
+      return data.votes_count;
+    } catch (error) {
+      console.error("Error fetching votes count:", error);
+      return 0;
+    }
+  };  
   

@@ -171,14 +171,14 @@ const SponsorChallengeList = () => {
                 
                 {/* Display Brand Logo */}
                 {challenge.brand_logo_id ? (
-                  <div className="brand-logo-container">
+                  <div className="brand-logo-container-admin">
                     <img
                       src={brandLogoUrls[challenge.id] || ''}  // Ensure the URL exists, else fallback to empty string
                       alt={`${challenge.brand_name} logo`}
                     />
                   </div>
                 ) : (
-                  <div className="brand-logo-container">
+                  <div className="brand-logo-container-admin">
                     <ImageOff color="#131313" size={70} />
                   </div>
                 )}

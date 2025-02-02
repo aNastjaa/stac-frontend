@@ -4,14 +4,12 @@ export interface ErrorMessages {
   password?: string;
   role?: string;
 }
- 
   export interface Theme {
     id: string;
     theme_name: string;  // Updated field name
     start_date: string;
     posts: Post[]; // Associated posts
   }
-
   export interface ArtworkResponse {
     id: string;
     user_id: string;
@@ -39,7 +37,6 @@ export interface ErrorMessages {
   comments_count?: number;
   likes_count?: number;
   }
-  
   export interface UserProfileType {
     id: string;
     username: string;
@@ -52,13 +49,11 @@ export interface ErrorMessages {
     bio: string | null;
     external_links?: string[]; 
   }
-
   export interface UserProfileStatsType {
     posts_count: number;
     comments_count: number;
     likes_count: number;
   }
-
   export interface UploadResponse {
     id: string; 
     file_url: string;
@@ -66,12 +61,10 @@ export interface ErrorMessages {
     avatar_url?: string;
     brand_logo_url?: string;
   }
-
   export interface Role {
     id: string;
     name: "basic" | "pro" | "admin";
   }
-  
   export interface User {
     id: string;
     username: string;
@@ -105,14 +98,6 @@ export interface ErrorMessages {
     brand_name: string;
     submission_deadline: string;
 }
-  // export interface SponsorSubmission {
-  //   id: string;
-  //   challenge_id: string;
-  //   user_id: string;
-  //   status: "pending" | "accepted" | "rejected";
-  //   created_at: string;
-  //   updated_at: string;
-  // }
   export interface Submission {
     id: string;
     user_id: string;
@@ -159,11 +144,9 @@ export interface ErrorMessages {
     created_at: string;
     updated_at: string; 
   }
-  export interface VoteResponse {
-    submission_id: string;  
-    user_id: string; 
-    vote_type: 'upvote' | 'downvote'; 
-    total_votes: number;  
-    created_at: string;  
-    updated_at: string; 
+  export interface Vote {
+    id: string;
+    user_id: string;
+    submission_id: string;
   }
+  

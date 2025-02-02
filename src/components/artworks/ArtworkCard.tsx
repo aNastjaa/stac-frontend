@@ -6,15 +6,15 @@ import { ArtworkResponse, Like } from "../../utils/types";
 
 interface ArtworkCardProps {
   artwork: ArtworkResponse;
-  userId: string; // Passing userId to track likes
+  userId: string; 
   onClick?: () => void;
 }
 
 const ArtworkCard = ({ artwork, userId, onClick }: ArtworkCardProps) => {
   const [likesCount, setLikesCount] = useState<number>(0);
   const [commentsCount, setCommentsCount] = useState<number>(0);
-  const [userHasLiked, setUserHasLiked] = useState<boolean>(false); // Track if user has liked the post
-  const [likes, setLikes] = useState<Like[]>([]); // Track likes for the current post
+  const [userHasLiked, setUserHasLiked] = useState<boolean>(false); 
+  const [likes, setLikes] = useState<Like[]>([]);
 
   useEffect(() => {
     // Fetch the likes and comments count when the artwork is loaded
@@ -37,7 +37,7 @@ const ArtworkCard = ({ artwork, userId, onClick }: ArtworkCardProps) => {
     };
 
     loadCounts();
-  }, [artwork.id, userId]); // Re-run when artwork or userId changes
+  }, [artwork.id, userId]);
 
   const handleLikeToggle = async () => {
     try {

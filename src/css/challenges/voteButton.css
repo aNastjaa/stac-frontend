@@ -1,0 +1,20 @@
+.vote-button {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background-color: rgba(0, 0, 0, 0.3);
+    padding: 4px 6px;
+    border-radius: 4px;
+    color: #fff;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  .vote-button:hover {
+    transform: scale(1.1);
+  }
+  
+  .vote-count {
+    font-size: 0.85rem;
+  }
+  

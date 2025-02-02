@@ -21,38 +21,42 @@ const UserProfile = () => {
 
   useEffect(() => {
     const userId = getUserIdFromLocalStorage();
-
+  
     if (!userId) {
       console.error('No user ID found in localStorage');
       setLoading(false);
       navigate('/login');
       return;
     }
-
+  
     const storedUser = localStorage.getItem('auth_user');
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
       setUsername(parsedUser.username || 'there');
-      setRole(parsedUser.role_name || '');  // Set role from localStorage
+      setRole(parsedUser.role_name || '');
     }
-
+  
     const fetchProfileData = async () => {
       try {
         const profileId = await getProfileIdByUserId(userId);
         if (profileId) {
           const userProfile = await getUserProfileByProfileId(profileId);
           setProfile(userProfile);
-
-          if (userProfile && userProfile.avatar_id) {
+  
+          if (userProfile?.avatar_id) {
             const avatarUrl = await fetchAvatarUrl(userProfile.avatar_id);
             setAvatarUrl(avatarUrl || '');
           }
         }
-
-        // Fetch artworks related to the user
+  
+        // Fetch all artworks (even if API doesn't filter properly)
         const userArtworks = await fetchUserArtworks(userId);
-        setArtworks(userArtworks);
-
+  
+        const filteredArtworks = userArtworks.filter(
+          (artwork) => artwork.user.id === userId
+        );
+  
+        setArtworks(filteredArtworks);
         setLoading(false);
       } catch (error) {
         console.error('Error fetching profile data', error);
@@ -60,9 +64,10 @@ const UserProfile = () => {
         navigate('/edit-profile');
       }
     };
-
+  
     fetchProfileData();
   }, [navigate]);
+  
 
   const handleArtworkClick = (artwork: ArtworkResponse) => {
     setSelectedArtwork(artwork);
