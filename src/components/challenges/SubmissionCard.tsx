@@ -4,11 +4,12 @@ import VoteButton from "../../components/challenges/VoteButton";
 import "../../css/challenges/submissionCard.css";
 
 interface SubmissionCardProps {
-  submission: Submission & { votes?: Vote[] }; // Include optional votes array
+  submission: Submission & { votes?: Vote[] };
+  isPending?: boolean; // New prop for pending status
   onClick?: () => void;
 }
 
-const SubmissionCard = ({ submission, onClick }: SubmissionCardProps) => {
+const SubmissionCard = ({ submission, isPending, onClick }: SubmissionCardProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [username, setUsername] = useState<string | null>(null);
   const [votesCount, setVotesCount] = useState<number>(
@@ -17,17 +18,14 @@ const SubmissionCard = ({ submission, onClick }: SubmissionCardProps) => {
 
   useEffect(() => {
     setIsLoading(true);
-
-    // Simulate a short delay before showing the username
     setTimeout(() => {
       setUsername(submission.user.username);
       setIsLoading(false);
     }, 1000);
-
   }, [submission.user.username]);
 
   return (
-    <div className="submission-card" onClick={onClick}>
+    <div className={`submission-card ${isPending ? 'blurred' : ''}`} onClick={onClick}>
       {/* Submission Header */}
       <div className="submission-card-header">
         {isLoading ? <span>Loading...</span> : `@${username}`}
@@ -49,13 +47,17 @@ const SubmissionCard = ({ submission, onClick }: SubmissionCardProps) => {
           <VoteButton
             challengeId={submission.sponsor_challenge_id}
             submissionId={submission.id}
-            setVotesCount={setVotesCount} // Pass function to update count
+            setVotesCount={setVotesCount}
           />
           <span className="icon-count">{votesCount} votes</span>
         </div>
       </div>
+
+      {/* Approval Overlay for Pending Submissions */}
+      {isPending && <div className="approval-overlay">Waiting to be approved</div>}
     </div>
   );
 };
 
 export default SubmissionCard;
+

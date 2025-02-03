@@ -1,4 +1,4 @@
-import {ArtworkResponse, UploadResponse, UserProfileType,} from "./types";
+import {ArtworkResponse, Submission, UploadResponse, UserProfileType,} from "./types";
 //sasha@gmail.com
 //La;G7,8bP&V7
 
@@ -442,5 +442,33 @@ export const fetchUserArtworks = async (userId: string): Promise<ArtworkResponse
     throw error;
   }
 };
+//Get all the submissions related to user
+export const fetchUserSubmissions = async (userId: string, challengeId?: string): Promise<Submission[]> => {
+  try {
+    const csrfToken = getCsrfTokenFromCookie();
+    const authToken = localStorage.getItem('auth_token');
 
+    if (!authToken) {
+      throw new Error('Authentication token is missing');
+    }
 
+    const response = await fetch(`${API_URL}/api/sponsor-challenges/${challengeId}/submissions?user_id=${userId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-XSRF-TOKEN': csrfToken,
+        'Authorization': `Bearer ${authToken}`,
+      },
+      credentials: 'include',
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error fetching submissions: ${response.statusText}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching submissions:', error);
+    throw error;
+  }
+};
