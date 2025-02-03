@@ -24,8 +24,20 @@ const SubmissionCard = ({ submission, isPending, onClick }: SubmissionCardProps)
     }, 1000);
   }, [submission.user.username]);
 
+  // Handle click to prevent interaction if submission is pending
+  const handleClick = (e: React.MouseEvent) => {
+    if (isPending) {
+      e.preventDefault(); // Prevent any interaction if pending
+    } else if (onClick) {
+      onClick();
+    }
+  };
+
   return (
-    <div className={`submission-card ${isPending ? 'blurred' : ''}`} onClick={onClick}>
+    <div 
+      className={`submission-card ${isPending ? "blurred" : ""}`} 
+      onClick={handleClick}
+    >
       {/* Submission Header */}
       <div className="submission-card-header">
         {isLoading ? <span>Loading...</span> : `@${username}`}
@@ -43,14 +55,17 @@ const SubmissionCard = ({ submission, isPending, onClick }: SubmissionCardProps)
 
       {/* Submission Footer (Vote Button & Count) */}
       <div className="submission-card-footer">
-        <div className="icon-container">
-          <VoteButton
-            challengeId={submission.sponsor_challenge_id}
-            submissionId={submission.id}
-            setVotesCount={setVotesCount}
-          />
-          <span className="icon-count">{votesCount} votes</span>
-        </div>
+        {/* Conditionally render vote button if submission is not pending */}
+        {!isPending && (
+          <div className="icon-container">
+            <VoteButton
+              challengeId={submission.sponsor_challenge_id}
+              submissionId={submission.id}
+              setVotesCount={setVotesCount}
+            />
+            <span className="icon-count">{votesCount} votes</span>
+          </div>
+        )}
       </div>
 
       {/* Approval Overlay for Pending Submissions */}
@@ -60,4 +75,3 @@ const SubmissionCard = ({ submission, isPending, onClick }: SubmissionCardProps)
 };
 
 export default SubmissionCard;
-

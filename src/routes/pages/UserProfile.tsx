@@ -57,8 +57,9 @@ const UserProfile = () => {
             setAvatarUrl(avatarUrl || '');
           }
         }
-
+        
         const userArtworks = await fetchUserArtworks(userId);
+        console.log("Fetched artworks:", userArtworks);
         const filteredArtworks = userArtworks.filter(
           (artwork) => artwork.user.id === userId
         );
@@ -136,7 +137,6 @@ const UserProfile = () => {
 
           {/* Artworks */}
           <div className="user-artworks">
-            <h3>Artworks</h3>
             {artworks.length > 0 ? (
               artworks.map((artwork) => (
                 <ArtworkCard
@@ -144,10 +144,14 @@ const UserProfile = () => {
                   artwork={artwork}
                   onClick={() => handleArtworkClick(artwork)}
                   userId={artwork.user.id}
+                  isPending={artwork.status === 'pending'}
                 />
               ))
             ) : (
-              <p>You don’t have any artworks yet! Go to the <Link to="/artworks">Artwork page</Link> and start sharing.</p>
+              <div className="artwork-empty-placeholder">
+                <span className='row'>You don’t have any artworks yet! </span>
+                <span className='row'>Go to the <Link to="/artworks" className="link-highlight-artwork">Artwork page</Link> and start sharing.</span>
+              </div>
             )}
           </div>
 
@@ -161,11 +165,9 @@ const UserProfile = () => {
               </div>
             ) : submissions.length === 0 ? (
               <div className="sponsor-submission-empty-placeholder">
-                <p>
-                  Here you will see your Sponsor Submissions, but you don’t have any yet 👀.
-                  Go to <Link to="/sponsor-challenges" className="link-highlight">Sponsor Challenges</Link> and try yourself!
-                  Winners will get a collaboration with the brand, cool yeah? 🚀
-                </p>
+                <span className='row'>Here you will see your Sponsor Submissions, but you don’t have any yet 👀</span>
+                <span className='row'>Go to <Link to="/sponsor-challenges" className="link-highlight">Sponsor Challenges</Link> and try yourself!</span>
+                <span className='row'>Winners will get a collaboration with the brand, cool yeah? 🚀</span>
               </div>
             ) : (
               <section className="submissions-gallery">

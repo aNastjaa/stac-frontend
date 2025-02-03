@@ -281,19 +281,29 @@
     text-align: center;
   }
 
-  .sponsor-submission-empty-placeholder{
+  .sponsor-submission-empty-placeholder, .artwork-empty-placeholder {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 1rem;
+    text-align: center;
+    margin-top: 1rem;
   }
-
+  .link-highlight-artwork{
+    color: #131313;
+    font-family: 'bebas neue';
+    font-size: 24px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    text-decoration: underline;
+  }
   .link-highlight{
     color: #E3E3E3;
     font-family: 'bebas neue';
     font-size: 24px;
     letter-spacing: 1px;
     cursor: pointer;
+    text-decoration: underline;
   }
 
 .submissions-container{
