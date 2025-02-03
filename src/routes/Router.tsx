@@ -13,7 +13,7 @@ const Login = lazy(() => import("./pages/Login"));
 const UserProfile = lazy(() => import("./pages/UserProfile"));
 const ArtWorks = lazy(() => import("./pages/ArtWorks"));
 const SponsorChallenges = lazy(() => import("./pages/SponsorChallenges"));
-const ChallengeDetail = lazy(() => import("../components/challenges/ChallengeDetail")); // ✅ Added Challenge Detail
+const ChallengeDetail = lazy(() => import("../components/challenges/ChallengeDetail"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const EditProfile = lazy(() => import("../components/EditProfile"));

@@ -89,6 +89,11 @@
     margin-bottom: 1rem;
   }
 
+  .external-links a{
+    color: #131313;
+    text-decoration: underline;
+  }
+
   .profile-not-found {
     display: flex;
     flex-direction: column;
