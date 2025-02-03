@@ -1,51 +1,36 @@
 import { useEffect, useState } from "react";
-import { Submission } from "../../utils/types";
+import { Submission, Vote } from "../../utils/types";
 import VoteButton from "../../components/challenges/VoteButton";
-import { getVotesCount } from "../../utils/api/challenges";
 import "../../css/challenges/submissionCard.css";
 
 interface SubmissionCardProps {
-  submission: Submission;
+  submission: Submission & { votes?: Vote[] }; // Include optional votes array
   onClick?: () => void;
 }
 
 const SubmissionCard = ({ submission, onClick }: SubmissionCardProps) => {
-  const [votesCount, setVotesCount] = useState<number>(0);
-  const [isLoading, setIsLoading] = useState<boolean>(true); // State for loading
-  const [username, setUsername] = useState<string | null>(null); // State for username
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [username, setUsername] = useState<string | null>(null);
+  const [votesCount, setVotesCount] = useState<number>(
+    submission.votes ? Math.max(submission.votes.length, 1) : 1
+  );
 
   useEffect(() => {
-    // Simulating a delay for the first render
     setIsLoading(true);
-    
-    // Assuming the username is already available on the submission object
-    const fetchVotes = async () => {
-      try {
-        const count = await getVotesCount(submission.id);
-        setVotesCount(count);
-      } catch (error) {
-        console.error("Error fetching votes:", error);
-      }
-    };
 
-    // Set a timeout to simulate loading state for the first render
+    // Simulate a short delay before showing the username
     setTimeout(() => {
-      setUsername(submission.user.username); // Set the username after a delay (simulating API call)
-      setIsLoading(false); // Set loading state to false once done
-    }, 1000); // Adjust the timeout to suit your needs for loading duration
+      setUsername(submission.user.username);
+      setIsLoading(false);
+    }, 1000);
 
-    fetchVotes();
-  }, [submission.id, submission.user.username]); // Dependency array includes the username
+  }, [submission.user.username]);
 
   return (
     <div className="submission-card" onClick={onClick}>
       {/* Submission Header */}
       <div className="submission-card-header">
-        {isLoading ? (
-          <span>Loading...</span> // Show "Loading..." when the username is being fetched
-        ) : (
-          `@${username}` // Render the username when it's available
-        )}
+        {isLoading ? <span>Loading...</span> : `@${username}`}
       </div>
 
       {/* Submission Image */}
@@ -64,7 +49,7 @@ const SubmissionCard = ({ submission, onClick }: SubmissionCardProps) => {
           <VoteButton
             challengeId={submission.sponsor_challenge_id}
             submissionId={submission.id}
-            setVotesCount={setVotesCount}
+            setVotesCount={setVotesCount} // Pass function to update count
           />
           <span className="icon-count">{votesCount} votes</span>
         </div>
