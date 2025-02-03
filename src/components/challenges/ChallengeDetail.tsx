@@ -35,11 +35,12 @@ const ChallengeDetail = () => {
           setBrandLogoUrl(logoUrl);
         }
 
-        // Fetch and filter submissions
+        // Fetch all submissions and filter for accepted ones only
         const submissionsData = await getSubmissions(challengeId);
-        setSubmissions(submissionsData);
-        setVisibleSubmissions(submissionsData.slice(0, 6));
-        setHasMore(submissionsData.length > 6);
+        const acceptedSubmissions = submissionsData.filter((submission) => submission.status === "accepted");
+        setSubmissions(acceptedSubmissions);
+        setVisibleSubmissions(acceptedSubmissions.slice(0, 6));
+        setHasMore(acceptedSubmissions.length > 6);
       } catch (error) {
         console.error("Error fetching challenge details:", error);
         setErrorMessage("Failed to load challenge details. Please try again later.");
@@ -75,8 +76,13 @@ const ChallengeDetail = () => {
       setErrorMessage(null);
 
       // Add new submission and re-filter
-      setSubmissions((prevState) => [newSubmission, ...prevState]);
-      setVisibleSubmissions((prevState) => [newSubmission, ...prevState].slice(0, 5));
+      setSubmissions((prevState) => {
+        const updatedSubmissions = [newSubmission, ...prevState];
+        const acceptedSubmissions = updatedSubmissions.filter((submission) => submission.status === "accepted");
+        setVisibleSubmissions(acceptedSubmissions.slice(0, 6));
+        setHasMore(acceptedSubmissions.length > 6);
+        return acceptedSubmissions;
+      });
 
       alert("Work submitted successfully!");
   
@@ -190,9 +196,8 @@ const ChallengeDetail = () => {
           <h2>Submissions</h2>
           <div className="submissions-container">
             {visibleSubmissions.map((submission) => (
-              <div key={submission.id} className={`submission-card ${submission.status === "pending" ? "blurred" : ""}`}>
+              <div key={submission.id}>
                 <SubmissionCard submission={submission} />
-                {submission.status === "pending" && <div className="approval-overlay">Waiting to be approved</div>}
               </div>
             ))}
           </div>

@@ -108,7 +108,7 @@ export interface ErrorMessages {
     };
     image_path: string;
     sponsor_challenge_id: string; 
-    status: "pending" | "approved" | "rejected";
+    status: "pending" | "accepted" | "rejected";
     description: string;
     created_at: string;
     updated_at: string;
