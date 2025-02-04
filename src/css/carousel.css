@@ -1,5 +1,5 @@
 /* Carousel styling */
-.carousel-container {
+/* .carousel-container {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -7,7 +7,7 @@
     position: relative;
     gap: 1rem;
     max-width: 700px;
-  }
+  } */
   
   /* Central slide is larger */
   .carousel-slide {
@@ -18,7 +18,7 @@
   /* Side slides are smaller */
   .carousel-slide.side {
     width: 30%; /* Side slides are smaller */
-    opacity: 0.6; /* Make side slides less prominent */
+    opacity: 0.6; 
   }
   
   /* Hover effect to bring side slides to focus */
@@ -26,17 +26,6 @@
     transform: scale(1.1);
     opacity: 1;
   }
-  
-  /* Pagination styling */
-  .pagination {
-    position: absolute;
-    bottom: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 8px;
-  }
-    
   
   .swiper-3d .swiper-slide-shadow-right, .swiper-3d .swiper-slide-shadow-left{
     background-image: none;

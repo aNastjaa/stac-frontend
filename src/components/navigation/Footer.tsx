@@ -6,6 +6,7 @@ interface FooterProps {
 
 const Footer = ({ isDarkMode }: FooterProps) => {
   return (
+    <div className="footer-wraper">
     <footer className={`footer ${isDarkMode ? "dark" : "light"}`}> {/* Apply light or dark style */}
       <div className="footer-content">
         <div className="footer-text">
@@ -21,6 +22,7 @@ const Footer = ({ isDarkMode }: FooterProps) => {
         </div>
       </div>
     </footer>
+    </div>
   );
 };
 

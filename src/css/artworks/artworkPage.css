@@ -64,6 +64,16 @@
   }
 }
 
+@media (min-width: 699px){
+  .artworks-gallery{
+    display: flex;
+  }
+
+  .artwork-card {
+    height: auto;
+    width: 31%;}
+}
+
 /* Modal overlay */
 .modal-overlay {
     position: fixed;
