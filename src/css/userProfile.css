@@ -234,6 +234,12 @@
     padding: 1rem 0;
   }
 
+  .link-to-pro{
+    color: #131313;
+    text-decoration: underline;
+    font-weight: 400;
+  }
+
   .action-buttons-profile{
     margin-top: 2rem;
     width: 100%;

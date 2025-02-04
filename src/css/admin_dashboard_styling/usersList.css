@@ -95,6 +95,7 @@ main{
 .user-info{
     display: flex;
     flex-direction: column;
+    text-align: left;
 }
 
   .admin-list-item {

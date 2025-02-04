@@ -232,7 +232,7 @@ const EditProfile = () => {
           />
         ) : (
           <p>
-            Only <a href="/">Pro users</a> <br/>
+            Only <a href="/" className="link-to-pro">Pro users</a> <br/>
             can add external links.
           </p>
         )}

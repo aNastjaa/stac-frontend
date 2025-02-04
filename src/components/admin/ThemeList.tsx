@@ -117,19 +117,27 @@ const ThemeList = () => {
       <h2>Themes</h2>
       <div className="theme-creation">
         <h3>Create Theme</h3>
-        <input
-          type="text"
-          placeholder="Enter theme name"
-          value={newThemeName}
-          onChange={(e) => setNewThemeName(e.target.value)}
-          disabled={loading} // Disable input when loading
-        />
-        <input
-          type="date"
-          value={startDate}
-          onChange={(e) => setStartDate(e.target.value)}
-          disabled={loading} // Disable input when loading
-        />
+        <div className="input-field">
+          <label htmlFor="new-theme-name">Theme Name:</label>
+          <input
+            id="new-theme-name"
+            type="text"
+            placeholder="Enter theme name"
+            value={newThemeName}
+            onChange={(e) => setNewThemeName(e.target.value)}
+            disabled={loading} // Disable input when loading
+          />
+        </div>
+        <div className="input-field">
+          <label htmlFor="start-date">Start Date:</label>
+          <input
+            id="start-date"
+            type="date"
+            value={startDate}
+            onChange={(e) => setStartDate(e.target.value)}
+            disabled={loading} // Disable input when loading
+          />
+        </div>
         <ButtonLong onClick={handleThemeCreation} text="Create Theme" disabled={loading} /> {/* Disable button when loading */}
       </div>
   
@@ -137,7 +145,7 @@ const ThemeList = () => {
         <h3>Current Theme:</h3>
         {currentTheme ? (
           <div className='current-theme-info'>
-            <p>Name: <span className='theme-name'>{currentTheme.theme_name}</span></p>
+            <p>Name: <span className='theme-name-admin'>{currentTheme.theme_name}</span></p>
             <p>Start Date: <span className='theme-date'>{currentTheme.start_date}</span></p>
           </div>
         ) : (
@@ -148,31 +156,31 @@ const ThemeList = () => {
       <section className="all-themes">
         <h3>All Themes:</h3>
         {allThemes.length > 0 ? (
-              <ul>
-              {allThemes.map((theme) => (
-                <li key={theme.id}>
-                  <p><span className='theme-name'>{theme.theme_name}</span></p>
-                  <p>Start Date: {theme.start_date}</p>
-                  <div>
-                    <ButtonPrimary
-                      onClick={() => setSelectedTheme(theme)}
-                      text="Edit"
-                      disabled={loading} 
-                    />
-                    <ButtonPrimary
-                      onClick={() => handleMoveToArchive(theme.id)}
-                      text="Move to Archive"
-                      disabled={loading} 
-                    />
-                    <ButtonPrimary
-                      onClick={() => handleThemeDelete(theme.id)}
-                      text="Delete Theme"
-                      disabled={loading} 
-                    />
-                  </div>
-                </li>
-              ))}
-            </ul>
+          <ul>
+            {allThemes.map((theme) => (
+              <li key={theme.id}>
+                <p><span className='theme-name-admin'>{theme.theme_name}</span></p>
+                <p>Start Date: {theme.start_date}</p>
+                <div>
+                  <ButtonPrimary
+                    onClick={() => setSelectedTheme(theme)}
+                    text="Edit"
+                    disabled={loading} 
+                  />
+                  <ButtonPrimary
+                    onClick={() => handleMoveToArchive(theme.id)}
+                    text="Move to Archive"
+                    disabled={loading} 
+                  />
+                  <ButtonPrimary
+                    onClick={() => handleThemeDelete(theme.id)}
+                    text="Delete Theme"
+                    disabled={loading} 
+                  />
+                </div>
+              </li>
+            ))}
+          </ul>
         ) : (
           <p>No themes available.</p>
         )}
@@ -181,23 +189,31 @@ const ThemeList = () => {
       {selectedTheme && (
         <div className="edit-theme">
           <h3>Edit Theme</h3>
-          <input
-            type="text"
-            placeholder="Theme Name"
-            value={selectedTheme.theme_name}
-            onChange={(e) =>
-              setSelectedTheme({ ...selectedTheme, theme_name: e.target.value })
-            }
-            disabled={loading} // Disable input when loading
-          />
-          <input
-            type="date"
-            value={selectedTheme.start_date}
-            onChange={(e) =>
-              setSelectedTheme({ ...selectedTheme, start_date: e.target.value })
-            }
-            disabled={loading} // Disable input when loading
-          />
+          <div className="input-field">
+            <label htmlFor="edit-theme-name">Theme Name:</label>
+            <input
+              id="edit-theme-name"
+              type="text"
+              placeholder="Theme Name"
+              value={selectedTheme.theme_name}
+              onChange={(e) =>
+                setSelectedTheme({ ...selectedTheme, theme_name: e.target.value })
+              }
+              disabled={loading} // Disable input when loading
+            />
+          </div>
+          <div className="input-field">
+            <label htmlFor="edit-start-date">Start Date:</label>
+            <input
+              id="edit-start-date"
+              type="date"
+              value={selectedTheme.start_date}
+              onChange={(e) =>
+                setSelectedTheme({ ...selectedTheme, start_date: e.target.value })
+              }
+              disabled={loading} // Disable input when loading
+            />
+          </div>
           <ButtonPrimary
             onClick={() => {
               handleThemeUpdate(
@@ -211,10 +227,11 @@ const ThemeList = () => {
           />
         </div>
       )}
-
+  
       {loading && <p>Loading...</p>} {/* Show loading indicator */}
     </div>
   );
+  
 };
 
 export default ThemeList;

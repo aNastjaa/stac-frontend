@@ -103,9 +103,12 @@ const SponsorChallengeList = () => {
 
       {/* Create Challenge Form */}
       <div className="admin-form">
-      <h3 className='challenge-section-header'> Create new challenge </h3>
+        <h3 className='challenge-section-header'> Create new challenge </h3>
+
         <div className="input-field">
+          <label htmlFor="title">Title:</label>
           <input
+            id="title"
             className={`admin-input ${errorMessages.title ? 'has-error' : ''}`}
             type="text"
             placeholder="Title"
@@ -116,7 +119,9 @@ const SponsorChallengeList = () => {
         </div>
 
         <div className="input-field">
+          <label htmlFor="brief">Brief:</label>
           <textarea
+            id="brief"
             className={`admin-input ${errorMessages.brief ? 'has-error' : ''}`}
             placeholder="Brief"
             value={newChallenge.brief}
@@ -126,7 +131,9 @@ const SponsorChallengeList = () => {
         </div>
 
         <div className="input-field">
+          <label htmlFor="brand_name">Brand Name:</label>
           <input
+            id="brand_name"
             className={`admin-input ${errorMessages.brand_name ? 'has-error' : ''}`}
             type="text"
             placeholder="Brand Name"
@@ -137,7 +144,9 @@ const SponsorChallengeList = () => {
         </div>
 
         <div className="input-field">
+          <label htmlFor="submission_deadline">Submission Deadline:</label>
           <input
+            id="submission_deadline"
             className={`admin-input ${errorMessages.submission_deadline ? 'has-error' : ''}`}
             type="datetime-local"
             placeholder="Submission Deadline"
@@ -149,7 +158,9 @@ const SponsorChallengeList = () => {
 
         {/* Brand Logo File Upload */}
         <div className="input-field">
+          <label htmlFor="brand_logo">Brand Logo:</label>
           <input
+            id="brand_logo"
             type="file"
             accept="image/*"
             onChange={handleBrandLogoChange}
@@ -163,12 +174,11 @@ const SponsorChallengeList = () => {
 
       {/* List of Sponsor Challenges */}
       <ul className="sponsor-challenge-card-list">
-      <h3 className='challenge-section-header'> Current challenges </h3>
+        <h3 className='challenge-section-header'> Current challenges </h3>
         {challenges.length > 0 ? (
           challenges.map((challenge) => (
             <li key={challenge.id}>
               <div className="sponsor-challenge-card">
-                
                 {/* Display Brand Logo */}
                 {challenge.brand_logo_id ? (
                   <div className="brand-logo-container-admin">

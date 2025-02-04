@@ -23,3 +23,9 @@ align-items: center;
     justify-content: space-around;
     flex-wrap: wrap;
 }
+
+.input-field label{
+    color: #131313;
+    font-weight: 400;
+    font-size: 15px;
+}
