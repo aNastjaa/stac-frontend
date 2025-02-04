@@ -8,11 +8,13 @@
     text-align: center;
   }
   
-  .hero-section {
+  .hero-section-challenge-detail {
     position: relative;
     padding: 20px;
     border-radius: 30px;
     margin-bottom: 20px;
+    border-radius: 30px;
+    box-shadow: 5px 6px 7px rgba(0, 0, 0, 0.25);
   }
   
   .brand-logo {
@@ -21,10 +23,12 @@
     margin-bottom: 10px;
   }
   
-  .brand-name {
-    font-size: 24px;
+  .brand-name-challenge-detail {
+    font-size: calc(1.8rem +0.3vw);
     font-weight: bold;
     margin-bottom: 5px;
+    color: #131313;
+    font-family: "Bebas neue";
   }
   
   .challenge-detail-title {
@@ -112,14 +116,16 @@
   
   .image-icon {
     cursor: pointer;
-    margin-top: 10px;
-    width: 50px;
-    height: 50px;
+    width: 70px;
+    height: 70px;
   }
-  
+  .icon-explanation{
+    font-size: 14px;
+  }
   .image-preview {
-    max-width: 100px;
+    max-width: 150px;
     margin-top: 10px;
+    border-radius: 20px;
   }
   
   /* Form Layout */

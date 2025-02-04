@@ -24,6 +24,7 @@ const ChallengeDetail = () => {
   const [hasMore, setHasMore] = useState(true);
   const [selectedSubmission, setSelectedSubmission] = useState<Submission | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const roleName = localStorage.getItem("role_name");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -124,13 +125,13 @@ const ChallengeDetail = () => {
     <div className="challange-details">
       <div className="challenge-detail-container">
         {/* Hero Section with Brand Logo */}
-        <section className="hero-section">
+        <section className="hero-section-challenge-detail">
           {brandLogoUrl && <img src={brandLogoUrl} alt={challenge.brand_name} className="brand-logo" />}
-          <h1 className="brand-name">{challenge.brand_name}</h1>
+          <h1 className="brand-name-challenge-detail">{challenge.brand_name}</h1>
           <h2 className="challenge-detail-title">{challenge.title}</h2>
           <p className="challenge-detail-brief">{challenge.brief}</p>
           <p className="deadline">Deadline: {challenge.submission_deadline}</p>
-          <ButtonLong onClick={() => setShowForm(true)} text="Submit" />
+          {roleName === "pro" && <ButtonLong onClick={() => setShowForm(true)} text="Submit" />}
         </section>
   
         {/* Submission Modal */}
@@ -144,6 +145,7 @@ const ChallengeDetail = () => {
                   <label className="form-label" onClick={handleIconClick}>
                     <ImagePlus size={50} color="#131313" className="image-icon" />
                   </label>
+                  <p className="icon-explanation">Click on the icon <br/>to choose a photo</p> {/* Added explanatory text */}
                   <input
                     ref={fileInputRef}
                     type="file"
