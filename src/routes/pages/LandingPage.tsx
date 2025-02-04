@@ -1,10 +1,40 @@
+import { useEffect, useState } from "react";
 import { ButtonCTA } from "../../components/Buttons";
-import Carousel1 from "../../components/Carousel1";
+import ArtworkCarousel from "../../components/carousels/ArtworkCarousel"; // Import the ArtworkCarousel component
 import SponsorCarousel from "../../components/SponsorCarousel";
-//import SponsorCarousel from "../../components/SponsorCarousel";
 import "../../css/landingPage.css";
+import { fetchArtworks } from "../../utils/api/artworks";  // Correct import for the API function
+import { ArtworkResponse } from "../../utils/types";  // Assuming this is your type for artwork
 
 const LandingPage = () => {
+  const [artworks, setArtworks] = useState<ArtworkResponse[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [userId] = useState<string>("");
+  const [isPending] = useState<boolean>(false);  
+
+  useEffect(() => {
+    // Fetch all artworks from the API or backend
+    const getArtworks = async () => {
+      try {
+        setLoading(true);
+        const fetchedArtworks = await fetchArtworks();  // Fetch artworks from the API
+
+        // Filter out pending artworks before setting the state
+        const approvedArtworks = fetchedArtworks.filter(artwork => artwork.status !== "pending");
+
+        setArtworks(approvedArtworks); // Only set approved artworks
+      } catch (error) {
+        console.error("Error fetching artworks:", error);
+        setError("Failed to load artworks.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    getArtworks();
+  }, []);
+
   return (
     <div className="landing-page">
       {/* Hero Section */}
@@ -19,8 +49,16 @@ const LandingPage = () => {
       <section className="carousel-section">
         <h3>Monthly theme:</h3>
         <h2 className="bite">"Yellow color"</h2>
-        <Carousel1 />
-        <ButtonCTA text="Submit" link="/login" />
+        {loading ? (
+          <p>Loading artworks...</p>
+        ) : error ? (
+          <p>{error}</p>
+        ) : (
+          <ArtworkCarousel artworks={artworks} userId={userId} isPending={isPending} />
+        )}
+        <div className="submit-button-wrapper">
+          <ButtonCTA text="Submit" link="/login" />
+        </div>
       </section>
 
       {/* How It Works Section */}

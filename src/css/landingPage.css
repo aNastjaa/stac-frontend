@@ -41,15 +41,19 @@
   /* Carousel Section */
 .carousel-section {
     margin-top: 2rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
     margin-bottom: 1rem;
+    text-align: center;
   }
 .carousel-section h3{
     font-family: 'Bebas Neue', sans-serif;
     font-size: 20px;
+  }
+
+  .submit-button-wrapper{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 1rem;
   }
 
 .bite {

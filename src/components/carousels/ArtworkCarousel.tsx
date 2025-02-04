@@ -1,56 +1,44 @@
-import { useEffect, useState } from "react";
-import ArtworkCard from '../../components/artworks/ArtworkCard';
-import "../../css/carousel.css";  // CSS for the carousel styling
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/swiper-bundle.css";  // Fix Swiper CSS import
+import { EffectCoverflow, Pagination } from "swiper/modules";
+import ArtworkCard from "../../components/artworks/ArtworkCard";  // Assuming ArtworkCard is located in the same directory
+import { ArtworkResponse } from "../../utils/types";  // Assuming ArtworkResponse is defined in utils/types
+import "../../css/carousel.css";  // Carousel CSS for styling
 
-interface Submission {
-  id: string;
-  username: string;
-  image: string;
-  likesCount: number;
-  commentsCount: number;
+interface ArtworkCarouselProps {
+  artworks: ArtworkResponse[];  // artworks prop passed from the parent
+  userId: string;
+  isPending?: boolean;
 }
 
-const ArtworkCarousel = () => {
-  const [submissions, setSubmissions] = useState<Submission[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-
-  // Fetch submissions data
-  useEffect(() => {
-    const fetchSubmissions = async () => {
-      try {
-        const response = await fetch("/api/submissions"); // Adjust the endpoint as needed
-        const data = await response.json();
-        setSubmissions(data);
-      } catch (error) {
-        console.error("Error fetching submissions:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    
-    fetchSubmissions();
-  }, []);
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
+const ArtworkCarousel = ({ artworks, userId, isPending }: ArtworkCarouselProps) => {
   return (
-    <div className="carousel-container">
-      {submissions.map((submission, index) => (
-        <div
-          key={submission.id}
-          className={`carousel-slide ${index === 1 ? "center" : "side"}`} // Center the middle slide
-        >
+    <Swiper
+      effect={"coverflow"}
+      grabCursor={true}
+      centeredSlides={true}
+      slidesPerView={"auto"}
+      coverflowEffect={{
+        rotate: 50,
+        stretch: 0,
+        depth: 100,
+        modifier: 1,
+        slideShadows: true,
+      }}
+      pagination={true}
+      modules={[EffectCoverflow, Pagination]}
+      className="artwork-swiper"
+    >
+      {artworks.map((artwork) => (
+        <SwiperSlide key={artwork.id} className="carousel-slide">
           <ArtworkCard
-            username={submission.username}
-            image={submission.image}
-            likesCount={submission.likesCount}
-            commentsCount={submission.commentsCount}
+            artwork={artwork}
+            userId={userId}
+            isPending={isPending}
           />
-        </div>
+        </SwiperSlide>
       ))}
-    </div>
+    </Swiper>
   );
 };
 

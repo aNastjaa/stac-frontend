@@ -6,6 +6,7 @@
     overflow: hidden;
     position: relative;
     gap: 1rem;
+    max-width: 700px;
   }
   
   /* Central slide is larger */
@@ -35,35 +36,12 @@
     display: flex;
     gap: 8px;
   }
+    
   
-  .pagination button {
-    background-color: black;
-    color: white;
-    border: none;
-    padding: 8px;
-    border-radius: 50%;
-    cursor: pointer;
+  .swiper-3d .swiper-slide-shadow-right, .swiper-3d .swiper-slide-shadow-left{
+    background-image: none;
   }
-  
-  /* Responsive design */
-  @media (max-width: 700px) {
-    .carousel-container {
-      width: 100%;
-    }
-  
-    .carousel-slide {
-      width: 100%; /* Full width on smaller screens */
-    }
+  .swiper-pagination-bullet-active{
+    background: #131313;
   }
-  
-  /* Responsive design for very small screens */
-  @media (max-width: 500px) {
-    .carousel-slide {
-      width: 100%; /* Full width for single slide on very small screens */
-    }
-  
-    .pagination button {
-      padding: 6px;
-    }
-  }
-  
+ 

@@ -69,18 +69,18 @@ export const fetchCurrentTheme = async (): Promise<Theme | null> => {
   export const fetchArtworks = async (): Promise<ArtworkResponse[]> => {
     try {
       const csrfToken = getCsrfTokenFromCookie();
-      const authToken = localStorage.getItem('auth_token');
+      //const authToken = localStorage.getItem('auth_token');
 
-      if (!authToken) {
-        throw new Error('Authentication token is missing');
-      }
+      // if (!authToken) {
+      //   throw new Error('Authentication token is missing');
+      // }
 
       const response = await fetch(`${API_URL}/api/artworks`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
           'X-XSRF-TOKEN': csrfToken,
-          'Authorization': `Bearer ${authToken}`,
+          // 'Authorization': `Bearer ${authToken}`,
         },
         credentials: 'include',
       });

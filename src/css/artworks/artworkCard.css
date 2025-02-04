@@ -91,3 +91,25 @@
       margin-bottom: 1rem;
     }
   }
+
+    @media (min-width: 700px){
+      .artwork-card {
+        height: 500px;
+        width: auto;
+      }
+    }
+
+    @media  (max-width: 499px) {
+      .artwork-card{
+          width: 100%;
+          height: 400px;
+      }
+     
+  }
+      /* @media  (min-width: 500px) {
+          .artwork-card{
+              width: 100%;
+              height: 400px;
+          }
+         
+      } */
