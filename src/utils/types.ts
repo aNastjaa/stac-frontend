@@ -112,6 +112,7 @@ export interface ErrorMessages {
     description: string;
     created_at: string;
     updated_at: string;
+    votes_count: number; 
   }
   export interface Post {
     id: string;

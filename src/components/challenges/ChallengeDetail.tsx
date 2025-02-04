@@ -6,6 +6,7 @@ import { SponsorChallengeDetail, Submission } from "../../utils/types";
 import { ImagePlus, Info } from "lucide-react";
 import { ButtonLong, ButtonCTA, ButtonPrimary } from "../../components/Buttons";
 import SubmissionCard from "../../components/challenges/SubmissionCard";
+import FullScreenSubmission from "../../components/challenges/FullScreenSubmission";
 import "../../css/challenges/challengeDetail.css";
 import { getCsrfTokenFromCookie } from "../../utils/api";
 
@@ -21,6 +22,7 @@ const ChallengeDetail = () => {
   const [submissions, setSubmissions] = useState<Submission[]>([]);
   const [visibleSubmissions, setVisibleSubmissions] = useState<Submission[]>([]);
   const [hasMore, setHasMore] = useState(true);
+  const [selectedSubmission, setSelectedSubmission] = useState<Submission | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
@@ -35,7 +37,7 @@ const ChallengeDetail = () => {
           setBrandLogoUrl(logoUrl);
         }
 
-        // Fetch all submissions and filter for accepted ones only
+        // Fetch all submissions and filter accepted ones
         const submissionsData = await getSubmissions(challengeId);
         const acceptedSubmissions = submissionsData.filter((submission) => submission.status === "accepted");
         setSubmissions(acceptedSubmissions);
@@ -52,24 +54,24 @@ const ChallengeDetail = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-  
+
     if (!imageFile) {
       setErrorMessage("Please upload an image before submitting.");
       return;
     }
-  
+
     try {
       const csrfToken = getCsrfTokenFromCookie();
       if (!csrfToken) {
         throw new Error("CSRF token is missing");
       }
-  
+
       const formData = new FormData();
       formData.append("image", imageFile);
       formData.append("description", description);
-  
+
       const newSubmission = await submitWork(challengeId ?? 'default-challenge-id', formData, csrfToken);
-  
+
       setShowForm(false);
       setImageFile(null);
       setDescription("");
@@ -85,7 +87,7 @@ const ChallengeDetail = () => {
       });
 
       alert("Work submitted successfully!");
-  
+
     } catch (error) {
       if (error instanceof Error) {
         setErrorMessage(error.message);
@@ -108,6 +110,14 @@ const ChallengeDetail = () => {
     setHasMore(submissions.length > visibleSubmissions.length + nextBatch.length);
   };
 
+  const handleSubmissionClick = (submission: Submission) => {
+    setSelectedSubmission(submission);
+  };
+
+  const closeFullScreenSubmission = () => {
+    setSelectedSubmission(null);
+  };
+
   if (!challenge) return <p>Loading challenge details...</p>;
 
   return (
@@ -122,7 +132,7 @@ const ChallengeDetail = () => {
           <p className="deadline">Deadline: {challenge.submission_deadline}</p>
           <ButtonLong onClick={() => setShowForm(true)} text="Submit" />
         </section>
-
+  
         {/* Submission Modal */}
         {showForm && (
           <div className="modal-overlay">
@@ -144,7 +154,7 @@ const ChallengeDetail = () => {
                   />
                   {imageFile && <img src={URL.createObjectURL(imageFile)} alt="Preview" className="image-preview" />}
                 </div>
-
+  
                 <div className="form-group artwork-description">
                   <label className="form-label">Description:</label>
                   <div className="textarea-container">
@@ -158,7 +168,7 @@ const ChallengeDetail = () => {
                       className="info-button"
                       onClick={(e) => {
                         e.preventDefault();
-                        setShowInfo(true);
+                        setShowInfo(true); // Show info when clicked
                       }}
                       aria-label="Show information"
                     >
@@ -167,7 +177,7 @@ const ChallengeDetail = () => {
                   </div>
                   {errorMessage && <p className="error-message">{errorMessage}</p>}
                 </div>
-
+  
                 <div className="form-group">
                   <ButtonCTA text="Submit Artwork" link="#" onClick={handleSubmit} />
                 </div>
@@ -175,37 +185,48 @@ const ChallengeDetail = () => {
             </div>
           </div>
         )}
-
-        {/* Info Modal */}
+  
+        {/* Show Info Modal */}
         {showInfo && (
           <div className="info-modal">
-            <div className="info-modal-content">
-              <button className="info-close-button" onClick={() => setShowInfo(false)}>
-                &times;
+            <div className="info-content">
+              <h3>Important Information</h3>
+              <p>This is some important information about submitting your artwork to the challenge.</p>
+              <button onClick={() => setShowInfo(false)} className="close-info-button">
+                Close
               </button>
-              <p>
-                When you submit an artwork, it will be reviewed to ensure it matches the challenge.
-                After approval, your artwork will appear for everyone to admire!
-              </p>
             </div>
           </div>
         )}
-
+  
         {/* Submissions Gallery */}
         <section className="submissions-gallery">
           <h2>Submissions</h2>
           <div className="submissions-container">
             {visibleSubmissions.map((submission) => (
-              <div key={submission.id}>
-                <SubmissionCard submission={submission} />
+              <div key={submission.id} onClick={() => handleSubmissionClick(submission)}>
+                <SubmissionCard 
+                  submission={submission} 
+                  challengeName={challenge.title}
+                />
               </div>
             ))}
           </div>
           {hasMore && <ButtonPrimary onClick={loadMoreSubmissions} text="Load More" />}
         </section>
       </div>
+  
+      {/* FullScreenSubmission */}
+      {selectedSubmission && (
+        <FullScreenSubmission
+          submission={selectedSubmission}
+          challengeName={challenge.title}
+          votesCount={selectedSubmission.votes_count}
+          onClose={closeFullScreenSubmission}
+        />
+      )}
     </div>
-  );
+  );  
 };
 
 export default ChallengeDetail;

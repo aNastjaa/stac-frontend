@@ -1,20 +1,23 @@
 import { useEffect, useState } from "react";
 import { Submission, Vote } from "../../utils/types";
 import VoteButton from "../../components/challenges/VoteButton";
+import FullScreenSubmission from "../../components/challenges/FullScreenSubmission";
 import "../../css/challenges/submissionCard.css";
 
 interface SubmissionCardProps {
   submission: Submission & { votes?: Vote[] };
   isPending?: boolean; // New prop for pending status
   onClick?: () => void;
+  challengeName: string; // Add challengeName prop
 }
 
-const SubmissionCard = ({ submission, isPending, onClick }: SubmissionCardProps) => {
+const SubmissionCard = ({ submission, isPending, onClick, challengeName }: SubmissionCardProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [username, setUsername] = useState<string | null>(null);
   const [votesCount, setVotesCount] = useState<number>(
     submission.votes ? Math.max(submission.votes.length, 1) : 1
   );
+  const [isFullscreen, setIsFullscreen] = useState<boolean>(false); // State to toggle fullscreen
 
   useEffect(() => {
     setIsLoading(true);
@@ -33,6 +36,14 @@ const SubmissionCard = ({ submission, isPending, onClick }: SubmissionCardProps)
     }
   };
 
+  const handleOpenFullscreen = () => {
+    setIsFullscreen(true); // Open FullScreen view
+  };
+
+  const handleCloseFullscreen = () => {
+    setIsFullscreen(false); // Close FullScreen view
+  };
+
   return (
     <div 
       className={`submission-card ${isPending ? "blurred" : ""}`} 
@@ -44,7 +55,7 @@ const SubmissionCard = ({ submission, isPending, onClick }: SubmissionCardProps)
       </div>
 
       {/* Submission Image */}
-      <div className="submission-image-container">
+      <div className="submission-image-container" onClick={handleOpenFullscreen}>
         <img
           src={submission.image_path}
           alt="Submission"
@@ -70,6 +81,20 @@ const SubmissionCard = ({ submission, isPending, onClick }: SubmissionCardProps)
 
       {/* Approval Overlay for Pending Submissions */}
       {isPending && <div className="approval-overlay">Waiting to be approved</div>}
+
+      {/* Fullscreen Modal */}
+      {isFullscreen && (
+        <div className="fullscreen-modal-overlay" onClick={handleCloseFullscreen}>
+          <div className="fullscreen-modal-content" onClick={(e) => e.stopPropagation()}>
+            <FullScreenSubmission
+              submission={submission}
+              onClose={handleCloseFullscreen}
+              challengeName={challengeName}
+              votesCount={votesCount}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };
