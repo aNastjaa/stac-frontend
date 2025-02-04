@@ -201,7 +201,7 @@ const ChallengeDetail = () => {
   
         {/* Submissions Gallery */}
         <section className="submissions-gallery">
-          <h2>Submissions</h2>
+          <h2>Submissions Gallery</h2>
           <div className="submissions-container">
             {visibleSubmissions.map((submission) => (
               <div key={submission.id} onClick={() => handleSubmissionClick(submission)}>

@@ -2,7 +2,7 @@
     padding: 0 1rem;
 }
 
-.hero-section {
+.challenge-hero-section {
     margin-top: 1rem;
     display: flex;
     flex-direction: column;
@@ -16,13 +16,13 @@
     text-align: center;
   }
   
-  .hero-section h1 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: calc(2rem + 0.3vw);
+  .challenge-hero-section h1 {
+    font-family: 'Sedgwick Ave Display';
+    font-size: calc(1.8rem + 0.3vw);
     color: #131313;
   }
 
-  .hero-section p {
+  .challenge-hero-section p {
     font-size: 16px;
     font-weight: 200;
     color: #131313;
@@ -30,12 +30,32 @@
     margin-bottom: 1rem;
   }
 
-  .how-it-works, .update-to-pro{
+  .challenge-how-it-works{
     margin-top: 2rem;
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
+    gap: 1rem;
+  }
+
+  .update-to-pro{
+    border-radius: 30px;
+    box-shadow: 5px 6px 7px rgba(0, 0, 0, 0.25);
+    padding: 2rem 1rem;
+    text-align: center;
+    color: #e3e3e3;
+    background-color: #131313;
+
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+
+  .cta{
+    display: flex;
+    flex-direction: column;
     gap: 1rem;
   }
 

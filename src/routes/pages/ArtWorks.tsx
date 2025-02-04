@@ -146,10 +146,11 @@ const ArtWorks = () => {
             <button className="close-button" onClick={() => setShowForm(false)}>&times;</button>
             <h2>Submit Your Artwork</h2>
             <form onSubmit={handleSubmit} className="artwork-submit-form">
-              <div className="form-group artwork-image">
+            <div className="form-group artwork-image">
                 <label className="form-label" onClick={handleIconClick}>
                   <ImagePlus size={50} color="#131313" className="image-icon" />
                 </label>
+                  <p className="icon-explanation">Click on the icon <br/>to choose a photo</p> {/* Added explanatory text */}
                 <input
                   ref={fileInputRef}
                   type="file"
@@ -159,11 +160,12 @@ const ArtWorks = () => {
                   style={{ display: 'none' }}
                 />
                 {imageFile && <img src={URL.createObjectURL(imageFile)} alt="Preview" className="image-preview" />}
-              </div>
+            </div>
 
-              <div className="form-group artwork-description">
-                <label className="form-label">Description:</label>
-                <div className="textarea-container">
+
+              <div className="form-group-artwork-description">
+                <label className="form-label">Add description:</label>
+                <div className="artwork-textarea-container">
                   <textarea
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
@@ -197,7 +199,7 @@ const ArtWorks = () => {
                     >
                       &times;
                     </button>
-                    <p>When you submit an artwork, it will be reviewed to ensure it matches the current theme. After approval, your artwork will appear on your profile for everyone to admire!</p>
+                    <p>When you submit an artwork, it will be reviewed to ensure it matches the current theme. After approval, your artwork will appear on Artwork page for everyone to admire!</p>
                   </div>
                 </div>
               )}

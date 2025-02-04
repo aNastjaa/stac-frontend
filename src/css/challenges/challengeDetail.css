@@ -46,6 +46,15 @@
     font-weight: bold;
     color: #d9534f;
   }
+
+  .submissions-gallery{
+    margin-top: 2rem;
+  }
+  
+  .submissions-gallery h2{
+    font-family: 'Sedgwick Ave Display';
+    font-size: calc(2rem + 0.3vw);
+  }
   
 /* Modal Overlay */
 .modal-overlay {

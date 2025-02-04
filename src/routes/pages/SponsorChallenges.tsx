@@ -44,15 +44,15 @@ const SponsorChallenges = () => {
   return (
     <div className="sponsor-challenges-container">
       {/* Hero Section */}
-      <section className="hero-section">
-        <h1>Ready to Show Your Creativity?</h1>
+      <section className="challenge-hero-section">
+        <h1>Ready to show your creativity?</h1>
         <p>
           Join the exciting world of sponsored challenges! <br />
           Showcase your talent by submitting your creative works to top brands and win incredible prizes.
         </p>
       </section>
 
-      <div className="how-it-works">
+      <div className="challenge-how-it-works">
         <p>
           <span className="bite">How It Works:</span> <br /> Brands create challenges and invite creators like you to submit your artwork. The more creative you get, the better your chances!
         </p>
@@ -94,16 +94,16 @@ const SponsorChallenges = () => {
                 )}
               </div>
 
-              {/* Content (Brand Name, Title, Brief) */}
-              <div className="challenge-content">
-                <div className="challenge-header">
+              <Link to={`/sponsor-challenges/${challenge.id}`} className="challenge-content">
+                  {/* Content (Brand Name, Title, Brief) */}
+                  <div className="challenge-header">
                     {/* Brand Name (Upper Left Corner) */}
                     <h3 className="brand-name">{challenge.brand_name}</h3>
 
                     {/* Challenge Title */}
                     <h4 className="challenge-title">{challenge.title}</h4>
-                </div>
-                <div className="challenge-footer">
+                  </div>
+                  <div className="challenge-footer">
                     {/* Challenge Brief (Bottom of the Item) */}
                     <p className="challenge-brief">{challenge.brief}</p>
                     
@@ -111,11 +111,11 @@ const SponsorChallenges = () => {
                     <p className="deadline">Deadline: {challenge.submission_deadline}</p>
 
                     {/* View Challenge Link */}
-                    <Link to={`/sponsor-challenges/${challenge.id}`} className="view-challenge-link">
+                    <span className="view-challenge-link">
                       View Challenge <ExternalLink size={16} />
-                    </Link>
-                </div>
-              </div>
+                    </span>
+                  </div>
+              </Link>
             </div>
           ))}
         </div>
