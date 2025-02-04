@@ -57,24 +57,25 @@ const UserProfile = () => {
             setAvatarUrl(avatarUrl || '');
           }
         }
-        
+
         const userArtworks = await fetchUserArtworks(userId);
-        console.log("Fetched artworks:", userArtworks);
         const filteredArtworks = userArtworks.filter(
           (artwork) => artwork.user.id === userId
         );
         setArtworks(filteredArtworks);
 
+        // Fetch all challenges and submissions
         const challenges = await getChallenges();
         const allSubmissions: Submission[] = [];
 
         for (const challenge of challenges) {
           const submissions = await getSubmissions(challenge.id);
+
           const userSubmissions = submissions
             .filter((submission) => submission.user_id === userId)
             .map((submission) => ({
               ...submission,
-              status: submission.status, // Ensure status is included
+              challengeName: challenge.title, // Map challenge title to challengeName
             }));
 
           allSubmissions.push(...userSubmissions);
@@ -172,13 +173,14 @@ const UserProfile = () => {
             ) : (
               <section className="submissions-gallery">
                 <div className="submissions-container">
-                  {submissions.map((submission) => (
-                    <SubmissionCard 
-                      key={submission.id} 
-                      submission={submission} 
-                      isPending={submission.status === 'pending'}
-                    />
-                  ))}
+                {submissions.map((submission) => (
+                  <SubmissionCard
+                    key={submission.id}
+                    submission={submission}
+                    challenge={submission.challengeName || ''}
+                    isPending={submission.status === 'pending'}
+                  />
+                ))}
                 </div>
               </section>
             )}

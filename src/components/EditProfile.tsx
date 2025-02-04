@@ -37,7 +37,7 @@ const EditProfile = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isNewProfile, setIsNewProfile] = useState<boolean>(false);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
-  const [role, setRole] = useState<string>(""); // Role will be fetched from local storage
+  const [role, setRole] = useState<string>("");
 
   const navigate = useNavigate();
 
@@ -225,8 +225,8 @@ const EditProfile = () => {
                 ...profile,
                 external_links: e.target.value
                   .split(", ")
-                  .map(link => link.trim()) // Trim spaces to clean up entries
-                  .filter(link => link !== ""), // Remove empty values
+                  .map(link => link.trim()) 
+                  .filter(link => link !== ""), 
               })
             }
           />

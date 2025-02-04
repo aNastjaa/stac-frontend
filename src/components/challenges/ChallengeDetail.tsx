@@ -207,7 +207,7 @@ const ChallengeDetail = () => {
               <div key={submission.id} onClick={() => handleSubmissionClick(submission)}>
                 <SubmissionCard 
                   submission={submission} 
-                  challengeName={challenge.title}
+                  challenge={challenge.title}
                 />
               </div>
             ))}

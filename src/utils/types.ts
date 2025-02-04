@@ -113,6 +113,7 @@ export interface ErrorMessages {
     created_at: string;
     updated_at: string;
     votes_count: number; 
+    challengeName?: string;
   }
   export interface Post {
     id: string;

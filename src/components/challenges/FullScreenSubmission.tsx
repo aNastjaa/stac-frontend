@@ -4,6 +4,7 @@ import "../../css/challenges/fullScreenSubmission.css";
 import { Submission } from "../../utils/types";
 import { getProfileIdByUserId, getUserProfileByProfileId, fetchAvatarUrl } from "../../utils/api";
 import VoteButton from "./VoteButton";
+import { getChallengeDetails } from "../../utils/api/challenges"; // Assuming this is your API call to get challenge details
 
 interface FullScreenSubmissionProps {
   submission: Submission;
@@ -12,11 +13,17 @@ interface FullScreenSubmissionProps {
   votesCount: number;
 }
 
-const FullScreenSubmission = ({ submission, onClose, challengeName, votesCount: initialVotesCount }: FullScreenSubmissionProps) => {
+const FullScreenSubmission = ({
+  submission,
+  onClose,
+  challengeName,
+  votesCount: initialVotesCount,
+}: FullScreenSubmissionProps) => {
   const [avatarUrl, setAvatarUrl] = useState<string>(submission.user.avatar_url || "");
-  const [votesCount, setVotesCount] = useState<number>(initialVotesCount);
+  const [votesCount, setVotesCount] = useState<number>(initialVotesCount); // State for vote count
+  const [challengeTitle, setChallengeTitle] = useState<string>(challengeName);
 
-  // Fetch avatar logic
+  // Fetch avatar logic (unchanged from original)
   useEffect(() => {
     const fetchAvatar = async () => {
       try {
@@ -40,10 +47,36 @@ const FullScreenSubmission = ({ submission, onClose, challengeName, votesCount: 
     fetchAvatar();
   }, [avatarUrl, submission.user.id]);
 
+  // Fetch challenge title based on sponsor_challenge_id
+  useEffect(() => {
+    const fetchChallengeTitle = async () => {
+      try {
+        const challengeData = await getChallengeDetails(submission.sponsor_challenge_id);
+        if (challengeData?.title) {
+          setChallengeTitle(challengeData.title);
+        }
+      } catch (error) {
+        console.error("Error fetching challenge details:", error);
+      }
+    };
+
+    // Only fetch challenge title if not already provided via props
+    if (!challengeName) {
+      fetchChallengeTitle();
+    } else {
+      setChallengeTitle(challengeName);
+    }
+  }, [submission.sponsor_challenge_id, challengeName]);
+
+  // Handle closing the modal
+  const handleClose = () => {
+    onClose(); // Trigger the onClose function passed via props without preventing default
+  };
+
   return (
     <div className="fullscreen-post">
       {/* Close Button */}
-      <button className="close-button" onClick={onClose}>
+      <button className="close-button" onClick={handleClose}>
         <X size={36} color="#e3e3e3" />
       </button>
   
@@ -56,32 +89,34 @@ const FullScreenSubmission = ({ submission, onClose, challengeName, votesCount: 
         )}
         <div>
           <p className="username">{submission.user.username}</p>
-          <p className="theme-name">Challenge: {challengeName}</p>
+          <p className="challenge-name">Challenge: {challengeTitle || "Loading..."}</p>
         </div>
       </div>
-  
-      {/* Submission Image */}
-      <div className="post-image">
-        <img src={submission.image_path} alt="Submission content" />
-      </div>
-  
-      {/* Description Under Image */}
-      {submission.description && (
-        <div className="post-description">
-          <p>{submission.description}</p>
-        </div>
-      )}
-  
+      
+          {/* Submission Image */}
+          <div className="post-image">
+            <img src={submission.image_path} alt="Submission content" />
+          </div>
+      <div className="desc-vote-container">
+          {/* Description Under Image */}
+          {submission.description && (
+            <div className="post-description">
+              <p>{submission.description}</p>
+            </div>
+          )}
+      
       {/* Submission Actions */}
       <div className="post-actions">
         <div className="icon-container-full-post">
           <VoteButton
             challengeId={submission.sponsor_challenge_id}
             submissionId={submission.id}
-            setVotesCount={setVotesCount}
+            setVotesCount={setVotesCount} // Update votes count
           />
-          <span>{votesCount} votes</span>
+          {/* Render the vote count immediately */}
+          <span>{votesCount} votes</span> 
         </div>
+      </div>
       </div>
     </div>
   );

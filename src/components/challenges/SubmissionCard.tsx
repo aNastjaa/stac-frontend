@@ -1,23 +1,23 @@
-import { useEffect, useState } from "react";
-import { Submission, Vote } from "../../utils/types";
-import VoteButton from "../../components/challenges/VoteButton";
-import FullScreenSubmission from "../../components/challenges/FullScreenSubmission";
-import "../../css/challenges/submissionCard.css";
+import { useEffect, useState } from 'react';
+import { Submission, Vote } from '../../utils/types';
+import VoteButton from '../../components/challenges/VoteButton';
+import FullScreenSubmission from '../../components/challenges/FullScreenSubmission';
+import '../../css/challenges/submissionCard.css';
 
 interface SubmissionCardProps {
   submission: Submission & { votes?: Vote[] };
-  isPending?: boolean; // New prop for pending status
+  isPending?: boolean;
   onClick?: () => void;
-  challengeName: string; // Add challengeName prop
+  challenge: string; // challengeName passed as string (from UserProfile)
 }
 
-const SubmissionCard = ({ submission, isPending, onClick, challengeName }: SubmissionCardProps) => {
+const SubmissionCard = ({ submission, isPending, onClick, challenge }: SubmissionCardProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [username, setUsername] = useState<string | null>(null);
   const [votesCount, setVotesCount] = useState<number>(
     submission.votes ? Math.max(submission.votes.length, 1) : 1
   );
-  const [isFullscreen, setIsFullscreen] = useState<boolean>(false); // State to toggle fullscreen
+  const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
 
   useEffect(() => {
     setIsLoading(true);
@@ -27,28 +27,24 @@ const SubmissionCard = ({ submission, isPending, onClick, challengeName }: Submi
     }, 1000);
   }, [submission.user.username]);
 
-  // Handle click to prevent interaction if submission is pending
   const handleClick = (e: React.MouseEvent) => {
     if (isPending) {
-      e.preventDefault(); // Prevent any interaction if pending
+      e.preventDefault();
     } else if (onClick) {
       onClick();
     }
   };
 
   const handleOpenFullscreen = () => {
-    setIsFullscreen(true); // Open FullScreen view
+    setIsFullscreen(true);
   };
 
   const handleCloseFullscreen = () => {
-    setIsFullscreen(false); // Close FullScreen view
+    setIsFullscreen(false);
   };
 
   return (
-    <div 
-      className={`submission-card ${isPending ? "blurred" : ""}`} 
-      onClick={handleClick}
-    >
+    <div className={`submission-card ${isPending ? 'blurred' : ''}`} onClick={handleClick}>
       {/* Submission Header */}
       <div className="submission-card-header">
         {isLoading ? <span>Loading...</span> : `@${username}`}
@@ -56,17 +52,11 @@ const SubmissionCard = ({ submission, isPending, onClick, challengeName }: Submi
 
       {/* Submission Image */}
       <div className="submission-image-container" onClick={handleOpenFullscreen}>
-        <img
-          src={submission.image_path}
-          alt="Submission"
-          className="submission-image"
-          loading="lazy"
-        />
+        <img src={submission.image_path} alt="Submission" className="submission-image" loading="lazy" />
       </div>
 
       {/* Submission Footer (Vote Button & Count) */}
       <div className="submission-card-footer">
-        {/* Conditionally render vote button if submission is not pending */}
         {!isPending && (
           <div className="icon-container">
             <VoteButton
@@ -89,7 +79,7 @@ const SubmissionCard = ({ submission, isPending, onClick, challengeName }: Submi
             <FullScreenSubmission
               submission={submission}
               onClose={handleCloseFullscreen}
-              challengeName={challengeName}
+              challengeName={challenge} // Pass challengeName here
               votesCount={votesCount}
             />
           </div>
