@@ -133,9 +133,9 @@ const ArtWorks = () => {
           Current Theme: <br /> <span className="current-theme-name">{currentTheme ? currentTheme.theme_name : 'Loading...'}</span>
         </h1>
         <p className="current-theme-description">
-          Capture the beauty and mystery of the horizon and what lies beyond it. Whether it’s a stunning landscape,
-          a dream of what’s ahead, or a creative interpretation of what the horizon represents, this theme is your
-          chance to showcase how you see and imagine it.
+        This month’s theme is all about the color yellow! <br/><br/> Whether it’s in a painting, a photo, or even 3D art,
+         we want to see how you bring yellow to life in your own creative way. <br/><br/>
+        Show us yellow in its many forms—bright, bold, and beautiful. Let your imagination run wild!
         </p>
         <ButtonLong onClick={() => setShowForm(true)} text="Submit" />
       </section>

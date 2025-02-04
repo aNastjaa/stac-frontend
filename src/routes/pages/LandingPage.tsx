@@ -18,7 +18,7 @@ const LandingPage = () => {
       {/* Image Carousel Section */}
       <section className="carousel-section">
         <h3>Monthly theme:</h3>
-        <h2 className="bite">"Beyond the Horizon"</h2>
+        <h2 className="bite">"Yellow color"</h2>
         <Carousel1 />
         <ButtonCTA text="Submit" link="/login" />
       </section>

@@ -484,6 +484,40 @@ export const archiveTheme = async (themeId: string): Promise<void> => {
     throw error; // Re-throw the error to handle it where the function is called
   }
 };
+// Get archiver themes
+export const fetchArchivedThemes = async (): Promise<Theme[]> => {
+  try {
+    // Ensure the CSRF token is set
+    await setCsrfCookie();
+
+    // Get the CSRF token from the cookie
+    const csrfToken = getCsrfTokenFromCookie();
+
+    // Send the GET request to fetch the archived themes
+    const response = await fetch(`${API_URL}/api/archive/archived-themes`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-XSRF-TOKEN': csrfToken, // Pass the CSRF token in the header
+      },
+      credentials: 'include', // Include credentials (cookies)
+    });
+
+    // Ensure the request was successful
+    if (!response.ok) {
+      throw new Error(`Failed to fetch archived themes: ${response.statusText}`);
+    }
+
+    // Parse and return the list of archived themes
+    const archivedThemes: Theme[] = await response.json();
+    return archivedThemes;
+
+  } catch (error) {
+    console.error('Error fetching archived themes:', error);
+    throw error; // Re-throw the error to handle it where the function is called
+  }
+};
+
 
 
 

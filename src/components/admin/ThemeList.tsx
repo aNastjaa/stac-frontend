@@ -1,17 +1,18 @@
 import { useState, useEffect } from 'react';
 import { ButtonLong, ButtonPrimary } from '../../components/Buttons';
 import { Theme } from '../../utils/types';
-import { createTheme, updateTheme, archiveTheme, deleteTheme, fetchAllThemes } from '../../utils/api/admin';
-import { fetchCurrentTheme} from '../../utils/api/artworks'; 
+import { createTheme, archiveTheme, deleteTheme, fetchAllThemes, fetchArchivedThemes, updateTheme } from '../../utils/api/admin';
+import { fetchCurrentTheme } from '../../utils/api/artworks';
 import '../../css/admin_dashboard_styling/themesList.css';
 
 const ThemeList = () => {
   const [currentTheme, setCurrentTheme] = useState<Theme | null>(null); // State for the current theme
   const [allThemes, setAllThemes] = useState<Theme[]>([]); // State for all themes
+  const [archivedThemes, setArchivedThemes] = useState<Theme[]>([]); // State for archived themes
   const [newThemeName, setNewThemeName] = useState<string>('');
   const [startDate, setStartDate] = useState<string>(''); // State to store start date
-  const [selectedTheme, setSelectedTheme] = useState<Theme | null>(null);
   const [loading, setLoading] = useState<boolean>(false); // Loading state for async actions
+  const [selectedTheme, setSelectedTheme] = useState<Theme | null>(null); // State for the theme being edited
 
   // Fetch the current theme
   useEffect(() => {
@@ -26,12 +27,36 @@ const ThemeList = () => {
     loadCurrentTheme();
   }, []);
 
-  // Fetch all themes
+  // Fetch all themes and archived themes
   useEffect(() => {
     const loadAllThemes = async () => {
       try {
         const themes = await fetchAllThemes();
-        setAllThemes(themes);
+        const archivedThemes = await fetchArchivedThemes();
+
+        // Set the state for archived themes
+        setArchivedThemes(archivedThemes);
+
+        // Filter out archived themes from the allThemes list
+        const nonArchivedThemes = themes.filter(theme => 
+          !archivedThemes.some(archivedTheme => archivedTheme.id === theme.id)
+        );
+
+        setAllThemes(nonArchivedThemes);
+
+        // Determine the current theme by checking the start date with the current month
+        const currentMonth = new Date().getMonth() + 1; // Current month (1-12)
+        const currentTheme = nonArchivedThemes.find(theme => {
+          const themeMonth = new Date(theme.start_date).getMonth() + 1;
+          return themeMonth === currentMonth; // Match the current month
+        });
+
+        if (currentTheme) {
+          setCurrentTheme(currentTheme); // Set current theme if found
+        } else {
+          setCurrentTheme(null); // No theme for current month
+        }
+
       } catch (error) {
         console.error('Failed to fetch all themes', error);
       }
@@ -39,6 +64,7 @@ const ThemeList = () => {
     loadAllThemes();
   }, []);
 
+  // Handle theme creation
   const handleThemeCreation = async () => {
     if (!newThemeName || !startDate) return; // Validate that both fields are filled
     try {
@@ -56,36 +82,25 @@ const ThemeList = () => {
     }
   };
 
-  const handleThemeUpdate = async (themeId: string, updatedThemeName: string, startDate: string) => {
-    try {
-      setLoading(true); // Set loading to true when the update starts
-      const updatedTheme = await updateTheme(themeId, updatedThemeName, startDate);
-  
-      // Update allThemes state
-      setAllThemes((prevThemes) =>
-        prevThemes.map((theme) => (theme.id === themeId ? updatedTheme : theme))
-      );
-  
-      // Update currentTheme if it's the same as the updated one
-      if (currentTheme && currentTheme.id === themeId) {
-        setCurrentTheme(updatedTheme);
-      }
-  
-      // Show success alert
-      alert('Theme updated successfully!');
-    } catch (error) {
-      console.error('Failed to update theme:', error);
-      alert('An error occurred while updating the theme. Please try again.');
-    } finally {
-      setLoading(false); // Reset loading state
-    }
-  };
-
+  // Handle moving theme to archive
   const handleMoveToArchive = async (themeId: string) => {
     try {
       setLoading(true); 
       await archiveTheme(themeId); 
-      setAllThemes(allThemes.filter((theme) => theme.id !== themeId)); 
+
+      // Remove the archived theme from allThemes and currentTheme if needed
+      setAllThemes((prevThemes) => prevThemes.filter((theme) => theme.id !== themeId));
+      
+      if (currentTheme && currentTheme.id === themeId) {
+        setCurrentTheme(null); // If the archived theme is the current theme, set currentTheme to null
+      }
+
+      // Add the archived theme to archivedThemes
+      const archivedTheme = allThemes.find((theme) => theme.id === themeId);
+      if (archivedTheme) {
+        setArchivedThemes([...archivedThemes, archivedTheme]);
+      }
+
       alert('Theme archived successfully');
     } catch (error) {
       console.error('Failed to archive theme', error);
@@ -95,14 +110,29 @@ const ThemeList = () => {
     }
   };
 
+  // Handle theme update
+  const handleThemeUpdate = async (themeId: string, themeName: string, startDate: string) => {
+    try {
+      setLoading(true);
+      const updatedTheme = await updateTheme(themeId, themeName, startDate); // Send update request to the backend
+      setAllThemes(allThemes.map(theme => theme.id === themeId ? updatedTheme : theme)); // Update the theme in the list
+      setSelectedTheme(null); // Clear the selected theme after updating
+      alert('Theme updated successfully');
+    } catch (error) {
+      console.error('Failed to update theme', error);
+      alert('Error updating theme');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Handle theme deletion
   const handleThemeDelete = async (themeId: string) => {
     try {
-      setLoading(true); // Set loading to true when deleting the theme
-      await deleteTheme(themeId);
-      setAllThemes(allThemes.filter((theme) => theme.id !== themeId)); // Remove deleted theme from the list
-      if (currentTheme && currentTheme.id === themeId) {
-        setCurrentTheme(null); // Clear the current theme if deleted
-      }
+      setLoading(true);
+      await deleteTheme(themeId); // Delete the theme using the backend API
+      // Remove the theme from the state
+      setAllThemes(prevThemes => prevThemes.filter(theme => theme.id !== themeId));
       alert('Theme deleted successfully');
     } catch (error) {
       console.error('Failed to delete theme', error);
@@ -138,44 +168,44 @@ const ThemeList = () => {
             disabled={loading} // Disable input when loading
           />
         </div>
-        <ButtonLong onClick={handleThemeCreation} text="Create Theme" disabled={loading} /> {/* Disable button when loading */}
+        <ButtonLong onClick={handleThemeCreation} text="Create Theme" disabled={loading} />
       </div>
-  
+
       <section className="current-theme">
         <h3>Current Theme:</h3>
         {currentTheme ? (
-          <div className='current-theme-info'>
-            <p>Name: <span className='theme-name-admin'>{currentTheme.theme_name}</span></p>
-            <p>Start Date: <span className='theme-date'>{currentTheme.start_date}</span></p>
+          <div className="current-theme-info">
+            <p>Name: <span className="theme-name-admin">{currentTheme.theme_name}</span></p>
+            <p>Start Date: <span className="theme-date">{currentTheme.start_date}</span></p>
           </div>
         ) : (
           <p>No current theme available.</p>
         )}
       </section>
-  
+
       <section className="all-themes">
         <h3>All Themes:</h3>
         {allThemes.length > 0 ? (
           <ul>
             {allThemes.map((theme) => (
               <li key={theme.id}>
-                <p><span className='theme-name-admin'>{theme.theme_name}</span></p>
+                <p><span className="theme-name-admin">{theme.theme_name}</span></p>
                 <p>Start Date: {theme.start_date}</p>
                 <div>
                   <ButtonPrimary
                     onClick={() => setSelectedTheme(theme)}
                     text="Edit"
-                    disabled={loading} 
+                    disabled={loading}
                   />
                   <ButtonPrimary
                     onClick={() => handleMoveToArchive(theme.id)}
                     text="Move to Archive"
-                    disabled={loading} 
+                    disabled={loading}
                   />
                   <ButtonPrimary
                     onClick={() => handleThemeDelete(theme.id)}
                     text="Delete Theme"
-                    disabled={loading} 
+                    disabled={loading}
                   />
                 </div>
               </li>
@@ -185,35 +215,43 @@ const ThemeList = () => {
           <p>No themes available.</p>
         )}
       </section>
-  
+
+      <section className="archived-themes">
+        <h3>Archived Themes:</h3>
+        {archivedThemes.length > 0 ? (
+          <ul>
+            {archivedThemes.map((theme) => (
+              <li key={theme.id}>
+                <p><span className="theme-name-admin">{theme.theme_name}</span></p>
+                <p>Start Date: {theme.start_date}</p>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>No archived themes available.</p>
+        )}
+      </section>
+
       {selectedTheme && (
         <div className="edit-theme">
           <h3>Edit Theme</h3>
-          <div className="input-field">
-            <label htmlFor="edit-theme-name">Theme Name:</label>
-            <input
-              id="edit-theme-name"
-              type="text"
-              placeholder="Theme Name"
-              value={selectedTheme.theme_name}
-              onChange={(e) =>
-                setSelectedTheme({ ...selectedTheme, theme_name: e.target.value })
-              }
-              disabled={loading} // Disable input when loading
-            />
-          </div>
-          <div className="input-field">
-            <label htmlFor="edit-start-date">Start Date:</label>
-            <input
-              id="edit-start-date"
-              type="date"
-              value={selectedTheme.start_date}
-              onChange={(e) =>
-                setSelectedTheme({ ...selectedTheme, start_date: e.target.value })
-              }
-              disabled={loading} // Disable input when loading
-            />
-          </div>
+          <input
+            type="text"
+            placeholder="Theme Name"
+            value={selectedTheme.theme_name}
+            onChange={(e) =>
+              setSelectedTheme({ ...selectedTheme, theme_name: e.target.value })
+            }
+            disabled={loading}
+          />
+          <input
+            type="date"
+            value={selectedTheme.start_date}
+            onChange={(e) =>
+              setSelectedTheme({ ...selectedTheme, start_date: e.target.value })
+            }
+            disabled={loading}
+          />
           <ButtonPrimary
             onClick={() => {
               handleThemeUpdate(
@@ -223,15 +261,14 @@ const ThemeList = () => {
               );
             }}
             text="Update Theme"
-            disabled={loading} // Disable button when loading
+            disabled={loading}
           />
         </div>
       )}
-  
-      {loading && <p>Loading...</p>} {/* Show loading indicator */}
+
+      {loading && <p>Loading...</p>}
     </div>
   );
-  
 };
 
 export default ThemeList;
