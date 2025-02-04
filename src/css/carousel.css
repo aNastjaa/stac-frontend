@@ -1,0 +1,69 @@
+/* Carousel styling */
+.carousel-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+    gap: 1rem;
+  }
+  
+  /* Central slide is larger */
+  .carousel-slide {
+    width: 70%; /* Central slide takes most of the space */
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  /* Side slides are smaller */
+  .carousel-slide.side {
+    width: 30%; /* Side slides are smaller */
+    opacity: 0.6; /* Make side slides less prominent */
+  }
+  
+  /* Hover effect to bring side slides to focus */
+  .carousel-slide:hover {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+  
+  /* Pagination styling */
+  .pagination {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+  }
+  
+  .pagination button {
+    background-color: black;
+    color: white;
+    border: none;
+    padding: 8px;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  
+  /* Responsive design */
+  @media (max-width: 700px) {
+    .carousel-container {
+      width: 100%;
+    }
+  
+    .carousel-slide {
+      width: 100%; /* Full width on smaller screens */
+    }
+  }
+  
+  /* Responsive design for very small screens */
+  @media (max-width: 500px) {
+    .carousel-slide {
+      width: 100%; /* Full width for single slide on very small screens */
+    }
+  
+    .pagination button {
+      padding: 6px;
+    }
+  }
+  

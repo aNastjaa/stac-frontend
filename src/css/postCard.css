@@ -1,5 +1,5 @@
 /* Artwork card */
-.artwork-card {
+.artwork-card-dummy {
     position: relative;
     width: calc(32% - 0.5rem); /* Each card takes up 1/3 of the row width */
     height: 0;
@@ -8,14 +8,15 @@
     border-radius: 10px;
     overflow: hidden;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    background-color: #fff; /* Ensure cards have a background */
+    background-color: #fff; 
+    border-radius: 30px;
   }
   
   /* Artwork card header */
-  .artwork-card-header {
+  .artwork-card-header-dummy {
     position: absolute;
-    top: 8px;
-    left: 8px;
+    top: 20px;
+    left: 20px;
     background-color: rgba(0, 0, 0, 0.3);
     color: #fff;
     padding: 4px 8px;
@@ -27,7 +28,7 @@
   }
   
   /* Image container */
-  .artwork-image-container {
+  .artwork-image-container-dummy {
     position: absolute;
     top: 0;
     left: 0;
@@ -40,29 +41,29 @@
     transition: transform 0.3s ease-in-out;
   }
   
-  .artwork-image-container:hover{
+  .artwork-image-container-dummy:hover{
     transform: scale(1.2);
     cursor: pointer;
   }
   /* Artwork image */
-  .artwork-image {
+  .artwork-image-dummy {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Make sure the image covers the entire container */
-    object-position: center; /* Center the image */
+    object-fit: cover;
+    object-position: center;
   }
   
   /* Artwork card footer */
-  .artwork-card-footer {
+  .artwork-card-footer-dummy {
     position: absolute;
-    bottom: 8px;
-    right: 8px;
+    bottom: 20px;
+    right: 20px;
     display: flex;
     gap: 12px;
   }
   
   /* Icon container */
-  .icon-container {
+  .icon-container-dummy {
     display: flex;
     align-items: center;
     gap: 4px;
@@ -77,17 +78,24 @@
     font-size: 0.85rem;
   }
   
-  /* Responsive design */
-  @media (max-width: 700px) {
-    .artwork-card {
-      padding-bottom: 50%; /* Maintain square aspect ratio */
-    }
+  .swiper-3d .swiper-slide-shadow-right, .swiper-3d .swiper-slide-shadow-left{
+    background-image: none;
   }
-  
-  @media (max-width: 500px) {
-    .artwork-card {
-      width: 100%; /* One card per row on mobile */
-      padding-bottom: 100%; /* Maintain square aspect ratio */
-      margin-bottom: 1rem;
-    }
+  .swiper-pagination-bullet-active{
+    background: #131313;
   }
+  @media  (max-width: 499px) {
+    .artwork-card-dummy{
+        width: 100%;
+        height: 400px;
+    }
+   
+}
+
+    @media  (min-width: 500px) {
+        .artwork-card-dummy{
+            width: 98%;
+            height: 400px;
+        }
+       
+    }

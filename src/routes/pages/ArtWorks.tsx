@@ -8,6 +8,7 @@ import "../../css/artworks/artworkPage.css";
 import { getCsrfTokenFromCookie } from '../../utils/api';
 import DotLoader from '../../components/DotLoader';
 import FullScreenPost from '../../components/artworks/FullScreenPost';
+import LastMonthCarousel from '../../components/carousels/LastMonthCarousel';
 
 const ArtWorks = () => {
   const [currentTheme, setCurrentTheme] = useState<Theme | null>(null);
@@ -232,6 +233,21 @@ const ArtWorks = () => {
           <ButtonPrimary onClick={loadMoreArtworks} text="Load More" />
         )}
       </section>
+
+      {/* Top Artworks from Last Month Section */}
+      <section className="top-artworks-last-month">
+        <h2 className="section-title">Top Artworks from Last Month</h2>
+        <h3 className="theme-title">Beyond the Horizon</h3>
+        <p className="theme-description">
+          Capture the beauty and mystery of the horizon and what lies beyond it. 
+          Whether it’s a stunning landscape, a dream of what’s ahead, or a creative 
+          interpretation of what the horizon represents, this theme is your chance 
+          to showcase how you see and imagine it.
+        </p>
+        <LastMonthCarousel />
+      </section>
+
+
     </div>
   );
 };
