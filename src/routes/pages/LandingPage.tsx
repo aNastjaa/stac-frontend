@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { ButtonCTA } from "../../components/Buttons";
 import ArtworkCarousel from "../../components/carousels/ArtworkCarousel"; // Import the ArtworkCarousel component
-import SponsorCarousel from "../../components/SponsorCarousel";
 import "../../css/landingPage.css";
 import { fetchArtworks } from "../../utils/api/artworks";  // Correct import for the API function
 import { ArtworkResponse } from "../../utils/types";  // Assuming this is your type for artwork
+import SponsorChallengesCarousel from "../../components/carousels/SponsorChallengesCarousel";
 
 const LandingPage = () => {
   const [artworks, setArtworks] = useState<ArtworkResponse[]>([]);
@@ -103,18 +103,22 @@ const LandingPage = () => {
       </section>
 
       {/* Ready to Create? */}
+      <div className="ready-to-create-wrapper">
       <section className="ready-to-create">
         <h2 className="bite">Ready to create?</h2>
         <h3>Join thousands of artists pushing creative boundaries every day. 
         Sign up now and unleash your potential.</h3>
         <ButtonCTA text="Join Now" link="/register" />
       </section>
+      </div>
 
       {/* Sponsors Section (Carousel2) */}
-      <section className="sponsors-section">
-        <h2 className="bite">Sponsors</h2>
-        <SponsorCarousel />
-      </section>
+      <div className="sponsors-section-wrapper"> 
+        <section className="sponsors-section">
+          <h2 className="bite">Sponsors</h2>
+          <SponsorChallengesCarousel />
+        </section>
+      </div>
     </div>
   );
 };

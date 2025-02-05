@@ -4,18 +4,18 @@ import { SponsorChallenge, SponsorChallengeDetail,Submission, Vote} from "../typ
   export const getChallenges = async (): Promise<SponsorChallenge[]> => {
     try {
       const csrfToken = getCsrfTokenFromCookie();
-      const authToken = localStorage.getItem('auth_token');
+      //const authToken = localStorage.getItem('auth_token');
   
-      if (!authToken) {
-        throw new Error('Authentication token is missing');
-      }
+      // if (!authToken) {
+      //   throw new Error('Authentication token is missing');
+      // }
   
       const response = await fetch(`${API_URL}/api/sponsor-challenges`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
           'X-XSRF-TOKEN': csrfToken,
-          'Authorization': `Bearer ${authToken}`,
+          //'Authorization': `Bearer ${authToken}`,
         },
         credentials: 'include',
       });

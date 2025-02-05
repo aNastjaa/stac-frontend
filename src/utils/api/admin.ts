@@ -245,7 +245,7 @@ export const uploadBrandLogo = async (file: File): Promise<UploadResponse> => {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          'X-XSRF-TOKEN': getCsrfTokenFromCookie(), // Ensure the CSRF token is included
+          'X-XSRF-TOKEN': getCsrfTokenFromCookie(),
         },
         credentials: 'include',
       });
