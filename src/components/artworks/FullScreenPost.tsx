@@ -1,9 +1,12 @@
-import { useState, useEffect } from "react";
-import { X, MessageCircle, CircleUserRound } from "lucide-react";
+import { useState, useEffect, useContext } from "react";
+import { X, MessageCircle, CircleUserRound} from "lucide-react";
 import "../../css/artworks/fullScreenPost.css";
-import { getProfileIdByUserId, getUserProfileByProfileId, fetchAvatarUrl } from "../../utils/api";
-import Likes from "./Likes";  // Import Likes Component
-import Comments from "./Comments";  // Import Comments Component
+import { getProfileIdByUserId, getUserProfileByProfileId, fetchAvatarUrl} from "../../utils/api";
+import { getAuthToken } from "../../utils/api"; // Import token helper
+import { AuthContext } from "../../context/AuthContext"; // Import Auth Context
+import Likes from "./Likes";
+import Comments from "./Comments";
+import { deletePost } from "../../utils/api/artworks";
 
 interface Post {
   id: string;
@@ -19,14 +22,25 @@ interface Post {
 }
 
 type FullScreenPostProps = {
-  post: Post; 
+  post: Post;
   onClose: () => void;
 };
 
 function FullScreenPost({ post, onClose }: FullScreenPostProps) {
+  const { auth } = useContext(AuthContext); // Get auth details
+  const authToken = getAuthToken(); // Get token from local storage
   const [avatarUrl, setAvatarUrl] = useState<string>(post.avatarUrl || "");
   const [likesCount, setLikesCount] = useState<number>(post.likes_count);
   const [commentsCount, setCommentsCount] = useState<number>(post.comments_count);
+  const [isDeleting, setIsDeleting] = useState(false); // Track deletion state
+
+  // Check if logged-in user is the post owner
+  const isPostOwner = auth.id === post.userId;
+  
+  console.log("Auth Token:", authToken);
+  console.log("Auth Context User ID:", auth.id);
+  console.log("Post User ID:", post.userId);
+  console.log("Is Post Owner:", isPostOwner);
 
   // Fetch avatar logic
   useEffect(() => {
@@ -52,8 +66,26 @@ function FullScreenPost({ post, onClose }: FullScreenPostProps) {
     fetchAvatar();
   }, [avatarUrl, post.userId]);
 
-  console.log('Post Data:', post);
-
+  // Handle post deletion
+  const handleDelete = async () => {
+    if (!window.confirm("Are you sure you want to delete this post?")) {
+      return;
+    }
+  
+    try {
+      setIsDeleting(true);
+  
+      const result = await deletePost(post.id);
+      console.log(result);
+  
+      // Optionally close the fullscreen post view after deletion
+      onClose();
+    } catch (error) {
+      console.error("Error deleting post:", error);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   return (
     <div className="fullscreen-post">
@@ -61,7 +93,7 @@ function FullScreenPost({ post, onClose }: FullScreenPostProps) {
       <button className="close-button" onClick={onClose}>
         <X size={36} color="#e3e3e3" />
       </button>
-  
+
       {/* Post Header */}
       <div className="post-header">
         {avatarUrl ? (
@@ -74,49 +106,48 @@ function FullScreenPost({ post, onClose }: FullScreenPostProps) {
           <p className="theme-name">Theme: {post.themeName}</p>
         </div>
       </div>
-  
+
       {/* Post Image */}
       <div className="post-image">
         <img src={post.imageUrl} alt="Post content" />
+
       </div>
-  
-      {/* Description Under Image */}
-      {post.description && (
-        <div className="post-description">
-          <p>{post.description}</p>
+        <div className="post-decription-delete-button">
+          {/* Description Under Image */}
+          {post.description && (
+            <div className="fullpost-description">
+              <p>{post.description}</p>
+            </div>
+          )}
+
+          {/* Delete Button (Only for Post Owner) - Placed below description */}
+          {isPostOwner && (
+            <div className="delete-post-container">
+              <button className="delete-post-button" onClick={handleDelete} disabled={isDeleting}>
+                {isDeleting ? "Deleting..." : "Delete Post"}
+              </button>
+            </div>
+          )}
         </div>
-      )}
-  
+
       {/* Post Actions */}
       <div className="post-actions">
         {/* Likes */}
         <div className="icon-container-full-post" style={{ display: "flex", alignItems: "center" }}>
-          <Likes
-            postId={post.id}
-            userId={post.userId} 
-            setLikesCount={setLikesCount}
-          />
-          <span className="icon-count">
-            {likesCount}
-          </span> {/* Display like count */}
+          <Likes postId={post.id} userId={post.userId} setLikesCount={setLikesCount} />
+          <span className="icon-count">{likesCount}</span>
         </div>
-  
+
         {/* Comments */}
         <div className="icon-container-full-post" style={{ display: "flex", alignItems: "center" }}>
           <MessageCircle size={26} color="#e3e3e3" />
-          <span className="icon-count">
-            {commentsCount}
-          </span> {/* Display comment count */}
+          <span className="icon-count">{commentsCount}</span>
         </div>
       </div>
-  
+
       {/* Comments Section */}
       <div className="comments-section">
-        <Comments 
-          postId={post.id} 
-          userId={post.userId} 
-          setCommentsCount={setCommentsCount} 
-        />
+        <Comments postId={post.id} userId={post.userId} setCommentsCount={setCommentsCount} />
       </div>
     </div>
   );
