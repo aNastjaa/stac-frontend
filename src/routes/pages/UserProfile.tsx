@@ -17,6 +17,7 @@ import ProfileStats from '../../components/profile/ProfileStats';
 import SubmissionCard from '../../components/challenges/SubmissionCard';
 import { getChallenges, getSubmissions } from '../../utils/api/challenges';
 import DotLoader from '../../components/DotLoader';  // Import the loader
+import FullScreenProUpgrade from '../../components/FullScreenProUpgrade';
 
 const UserProfile = () => {
   const [profile, setProfile] = useState<UserProfileType | null>(null);
@@ -28,6 +29,7 @@ const UserProfile = () => {
   const [role, setRole] = useState<string>('');
   const [selectedArtwork, setSelectedArtwork] = useState<ArtworkResponse | null>(null);
   const navigate = useNavigate();
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
 
   useEffect(() => {
     const userId = getUserIdFromLocalStorage();
@@ -166,33 +168,46 @@ const UserProfile = () => {
           {/* Sponsor Challenges */}
           <div className="sponsor-challenges">
             <h3>Sponsor Challenges</h3>
-            {role === 'basic' ? (
-              <div className="sumission-upgrade-placeholder">
-                <p>Unlock Sponsor Challenges by upgrading to Pro! <br/>
-                 Only Pro users can submit their work and collaborate with top brands.</p>
-                <ButtonCTA text="Upgrade to Pro" onClick={() => {}} link="/" />
-              </div>
-            ) : submissions.length === 0 ? (
-              <div className="sponsor-submission-empty-placeholder">
-                <span className='row'>Here you will see your Sponsor Submissions, but you don’t have any yet 👀</span>
-                <span className='row'>Go to <Link to="/sponsor-challenges" className="link-highlight">Sponsor Challenges</Link> and try yourself!</span>
-                <span className='row'>Winners will get a collaboration with the brand, cool yeah? 🚀</span>
-              </div>
-            ) : (
-              <section className="submissions-gallery">
-                <div className="submissions-container">
-                  {submissions.map((submission) => (
-                    <SubmissionCard
-                      key={submission.id}
-                      submission={submission}
-                      challenge={submission.challengeName || ''}
-                      isPending={submission.status === 'pending'}
-                    />
-                  ))}
+
+            {role === "basic" ? (
+              <>
+                {/* Upgrade Placeholder */}
+                <div className="submission-upgrade-placeholder">
+                  <p>
+                    Unlock Sponsor Challenges by upgrading to Pro! <br />
+                    Only Pro users can submit their work and collaborate with top brands.
+                  </p>
+                  <ButtonCTA text="Upgrade to Pro" onClick={() => setShowUpgradeModal(true)} link="#" />
                 </div>
-              </section>
-            )}
-          </div>
+
+                {/* FullScreenProUpgrade Modal */}
+                {showUpgradeModal && <FullScreenProUpgrade onClose={() => setShowUpgradeModal(false)} />}
+              </>
+                ) : submissions.length === 0 ? (
+                  /* Empty Submissions Placeholder */
+                  <div className="sponsor-submission-empty-placeholder">
+                    <span className="row">Here you will see your Sponsor Submissions, but you don’t have any yet 👀</span>
+                    <span className="row">
+                      Go to <Link to="/sponsor-challenges" className="link-highlight">Sponsor Challenges</Link> and try yourself!
+                    </span>
+                    <span className="row">Winners will get a collaboration with the brand, cool yeah? 🚀</span>
+                  </div>
+                ) : (
+                  /* Submissions Gallery */
+                  <section className="submissions-gallery">
+                    <div className="submissions-container">
+                      {submissions.map((submission) => (
+                        <SubmissionCard
+                          key={submission.id}
+                          submission={submission}
+                          challenge={submission.challengeName || ""}
+                          isPending={submission.status === "pending"}
+                        />
+                      ))}
+                    </div>
+                  </section>
+                )}
+           </div>
         </div>
       ) : (
         <div className="profile-not-found">

@@ -16,6 +16,7 @@ import { ButtonLong, ButtonPrimary } from "./Buttons";
 import "../css/userProfile.css";
 import { CircleUserRound } from "lucide-react";
 import { UserProfileType } from "../utils/types";
+import FullScreenProUpgrade from "./FullScreenProUpgrade";
 
 const EditProfile = () => {
   const [profile, setProfile] = useState<UserProfileType>({
@@ -38,6 +39,7 @@ const EditProfile = () => {
   const [isNewProfile, setIsNewProfile] = useState<boolean>(false);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [role, setRole] = useState<string>("");
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
 
   const navigate = useNavigate();
 
@@ -232,9 +234,15 @@ const EditProfile = () => {
           />
         ) : (
           <p>
-            Only <a href="/" className="link-to-pro">Pro users</a> <br/>
+            Only <a href="/" className="link-to-pro" onClick={(e) => { e.preventDefault(); setShowUpgradeModal(true); }}>
+            Pro users</a> <br />
             can add external links.
           </p>
+        )}
+
+        {/* FullScreenProUpgrade modal */}
+        {showUpgradeModal && (
+          <FullScreenProUpgrade onClose={() => setShowUpgradeModal(false)} />
         )}
       </div>
 

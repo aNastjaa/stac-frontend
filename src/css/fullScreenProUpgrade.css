@@ -1,0 +1,142 @@
+.fullscreen-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.802);
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1999;
+  }
+  
+  .upgrade-container {
+    background: #131313;
+    padding: 1.5rem;
+    border-radius: 30px;
+    width: 90%;
+    max-width: 700px;
+    text-align: center;
+    position: relative;
+    box-shadow: 5px 6px 7px rgba(0, 0, 0, 0.25);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .close-button {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 36px;
+    cursor: pointer;
+  }
+  
+  .upgrade-title{
+    font-size: 2rem;
+    font-family: "bebas neue";
+    margin-top: 1.5rem;
+    color: #e3e3e3;
+  }
+  
+  .upgrade-subtitle {
+    font-size: 16px;
+    color: #e3e3e3;
+  }
+  
+  .user-comparison-wrapper h3 {
+    font-size: 1.7rem;
+    margin-bottom: 20px;
+    font-family: "bebas neue";
+    letter-spacing: 1px;
+    color: #e3e3e3;
+  }
+
+  .user-comparison-wrapper .vs{
+    font-family: "bebas neue";
+    padding: 0 1.5rem;
+    color: #e3e3e3;
+  }
+  
+  .comparison-grid {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+  }
+  
+  .comparison-box {
+    flex: 1;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: left;
+    color: #e3e3e3;
+    border: #e3e3e3 1px solid;
+  }
+
+  .comparison-box h4 {
+    font-size: 18px;
+    margin-bottom: 10px;
+    font-weight: 500;
+  }
+  
+  .comparison-box ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .comparison-box li {
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+
+  .comparison-box.pro {
+    position: relative;
+    border-radius: 10px;
+    padding: 15px;
+    border: 1px solid #e3e3e3;
+    box-shadow: 0 0 3px 1px rgba(255, 100, 100, 0.2), 
+                0 0 5px 2px rgba(255, 150, 100, 0.1), 
+                0 0 7px 3px rgba(255, 200, 100, 0.05);
+    animation: glow 2s ease-in-out infinite;
+  }
+  
+  @keyframes glow {
+    0% {
+      box-shadow: 0 0 3px 1px rgba(255, 100, 100, 0.2), 
+                  0 0 5px 2px rgba(255, 150, 100, 0.1), 
+                  0 0 7px 3px rgba(255, 200, 100, 0.05);
+    }
+    50% {
+      box-shadow: 0 0 4px 2px rgba(255, 120, 120, 0.3), 
+                  0 0 6px 3px rgba(255, 180, 120, 0.2), 
+                  0 0 8px 4px rgba(255, 220, 120, 0.1);
+    }
+    100% {
+      box-shadow: 0 0 3px 1px rgba(255, 100, 100, 0.2), 
+                  0 0 5px 2px rgba(255, 150, 100, 0.1), 
+                  0 0 7px 3px rgba(255, 200, 100, 0.05);
+    }
+  }
+  
+  .pricing-section {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .pricing-text {
+    font-size: 16px;
+    font-weight: 400;
+    margin-bottom: 10px;
+    color: #e3e3e3;
+  }
+  

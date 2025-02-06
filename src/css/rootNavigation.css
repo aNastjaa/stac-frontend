@@ -71,4 +71,10 @@
   font-size: 13px;
   font-weight: 200;
   text-decoration: underline;
+  cursor: pointer;
+  transition: color 0.2s ease-in-out;
+}
+
+.back-to-start:hover{
+  scale: 1.2;
 }

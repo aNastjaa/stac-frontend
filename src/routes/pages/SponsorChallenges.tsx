@@ -6,18 +6,20 @@ import { SponsorChallenge } from "../../utils/types";
 import { ExternalLink, ImageOff } from "lucide-react";
 import "../../css/challenges/sponsorChallenges.css";
 import { ButtonPrimary } from "../../components/Buttons";
+import FullScreenProUpgrade from "../../components/FullScreenProUpgrade";
 
 const SponsorChallenges = () => {
   const [challenges, setChallenges] = useState<SponsorChallenge[]>([]);
   const [brandLogoUrls, setBrandLogoUrls] = useState<{ [key: string]: string | null }>({});
-  const [role, setRole] = useState<string>(''); // Default to empty string
+  const [role, setRole] = useState<string>(''); 
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
 
   useEffect(() => {
     // Get role from localStorage
     const storedUser = localStorage.getItem('auth_user');
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
-      setRole(parsedUser.role_name || '');  // Set role from localStorage
+      setRole(parsedUser.role_name || '');  
     }
 
     const fetchChallengesAndLogos = async () => {
@@ -59,7 +61,7 @@ const SponsorChallenges = () => {
       </div>
 
       {/* Conditionally render the "Want to Participate?" section based on the role */}
-      {role !== 'pro' && (
+      {role !== "pro" && (
         <div className="update-to-pro">
           <p>
             <span className="bite">Want to Participate?</span> <br />
@@ -69,12 +71,13 @@ const SponsorChallenges = () => {
             <p>
               Upgrade to Pro and start submitting your amazing creations today. Let your creativity shine!
             </p>
-            <Link to="/upgrade-to-pro">
-              <ButtonPrimary text="Upgrade to Pro" />
-            </Link>
+              <ButtonPrimary text="Upgrade to Pro" onClick={() => setShowUpgradeModal(true)}/>
           </div>
         </div>
       )}
+
+      {/* Render FullScreenProUpgrade when modal is open */}
+      {showUpgradeModal && <FullScreenProUpgrade onClose={() => setShowUpgradeModal(false)} />}
 
         {/* Challenges List */}
         <div className="challenges-list">

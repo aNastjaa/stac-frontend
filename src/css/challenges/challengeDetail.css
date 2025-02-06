@@ -1,4 +1,4 @@
-.challange-details{
+.challenge-details{
     padding: 1rem;
 }
 
@@ -205,4 +205,16 @@
     cursor: pointer;
   }
   
-  
+  .no-submissions-message{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    max-width: 700px;
+    padding: 2rem 1rem;
+  }
+
+  .upgrade-link{
+    text-decoration: underline;
+    cursor: pointer;
+  }

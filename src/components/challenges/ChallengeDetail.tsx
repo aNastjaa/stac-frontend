@@ -9,6 +9,7 @@ import SubmissionCard from "../../components/challenges/SubmissionCard";
 import FullScreenSubmission from "../../components/challenges/FullScreenSubmission";
 import "../../css/challenges/challengeDetail.css";
 import { getCsrfTokenFromCookie } from "../../utils/api";
+import FullScreenProUpgrade from "../FullScreenProUpgrade";
 
 const ChallengeDetail = () => {
   const { challengeId } = useParams();
@@ -24,7 +25,22 @@ const ChallengeDetail = () => {
   const [hasMore, setHasMore] = useState(true);
   const [selectedSubmission, setSelectedSubmission] = useState<Submission | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const roleName = localStorage.getItem("role_name");
+  const [role, setRole] = useState<string>("");
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  
+  useEffect(() => {
+    const storedUser = localStorage.getItem("auth_user");
+    if (storedUser) {
+      try {
+        const parsedUser = JSON.parse(storedUser);
+        setRole(parsedUser.role_name || ""); // Ensure role is properly set
+      } catch (error) {
+        console.error("Error parsing auth_user from localStorage:", error);
+      }
+    }
+  }, []);
+  
+  console.log("User role:", role);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -132,7 +148,7 @@ const ChallengeDetail = () => {
   if (!challenge) return <p>Loading challenge details...</p>;
 
   return (
-    <div className="challange-details">
+    <div className="challenge-details">
       <div className="challenge-detail-container">
         {/* Hero Section with Brand Logo */}
         <section className="hero-section-challenge-detail">
@@ -141,7 +157,8 @@ const ChallengeDetail = () => {
           <h2 className="challenge-detail-title">{challenge.title}</h2>
           <p className="challenge-detail-brief">{challenge.brief}</p>
           <p className="deadline">Deadline: {challenge.submission_deadline}</p>
-          {roleName === "pro" && <ButtonLong onClick={() => setShowForm(true)} text="Submit" />}
+  
+          {role !== "basic" && <ButtonLong onClick={() => setShowForm(true)} text="Submit" />}
         </section>
   
         {/* Submission Modal */}
@@ -155,7 +172,7 @@ const ChallengeDetail = () => {
                   <label className="form-label" onClick={handleIconClick}>
                     <ImagePlus size={50} color="#131313" className="image-icon" />
                   </label>
-                  <p className="icon-explanation">Click on the icon <br/>to choose a photo</p> {/* Added explanatory text */}
+                  <p className="icon-explanation">Click on the icon <br />to choose a photo</p>
                   <input
                     ref={fileInputRef}
                     type="file"
@@ -180,7 +197,7 @@ const ChallengeDetail = () => {
                       className="info-button"
                       onClick={(e) => {
                         e.preventDefault();
-                        setShowInfo(true); // Show info when clicked
+                        setShowInfo(true);
                       }}
                       aria-label="Show information"
                     >
@@ -203,7 +220,7 @@ const ChallengeDetail = () => {
           <div className="info-modal">
             <div className="info-content">
               <h3>Important Information</h3>
-              <p>This is some important information about submitting your artwork to the challenge.</p>
+              <p>When you submit an artwork, it will be reviewed to ensure it matches the current theme. After approval, your artwork will appear on Artwork page for everyone to admire!</p>
               <button onClick={() => setShowInfo(false)} className="close-info-button">
                 Close
               </button>
@@ -213,19 +230,40 @@ const ChallengeDetail = () => {
   
         {/* Submissions Gallery */}
         <section className="submissions-gallery">
-          <h2>Submissions Gallery</h2>
+        <h2>Submissions Gallery</h2>
+
+        {visibleSubmissions.length > 0 ? (
           <div className="submissions-container">
             {visibleSubmissions.map((submission) => (
               <div key={submission.id} onClick={() => handleSubmissionClick(submission)}>
-                <SubmissionCard 
-                  submission={submission} 
-                  challenge={challenge.title}
-                />
+                <SubmissionCard submission={submission} challenge={challenge.title} />
               </div>
             ))}
           </div>
-          {hasMore && <ButtonPrimary onClick={loadMoreSubmissions} text="Load More" />}
-        </section>
+        ) : (
+          <p className="no-submissions-message">
+            {role === "pro" ? (
+              <>
+                There are no submissions yet. <br /> Be the first to showcase your creativity and steal the spotlight! 🚀🎨
+              </>
+            ) : (
+              <>
+                There are no submissions yet. <br />
+                But you can{" "}
+                <span className="upgrade-link" onClick={() => setShowUpgradeModal(true)}>
+                  <strong>upgrade to Pro</strong>
+                </span>{" "}
+                and be the first to share your creativity! 🌟
+              </>
+            )}
+          </p>
+        )}
+
+        {hasMore && <ButtonPrimary onClick={loadMoreSubmissions} text="Load More" />}
+      </section>
+
+      {/* Render FullScreenProUpgrade when modal is open */}
+      {showUpgradeModal && <FullScreenProUpgrade onClose={() => setShowUpgradeModal(false)} />}
       </div>
   
       {/* FullScreenSubmission */}
@@ -239,7 +277,8 @@ const ChallengeDetail = () => {
         />
       )}
     </div>
-  );  
+  );
+  
 };
 
 export default ChallengeDetail;
