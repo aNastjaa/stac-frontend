@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from "react";
-import { X, MessageCircle, CircleUserRound} from "lucide-react";
+import { X, MessageCircle, CircleUserRound } from "lucide-react";
 import "../../css/artworks/fullScreenPost.css";
-import { getProfileIdByUserId, getUserProfileByProfileId, fetchAvatarUrl} from "../../utils/api";
+import { getProfileIdByUserId, getUserProfileByProfileId, fetchAvatarUrl } from "../../utils/api";
 import { getAuthToken } from "../../utils/api"; // Import token helper
 import { AuthContext } from "../../context/AuthContext"; // Import Auth Context
 import Likes from "./Likes";
@@ -24,9 +24,10 @@ interface Post {
 type FullScreenPostProps = {
   post: Post;
   onClose: () => void;
+  onPostDeleted: (postId: string) => void;
 };
 
-function FullScreenPost({ post, onClose }: FullScreenPostProps) {
+function FullScreenPost({ post, onClose, onPostDeleted }: FullScreenPostProps) {
   const { auth } = useContext(AuthContext); // Get auth details
   const authToken = getAuthToken(); // Get token from local storage
   const [avatarUrl, setAvatarUrl] = useState<string>(post.avatarUrl || "");
@@ -36,7 +37,7 @@ function FullScreenPost({ post, onClose }: FullScreenPostProps) {
 
   // Check if logged-in user is the post owner
   const isPostOwner = auth.id === post.userId;
-  
+
   console.log("Auth Token:", authToken);
   console.log("Auth Context User ID:", auth.id);
   console.log("Post User ID:", post.userId);
@@ -75,18 +76,30 @@ function FullScreenPost({ post, onClose }: FullScreenPostProps) {
     try {
       setIsDeleting(true);
   
+      // Call deletePost to delete the post
       const result = await deletePost(post.id);
       console.log(result);
   
+      // Ensure onPostDeleted is a function before calling it
+      if (typeof onPostDeleted === "function") {
+        onPostDeleted(post.id); // Call the callback to remove the post
+      } else {
+        console.error("onPostDeleted is not a function");
+      }
+  
       // Optionally close the fullscreen post view after deletion
       onClose();
+  
+      // Show a success alert
+      alert("Post deleted successfully");
     } catch (error) {
       console.error("Error deleting post:", error);
     } finally {
-      setIsDeleting(false);
+      setIsDeleting(false); // Set deleting state to false after the request is done
     }
   };
-
+  
+  
   return (
     <div className="fullscreen-post">
       {/* Close Button */}
@@ -110,35 +123,33 @@ function FullScreenPost({ post, onClose }: FullScreenPostProps) {
       {/* Post Image */}
       <div className="post-image">
         <img src={post.imageUrl} alt="Post content" />
-
       </div>
-        <div className="post-decription-delete-button">
-          {/* Description Under Image */}
-          {post.description && (
-            <div className="fullpost-description">
-              <p>{post.description}</p>
-            </div>
-          )}
 
-          {/* Delete Button (Only for Post Owner) - Placed below description */}
-          {isPostOwner && (
-            <div className="delete-post-container">
-              <button className="delete-post-button" onClick={handleDelete} disabled={isDeleting}>
-                {isDeleting ? "Deleting..." : "Delete Post"}
-              </button>
-            </div>
-          )}
-        </div>
+      {/* Description & Delete Button */}
+      <div className="post-decription-delete-button">
+        {post.description && (
+          <div className="fullpost-description">
+            <p>{post.description}</p>
+          </div>
+        )}
+
+        {/* Delete Button (Only for Post Owner) */}
+        {isPostOwner && (
+          <div className="delete-post-container">
+            <button className="delete-post-button" onClick={handleDelete} disabled={isDeleting}>
+              {isDeleting ? "Deleting..." : "Delete Post"}
+            </button>
+          </div>
+        )}
+      </div>
 
       {/* Post Actions */}
       <div className="post-actions">
-        {/* Likes */}
         <div className="icon-container-full-post" style={{ display: "flex", alignItems: "center" }}>
           <Likes postId={post.id} userId={post.userId} setLikesCount={setLikesCount} />
           <span className="icon-count">{likesCount}</span>
         </div>
 
-        {/* Comments */}
         <div className="icon-container-full-post" style={{ display: "flex", alignItems: "center" }}>
           <MessageCircle size={26} color="#e3e3e3" />
           <span className="icon-count">{commentsCount}</span>

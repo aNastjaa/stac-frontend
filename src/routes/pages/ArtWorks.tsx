@@ -119,6 +119,22 @@ const ArtWorks = () => {
     setLoading(false);
   };
 
+  const handlePostDeleted = (postId: string) => {
+    console.log(`Post with ID ${postId} deleted`);
+    
+    setAllArtworks((prevState) => {
+      const newState = prevState.filter(post => post.id !== postId);
+      console.log('Updated allArtworks:', newState);
+      return newState;
+    });
+    
+    setVisibleArtworks((prevState) => {
+      const newState = prevState.filter(post => post.id !== postId);
+      console.log('Updated visibleArtworks:', newState);
+      return newState;
+    });
+  };
+  
   return (
     <div className="artwork-page">
       {/* Render FullScreenPost if a post is selected */}
@@ -137,6 +153,7 @@ const ArtWorks = () => {
             description: selectedArtwork.description,
           }}
           onClose={closeFullScreenPost}
+          onPostDeleted={handlePostDeleted}
         />
       )}
 

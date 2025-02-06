@@ -101,6 +101,12 @@ const UserProfile = () => {
     setSelectedArtwork(null);
   };
 
+  const handleDeleteArtwork = (artworkId: string) => {
+    setArtworks((prevArtworks) =>
+      prevArtworks.filter((artwork) => artwork.id !== artworkId)
+    );
+  };
+
   return (
     <div className="profile-container">
       {loading ? (
@@ -209,6 +215,7 @@ const UserProfile = () => {
             description: selectedArtwork.description,
           }}
           onClose={handleCloseFullScreenPost}
+          onPostDeleted={handleDeleteArtwork}
         />
       )}
     </div>
