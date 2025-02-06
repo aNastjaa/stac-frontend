@@ -9,13 +9,14 @@ import {
 } from '../../utils/api';
 import { CircleUserRound } from 'lucide-react';
 import '../../css/userProfile.css';
-import { ButtonCTA, ButtonPrimary } from '../../components/Buttons';
+import { ButtonCTA, ButtonLong, ButtonPrimary } from '../../components/Buttons';
 import { UserProfileType, ArtworkResponse, Submission } from '../../utils/types';
 import ArtworkCard from '../../components/artworks/ArtworkCard';
 import FullScreenPost from '../../components/artworks/FullScreenPost';
 import ProfileStats from '../../components/profile/ProfileStats';
 import SubmissionCard from '../../components/challenges/SubmissionCard';
 import { getChallenges, getSubmissions } from '../../utils/api/challenges';
+import DotLoader from '../../components/DotLoader';  // Import the loader
 
 const UserProfile = () => {
   const [profile, setProfile] = useState<UserProfileType | null>(null);
@@ -110,7 +111,7 @@ const UserProfile = () => {
   return (
     <div className="profile-container">
       {loading ? (
-        <p>Loading profile...</p>
+        <DotLoader />
       ) : profile ? (
         <div className="container">
           {/* Profile Header */}
@@ -166,8 +167,9 @@ const UserProfile = () => {
           <div className="sponsor-challenges">
             <h3>Sponsor Challenges</h3>
             {role === 'basic' ? (
-              <div>
-                <p>Unlock Sponsor Challenges by upgrading to Pro! Only Pro users can submit their work and collaborate with top brands.</p>
+              <div className="sumission-upgrade-placeholder">
+                <p>Unlock Sponsor Challenges by upgrading to Pro! <br/>
+                 Only Pro users can submit their work and collaborate with top brands.</p>
                 <ButtonCTA text="Upgrade to Pro" onClick={() => {}} link="/" />
               </div>
             ) : submissions.length === 0 ? (
@@ -179,14 +181,14 @@ const UserProfile = () => {
             ) : (
               <section className="submissions-gallery">
                 <div className="submissions-container">
-                {submissions.map((submission) => (
-                  <SubmissionCard
-                    key={submission.id}
-                    submission={submission}
-                    challenge={submission.challengeName || ''}
-                    isPending={submission.status === 'pending'}
-                  />
-                ))}
+                  {submissions.map((submission) => (
+                    <SubmissionCard
+                      key={submission.id}
+                      submission={submission}
+                      challenge={submission.challengeName || ''}
+                      isPending={submission.status === 'pending'}
+                    />
+                  ))}
                 </div>
               </section>
             )}
@@ -195,8 +197,9 @@ const UserProfile = () => {
       ) : (
         <div className="profile-not-found">
           <h2>Hello {username || 'there'}!</h2>
-          <p>Oh wow, you're visiting for the first time! 🙌 Please fill out your profile to continue.</p>
-          <ButtonPrimary text="Complete Your Profile" onClick={() => navigate('/edit-profile')} />
+          <p>Oh wow, you're visiting for the first time! 🙌 <br/>
+          Please fill out your profile to continue.</p>
+          <ButtonLong text="Complete Your Profile" onClick={() => navigate('/edit-profile')} />
         </div>
       )}
 
