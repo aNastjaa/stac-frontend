@@ -59,3 +59,16 @@
   color: #e3e3e3;
 }
 
+.landing-page-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.back-to-start{
+  color: #e3e3e381;
+  font-family: 'Montserrat';
+  font-size: 13px;
+  font-weight: 200;
+  text-decoration: underline;
+}

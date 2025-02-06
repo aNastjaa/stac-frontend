@@ -107,7 +107,7 @@ export interface ErrorMessages {
       avatar_url?: string;
     };
     image_path: string;
-    sponsor_challenge_id: string; 
+    challenge_id: string; 
     status: "pending" | "accepted" | "rejected";
     description: string;
     created_at: string;

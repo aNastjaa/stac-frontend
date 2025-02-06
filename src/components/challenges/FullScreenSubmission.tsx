@@ -1,16 +1,20 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { X, CircleUserRound } from "lucide-react";
 import "../../css/challenges/fullScreenSubmission.css";
-import { Submission } from "../../utils/types";
+import { Submission } from "../../utils/types"; // Assuming Submission is defined in utils/types
 import { getProfileIdByUserId, getUserProfileByProfileId, fetchAvatarUrl } from "../../utils/api";
+import { getAuthToken } from "../../utils/api";
+import { AuthContext } from "../../context/AuthContext";
+import { deleteSubmission } from "../../utils/api/challenges"; 
 import VoteButton from "./VoteButton";
-import { getChallengeDetails } from "../../utils/api/challenges"; // Assuming this is your API call to get challenge details
+import { getChallengeDetails } from "../../utils/api/challenges";
 
 interface FullScreenSubmissionProps {
   submission: Submission;
   onClose: () => void;
   challengeName: string;
   votesCount: number;
+  onSubmissionDeleted: (submissionId: string) => void;
 }
 
 const FullScreenSubmission = ({
@@ -18,10 +22,22 @@ const FullScreenSubmission = ({
   onClose,
   challengeName,
   votesCount: initialVotesCount,
+  onSubmissionDeleted
 }: FullScreenSubmissionProps) => {
+  const { auth } = useContext(AuthContext);
+  const authToken = getAuthToken();
   const [avatarUrl, setAvatarUrl] = useState<string>(submission.user.avatar_url || "");
-  const [votesCount, setVotesCount] = useState<number>(initialVotesCount); // State for vote count
+  const [votesCount, setVotesCount] = useState<number>(initialVotesCount);
   const [challengeTitle, setChallengeTitle] = useState<string>(challengeName);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  // Check if logged-in user is the submission owner
+  const isSubmissionOwner = auth.id === submission.user.id;
+
+  console.log("Auth Token:", authToken);
+  console.log("Auth Context User ID:", auth.id);
+  console.log("Submission User ID:", submission.user.id);
+  console.log("Is Submission Owner:", isSubmissionOwner);
 
   // Fetch avatar logic (unchanged from original)
   useEffect(() => {
@@ -51,7 +67,7 @@ const FullScreenSubmission = ({
   useEffect(() => {
     const fetchChallengeTitle = async () => {
       try {
-        const challengeData = await getChallengeDetails(submission.sponsor_challenge_id);
+        const challengeData = await getChallengeDetails(submission.challenge_id);
         if (challengeData?.title) {
           setChallengeTitle(challengeData.title);
         }
@@ -66,11 +82,43 @@ const FullScreenSubmission = ({
     } else {
       setChallengeTitle(challengeName);
     }
-  }, [submission.sponsor_challenge_id, challengeName]);
+  }, [submission.challenge_id, challengeName]);
 
+  // Handle deletion of the submission
+  const handleDelete = async () => {
+    if (!window.confirm("Are you sure you want to delete this submission?")) {
+      return;
+    }
+
+    try {
+      setIsDeleting(true);
+
+      const challengeId = submission.challenge_id;
+
+      if (!challengeId) {
+        console.error("Challenge ID is missing in submission.");
+        return;
+      }
+
+      await deleteSubmission(submission.id, challengeId);
+      console.log(`Submission ${submission.id} deleted`);
+
+      // Remove the submission from state in the parent
+      onSubmissionDeleted(submission.id);
+
+      // Close the fullscreen view
+      onClose();
+
+      alert("Submission deleted successfully");
+    } catch (error) {
+      console.error("Error deleting submission:", error);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
   // Handle closing the modal
   const handleClose = () => {
-    onClose(); // Trigger the onClose function passed via props without preventing default
+    onClose(); // Trigger the onClose function passed via props
   };
 
   return (
@@ -79,7 +127,7 @@ const FullScreenSubmission = ({
       <button className="close-button" onClick={handleClose}>
         <X size={36} color="#e3e3e3" />
       </button>
-  
+
       {/* Submission Header */}
       <div className="post-header">
         {avatarUrl ? (
@@ -93,30 +141,43 @@ const FullScreenSubmission = ({
         </div>
       </div>
       
-          {/* Submission Image */}
-          <div className="post-image">
-            <img src={submission.image_path} alt="Submission content" />
+      {/* Submission Image */}
+      <div className="post-image">
+        <img src={submission.image_path} alt="Submission content" />
+      </div>
+
+      {/* Description and Delete Button */}
+      <div className="desc-del-container">
+        {submission.description && (
+          <div className="submission-description">
+            <p>{submission.description}</p>
           </div>
-      <div className="desc-vote-container">
-          {/* Description Under Image */}
-          {submission.description && (
-            <div className="post-description">
-              <p>{submission.description}</p>
-            </div>
-          )}
-      
+        )}
+
+        {/* Delete Button (Only for Submission Owner) */}
+        {isSubmissionOwner && (
+          <div className="delete-submission-container">
+            <button
+              className="delete-submission-button"
+              onClick={handleDelete}
+              disabled={isDeleting}
+            >
+              {isDeleting ? "Deleting..." : "Delete Submission"}
+            </button>
+          </div>
+        )}
+      </div>
+
       {/* Submission Actions */}
       <div className="post-actions">
         <div className="icon-container-full-post">
           <VoteButton
-            challengeId={submission.sponsor_challenge_id}
+            challengeId={submission.challenge_id}
             submissionId={submission.id}
             setVotesCount={setVotesCount} // Update votes count
           />
-          {/* Render the vote count immediately */}
-          <span>{votesCount} votes</span> 
+          <span>{votesCount} votes</span>
         </div>
-      </div>
       </div>
     </div>
   );

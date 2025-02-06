@@ -119,6 +119,16 @@ const ChallengeDetail = () => {
     setSelectedSubmission(null);
   };
 
+  const handleSubmissionDeleted = (submissionId: string) => {
+    console.log(`Submission with ID ${submissionId} deleted`);
+  
+    setSubmissions((prevState) => {
+      const newState = prevState.filter(submission => submission.id !== submissionId);
+      console.log("Updated submissions:", newState);
+      return newState;
+    });
+  };
+
   if (!challenge) return <p>Loading challenge details...</p>;
 
   return (
@@ -225,6 +235,7 @@ const ChallengeDetail = () => {
           challengeName={challenge.title}
           votesCount={selectedSubmission.votes_count}
           onClose={closeFullScreenSubmission}
+          onSubmissionDeleted={handleSubmissionDeleted}
         />
       )}
     </div>

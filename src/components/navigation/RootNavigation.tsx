@@ -29,6 +29,13 @@ function RootNavigation({ isOpen, closeMenu }: RootNavigationProps) {
           <ButtonLong text="Log In" />
         </Link>
       </div>
+
+      {/* Back to Start Page Link */}
+        <div className="back-link">
+          <Link to="/" onClick={closeMenu} className="back-to-start">
+              Back to start page
+          </Link>
+        </div>
     </div>
   );
 }

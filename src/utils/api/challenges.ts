@@ -1,4 +1,4 @@
-import { API_URL, getCsrfTokenFromCookie, getUserIdFromLocalStorage } from "../api";
+import { API_URL, getAuthToken, getCsrfTokenFromCookie, getUserIdFromLocalStorage } from "../api";
 import { SponsorChallenge, SponsorChallengeDetail,Submission, Vote} from "../types";
 
   export const getChallenges = async (): Promise<SponsorChallenge[]> => {
@@ -64,11 +64,7 @@ import { SponsorChallenge, SponsorChallengeDetail,Submission, Vote} from "../typ
     formData: FormData,
     csrfToken: string
   ): Promise<Submission> => {
-    try {
-      console.log('Submitting work...');
-      console.log('Challenge ID:', challengeId);
-      console.log('CSRF Token:', csrfToken);
-  
+    try {  
       // Log form data keys and values
       for (const pair of formData.entries()) {
         console.log(`FormData - ${pair[0]}:`, pair[1]);
@@ -133,6 +129,32 @@ import { SponsorChallenge, SponsorChallengeDetail,Submission, Vote} from "../typ
       return data as Submission[];
     } catch (error) {
       console.error("Error fetching submissions:", error);
+      throw error;
+    }
+  };
+  export const deleteSubmission = async (submissionId: string, challengeId: string): Promise<string> => {
+    try {
+      // Get CSRF token from cookies
+      const csrfToken = getCsrfTokenFromCookie();
+  
+      const response = await fetch(`${API_URL}/api/sponsor-challenges/${challengeId}/submissions/${submissionId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          "X-XSRF-TOKEN": csrfToken,
+          "Authorization": `Bearer ${getAuthToken()}`,
+        },
+        credentials: "include",
+      });
+  
+      if (!response.ok) {
+        throw new Error("Failed to delete submission.");
+      }
+  
+      const data = await response.json();
+      return data.message;
+    } catch (error) {
+      console.error("Error deleting submission:", error);
       throw error;
     }
   };

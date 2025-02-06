@@ -65,18 +65,20 @@
     border-radius: 20px;
   }
 
-  .desc-vote-container{
+  .desc-del-container{
     display: flex;
     justify-content: space-between;
+    align-items: flex-end;
+    margin-top: 1rem;
+    flex-wrap: wrap;
   }
 
-  .post-description {
+  .submission-description {
     margin-top: 10px;
     color: #e3e3e3;
     font-size: calc(1rem + 0.3vw);
     text-align: left;
     max-width: 80%;
-    padding: 1rem 1rem 0 1rem ;
   }
   
   .post-actions {
@@ -173,4 +175,18 @@
   
   .read-more-button:hover {
     text-decoration: underline;
+  }
+  
+  .delete-submission-button {
+    background: none;
+    border: none;
+    color: red;
+    font-size: 16px;
+    font-weight: 300;
+    cursor: pointer;
+    transition: opacity 0.3s;
+  }
+  
+  .delete-button:hover {
+    opacity: 0.7;
   }
