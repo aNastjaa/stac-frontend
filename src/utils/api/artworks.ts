@@ -2,7 +2,7 @@
 //POST (Artworks routing)
 //-------------------------------------------------------------------------------------------------------------
 
-import { API_URL, getCsrfTokenFromCookie} from "../api";
+import { API_URL, getAuthToken, getCsrfTokenFromCookie} from "../api";
 import { ArtworkResponse, Theme } from "../types";
 
 // Fetch the current theme for the artwork
@@ -41,30 +41,41 @@ export const fetchCurrentTheme = async (): Promise<Theme | null> => {
     }
   };
 // Submit artwork
-  export const submitArtwork = async (
-    formData: FormData,
-    csrfToken: string
-  ): Promise<ArtworkResponse> => {
-    try {
-      const response = await fetch(`${API_URL}/api/artworks`, {
-        method: 'POST',
-        headers: {
-          'X-XSRF-TOKEN': csrfToken, 
-        },
-        body: formData,
-        credentials: 'include', 
-      });
-  
-      if (!response.ok) {
-        throw new Error('Failed to submit artwork');
+export const submitArtwork = async (
+  formData: FormData,
+  csrfToken: string
+): Promise<{ message: string; post?: ArtworkResponse }> => {
+  try {
+    const response = await fetch(`${API_URL}/api/artworks`, {
+      method: "POST",
+      headers: {
+        "X-XSRF-TOKEN": csrfToken,
+      },
+      body: formData,
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      if (response.status === 422) {
+        // Handle Laravel validation errors
+        const data = await response.json();
+        if (data.errors) {
+          const errorMessages = Object.values(data.errors).flat().join(" ");
+          throw new Error(errorMessages);
+        } else {
+          throw new Error(data.message || "Validation failed");
+        }
       }
-  
-      return await response.json(); 
-    } catch (error) {
-      console.error('Error submitting artwork', error);
-      throw error;
+
+      throw new Error("Failed to submit artwork");
     }
-  };
+
+    return await response.json(); // Success response
+  } catch (error) {
+    console.error("Error submitting artwork", error);
+    throw error;
+  }
+};
 //Get all artworks
   export const fetchArtworks = async (): Promise<ArtworkResponse[]> => {
     try {
@@ -124,4 +135,21 @@ export const fetchCurrentTheme = async (): Promise<Theme | null> => {
       console.error('Error fetching post by ID:', error);
       throw error;
     }
+  };
+//Delete post
+  export const deletePost = async (postId: string, csrfToken: string): Promise<string> => {
+    const response = await fetch(`${API_URL}/artworks/${postId}`, {
+      method: "DELETE",
+      headers: {
+        "X-CSRF-TOKEN": csrfToken,
+        Authorization: `Bearer ${getAuthToken()}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to delete post.");
+    }
+
+    const data = await response.json();
+    return data.message;
   };

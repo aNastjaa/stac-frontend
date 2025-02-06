@@ -9,12 +9,13 @@ import { getCsrfTokenFromCookie } from '../../utils/api';
 import DotLoader from '../../components/DotLoader';
 import FullScreenPost from '../../components/artworks/FullScreenPost';
 import LastMonthCarousel from '../../components/carousels/LastMonthCarousel';
+import SuccessModal from '../../components/SuccessModal';
 
 const ArtWorks = () => {
   const [currentTheme, setCurrentTheme] = useState<Theme | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [description, setDescription] = useState<string>('');
-  const [errorMessage, setErrorMessage] = useState<string | null>(null); // New state for error messages
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [allArtworks, setAllArtworks] = useState<ArtworkResponse[]>([]);
   const [visibleArtworks, setVisibleArtworks] = useState<ArtworkResponse[]>([]);
   const [showForm, setShowForm] = useState<boolean>(false);
@@ -22,6 +23,7 @@ const ArtWorks = () => {
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState<boolean>(false);
   const [selectedArtwork, setSelectedArtwork] = useState<ArtworkResponse | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -63,36 +65,46 @@ const ArtWorks = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    setErrorMessage(null);
+    setSuccessMessage(null); 
+  
     if (!imageFile || !description) {
       setErrorMessage('Image and Description are required');
       return;
     }
-
+  
     try {
       const csrfToken = getCsrfTokenFromCookie();
       if (!csrfToken) {
         throw new Error('CSRF token is missing');
       }
-
+  
       const formData = new FormData();
       formData.append('image', imageFile);
       formData.append('description', description);
       if (currentTheme) {
         formData.append('theme_id', currentTheme.id);
       }
-
-      const newArtwork = await submitArtwork(formData, csrfToken);
-      setAllArtworks((prevState) => [...prevState, newArtwork]);
-      setVisibleArtworks((prevState) => [...prevState, newArtwork]);
+  
+      const { message, post } = await submitArtwork(formData, csrfToken);
+  
+      if (post) {
+        setAllArtworks((prevState) => [...prevState, post]);
+        setVisibleArtworks((prevState) => [...prevState, post]);
+      }
+  
+      setSuccessMessage(message);
+      window.alert(message);
       setShowForm(false);
-      alert('Artwork posted successfully!');
     } catch (error) {
-      alert('Failed to submit artwork');
-      console.error('Error submitting artwork:', error);
+      if (error instanceof Error) {
+        setErrorMessage(error.message);
+      } else {
+        setErrorMessage('An unexpected error occurred');
+      }
     }
   };
-
+  
   const handleIconClick = () => {
     if (fileInputRef.current) {
       fileInputRef.current.click();
@@ -147,11 +159,11 @@ const ArtWorks = () => {
             <button className="close-button" onClick={() => setShowForm(false)}>&times;</button>
             <h2>Submit Your Artwork</h2>
             <form onSubmit={handleSubmit} className="artwork-submit-form">
-            <div className="form-group artwork-image">
+              <div className="form-group artwork-image">
                 <label className="form-label" onClick={handleIconClick}>
                   <ImagePlus size={50} color="#131313" className="image-icon" />
                 </label>
-                  <p className="icon-explanation">Click on the icon <br/>to choose a photo</p> {/* Added explanatory text */}
+                <p className="icon-explanation">Click on the icon <br />to choose a photo</p>
                 <input
                   ref={fileInputRef}
                   type="file"
@@ -161,8 +173,7 @@ const ArtWorks = () => {
                   style={{ display: 'none' }}
                 />
                 {imageFile && <img src={URL.createObjectURL(imageFile)} alt="Preview" className="image-preview" />}
-            </div>
-
+              </div>
 
               <div className="form-group-artwork-description">
                 <label className="form-label">Add description:</label>
@@ -184,8 +195,10 @@ const ArtWorks = () => {
                     <Info size={20} color="#888" />
                   </button>
                 </div>
-                {errorMessage && <p className="error-message">{errorMessage}</p>}
               </div>
+
+              {errorMessage && <p className="error-message">{errorMessage}</p>}
+              {successMessage && <SuccessModal message={successMessage} />}
 
               <div className="form-group">
                 <ButtonCTA text="Submit Artwork" link="#" onClick={handleSubmit} />
@@ -237,7 +250,7 @@ const ArtWorks = () => {
       {/* Top Artworks from Last Month Section */}
       <section className="top-artworks-last-month">
         <h2 className="section-title">Top Artworks from Last Month</h2>
-        <h3 className="theme-title">Beyond the Horizon</h3>
+        <h3 className="theme-title">"Beyond the Horizon"</h3>
         <p className="theme-description">
           Capture the beauty and mystery of the horizon and what lies beyond it. 
           Whether it’s a stunning landscape, a dream of what’s ahead, or a creative 
