@@ -10,7 +10,7 @@
   display: flex;
   flex-direction: column;
   padding: 1rem;
-  overflow-y: auto;  /* Enable scrolling for the full post container */
+  overflow-y: auto;
 }
 
 .close-button {
@@ -63,13 +63,19 @@
   border-radius: 20px;
 }
 
-.post-description {
-  margin-top: 10px;
+.fullpost-description {
   color: #e3e3e3;
   font-size: calc(1rem + 0.3vw);
   text-align: left;
   max-width: 80%;
-  padding: 1rem 1rem 0 1rem ;
+}
+
+.post-decription-delete-button{
+  display: flex;
+  align-items: center;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-top: 1rem;
 }
 
 .post-actions {
@@ -97,7 +103,7 @@
 .comments-section {
   padding: 10px;
   border-top: 1px solid #444;
-  flex-grow: 1;  /* Allow comments section to take up the remaining space */
+  flex-grow: 1;
 }
 
 .comments-list {
@@ -157,7 +163,7 @@
 .read-more-button {
   background: none;
   border: none;
-  color: #fff;
+  color: #e3e3e3;
   cursor: pointer;
   padding: 10px;
   text-align: center;
@@ -166,4 +172,19 @@
 
 .read-more-button:hover {
   text-decoration: underline;
+}
+
+.delete-post-button {
+  background: none;
+  border: none;
+  color: red;
+  font-size: 16px;
+  font-weight: 300;
+  cursor: pointer;
+  transition: opacity 0.3s;
+  padding: 0.5rem;
+}
+
+.delete-button:hover {
+  opacity: 0.7;
 }

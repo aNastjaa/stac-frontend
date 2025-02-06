@@ -137,13 +137,19 @@ export const submitArtwork = async (
     }
   };
 //Delete post
-  export const deletePost = async (postId: string, csrfToken: string): Promise<string> => {
-    const response = await fetch(`${API_URL}/artworks/${postId}`, {
+export const deletePost = async (postId: string): Promise<string> => {
+  try {
+    // Get CSRF token from cookies
+    const csrfToken = getCsrfTokenFromCookie();
+
+    const response = await fetch(`${API_URL}/api/artworks/${postId}`, {
       method: "DELETE",
       headers: {
-        "X-CSRF-TOKEN": csrfToken,
-        Authorization: `Bearer ${getAuthToken()}`,
+        "Content-Type": "application/json",
+        "X-XSRF-TOKEN": csrfToken, // CSRF token
+        "Authorization": `Bearer ${getAuthToken()}`,
       },
+      credentials: "include", // Send cookies along with the request
     });
 
     if (!response.ok) {
@@ -152,4 +158,9 @@ export const submitArtwork = async (
 
     const data = await response.json();
     return data.message;
-  };
+  } catch (error) {
+    console.error("Error deleting post:", error);
+    throw error;
+  }
+};
+
