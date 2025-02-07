@@ -124,6 +124,7 @@
   .vs{
     font-family: 'Sedgwick Ave Display', sans-serif;
     font-size: 30px;
+    padding: 0 2rem;
   }
   .comprasion{
     display: flex;
