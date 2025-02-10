@@ -236,7 +236,10 @@ const ChallengeDetail = () => {
           <div className="submissions-container">
             {visibleSubmissions.map((submission) => (
               <div key={submission.id} onClick={() => handleSubmissionClick(submission)}>
-                <SubmissionCard submission={submission} challenge={challenge.title} />
+                <SubmissionCard 
+                submission={submission} 
+                challenge={challenge.title} 
+                onSubmissionDeleted={handleSubmissionDeleted} />
               </div>
             ))}
           </div>

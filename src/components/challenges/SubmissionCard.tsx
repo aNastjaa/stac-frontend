@@ -8,10 +8,11 @@ interface SubmissionCardProps {
   submission: Submission & { votes?: Vote[] };
   isPending?: boolean;
   onClick?: () => void;
-  challenge: string; // challengeName passed as string (from UserProfile)
+  challenge: string;
+  onSubmissionDeleted: (submissionId: string) => void;
 }
 
-const SubmissionCard = ({ submission, isPending, onClick, challenge }: SubmissionCardProps) => {
+const SubmissionCard = ({ submission, isPending, onClick, challenge, onSubmissionDeleted }: SubmissionCardProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [username, setUsername] = useState<string | null>(null);
   const [votesCount, setVotesCount] = useState<number>(
@@ -43,6 +44,11 @@ const SubmissionCard = ({ submission, isPending, onClick, challenge }: Submissio
     setIsFullscreen(false);
   };
 
+  const handleSubmissionDeleted = (submissionId: string) => {
+    console.log(`Submission with ID ${submissionId} deleted`);
+    onSubmissionDeleted(submissionId); 
+  };
+
   return (
     <div className={`submission-card ${isPending ? 'blurred' : ''}`} onClick={handleClick}>
       {/* Submission Header */}
@@ -60,7 +66,7 @@ const SubmissionCard = ({ submission, isPending, onClick, challenge }: Submissio
         {!isPending && (
           <div className="icon-container">
             <VoteButton
-              challengeId={submission.sponsor_challenge_id}
+              challengeId={submission.challenge_id}
               submissionId={submission.id}
               setVotesCount={setVotesCount}
             />
@@ -79,8 +85,9 @@ const SubmissionCard = ({ submission, isPending, onClick, challenge }: Submissio
             <FullScreenSubmission
               submission={submission}
               onClose={handleCloseFullscreen}
-              challengeName={challenge} // Pass challengeName here
+              challengeName={challenge}
               votesCount={votesCount}
+              onSubmissionDeleted={handleSubmissionDeleted}
             />
           </div>
         </div>

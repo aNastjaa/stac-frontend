@@ -110,6 +110,16 @@ const UserProfile = () => {
     );
   };
 
+  const handleSubmissionDeleted = (submissionId: string) => {
+    console.log(`Submission with ID ${submissionId} deleted`);
+  
+    setSubmissions((prevState) => {
+      const newState = prevState.filter((submission) => submission.id !== submissionId);
+      console.log("Updated submissions:", newState);
+      return newState;
+    });
+  };
+
   return (
     <div className="profile-container">
       {loading ? (
@@ -202,6 +212,7 @@ const UserProfile = () => {
                           submission={submission}
                           challenge={submission.challengeName || ""}
                           isPending={submission.status === "pending"}
+                          onSubmissionDeleted={handleSubmissionDeleted}
                         />
                       ))}
                     </div>

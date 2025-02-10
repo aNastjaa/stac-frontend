@@ -1,7 +1,3 @@
-//-------------------------------------------------------------------------------------------------------------
-//POST (Artworks routing)
-//-------------------------------------------------------------------------------------------------------------
-
 import { API_URL, getAuthToken, getCsrfTokenFromCookie} from "../api";
 import { ArtworkResponse, Theme } from "../types";
 
@@ -137,30 +133,27 @@ export const submitArtwork = async (
     }
   };
 //Delete post
-export const deletePost = async (postId: string): Promise<string> => {
+export const deletePost = async (postId: string): Promise<{ message: string }> => {
   try {
-    // Get CSRF token from cookies
     const csrfToken = getCsrfTokenFromCookie();
 
     const response = await fetch(`${API_URL}/api/artworks/${postId}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-        "X-XSRF-TOKEN": csrfToken, // CSRF token
+        "X-XSRF-TOKEN": csrfToken,
         "Authorization": `Bearer ${getAuthToken()}`,
       },
-      credentials: "include", // Send cookies along with the request
+      credentials: "include",
     });
 
     if (!response.ok) {
       throw new Error("Failed to delete post.");
     }
 
-    const data = await response.json();
-    return data.message;
+    return await response.json();
   } catch (error) {
     console.error("Error deleting post:", error);
     throw error;
   }
 };
-

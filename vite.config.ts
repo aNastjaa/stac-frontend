@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite'
+import { defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react-swc'
 
 
@@ -8,15 +8,20 @@ export default defineConfig({
   assetsInclude: ['**/*.woff2', '**/*.ttf', '**/*.woff'],
   server: {
     proxy: {
-      '/sanctum/csrf-cookie': 'http://localhost:8000', // Proxy CSRF cookie request to Laravel backend
-      '/api': 'http://localhost:8000', // Proxy other API requests to Laravel backend
+      '/sanctum/csrf-cookie': 'http://localhost:8000',
+      '/api': 'http://localhost:8000',
     },
   },
   build: {
-    outDir: 'public/build', // Output the built files in Laravel's public folder
+    outDir: 'public/build',
     assetsDir: 'assets',
   },
   publicDir: 'public',
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: './setupTests.js', 
+  },
 })
 
 

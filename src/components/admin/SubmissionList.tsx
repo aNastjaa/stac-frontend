@@ -35,7 +35,8 @@ const SubmissionList = () => {
         {submissions.map((submission) => (
           <li key={submission.id} className="submission-item">
             <div className="submission-details">
-              <p className="submission-username">{submission.user}</p> {/* Assuming submission contains a user object */}
+            <p className="submission-username">{submission.user.username}</p>
+            
               {submission.image_path && (
                 <div className="thumbnail-container">
                   <img

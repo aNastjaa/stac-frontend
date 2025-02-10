@@ -1,0 +1,151 @@
+import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
+import { getUserIdFromLocalStorage, getProfileIdByUserId, getUserProfileByProfileId, createUserProfile, updateUserProfile, uploadAvatar, fetchAvatarUrl, deleteUserAccount, logout, getCsrfTokenFromCookie, } from "../utils/api";
+import { ButtonLong, ButtonPrimary } from "./Buttons";
+import "../css/userProfile.css";
+import { CircleUserRound } from "lucide-react";
+import FullScreenProUpgrade from "./FullScreenProUpgrade";
+const EditProfile = () => {
+    const [profile, setProfile] = useState({
+        id: "",
+        username: "",
+        avatar_url: null,
+        avatar_id: "",
+        posts_count: 0,
+        comments_count: 0,
+        likes_count: 0,
+        full_name: "",
+        bio: "",
+        external_links: [],
+    });
+    const [avatarFile, setAvatarFile] = useState(null);
+    const [avatarPreview, setAvatarPreview] = useState(null);
+    const [isAvatarEditMode, setIsAvatarEditMode] = useState(false);
+    const [errorMessage, setErrorMessage] = useState(null);
+    const [isNewProfile, setIsNewProfile] = useState(false);
+    const [avatarUrl, setAvatarUrl] = useState(null);
+    const [role, setRole] = useState("");
+    const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+    const navigate = useNavigate();
+    useEffect(() => {
+        const fetchProfile = async () => {
+            try {
+                const userId = getUserIdFromLocalStorage();
+                if (!userId) {
+                    console.error("No user ID found in localStorage");
+                    navigate("/login");
+                    return;
+                }
+                const profileId = await getProfileIdByUserId(userId);
+                if (profileId) {
+                    const userProfile = await getUserProfileByProfileId(profileId);
+                    if (userProfile) {
+                        setProfile(userProfile);
+                        setIsNewProfile(false);
+                        // Fetch role from localStorage
+                        const storedUser = localStorage.getItem('auth_user');
+                        if (storedUser) {
+                            const parsedUser = JSON.parse(storedUser);
+                            setRole(parsedUser.role_name || ''); // Set role based on the stored data
+                        }
+                        if (userProfile.avatar_id) {
+                            const avatarUrl = await fetchAvatarUrl(userProfile.avatar_id);
+                            setAvatarUrl(avatarUrl);
+                        }
+                    }
+                }
+                else {
+                    setIsNewProfile(true);
+                }
+            }
+            catch (error) {
+                console.error("Error fetching user profile", error);
+                setIsNewProfile(true);
+            }
+        };
+        fetchProfile();
+    }, [navigate]);
+    const handleAvatarChange = (event) => {
+        const file = event.target.files?.[0];
+        if (file) {
+            setAvatarFile(file);
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setAvatarPreview(reader.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+    const handleSaveProfile = async () => {
+        try {
+            let updatedProfile;
+            let avatarId = profile.avatar_id;
+            if (avatarFile) {
+                const uploadResponse = await uploadAvatar(avatarFile);
+                avatarId = uploadResponse.id;
+                setAvatarUrl(await fetchAvatarUrl(avatarId));
+            }
+            if (isNewProfile) {
+                updatedProfile = await createUserProfile({ ...profile, avatar_id: avatarId });
+                alert("Profile created successfully!");
+            }
+            else {
+                updatedProfile = await updateUserProfile({ ...profile, avatar_id: avatarId });
+                alert("Profile updated successfully!");
+            }
+            setProfile(updatedProfile);
+            navigate("/profile");
+        }
+        catch (error) {
+            console.error("Error saving profile", error);
+            setErrorMessage("Error saving profile");
+        }
+    };
+    const handleDeleteAvatar = async () => {
+        try {
+            setProfile((prevProfile) => ({ ...prevProfile, avatar_id: "", avatar_url: null }));
+            setAvatarUrl(null);
+            setAvatarPreview(null);
+            alert("Avatar deleted successfully");
+        }
+        catch (error) {
+            console.error("Error deleting avatar", error);
+            alert("Error deleting avatar");
+        }
+    };
+    const handleLogout = async () => {
+        try {
+            const csrfToken = getCsrfTokenFromCookie();
+            if (!csrfToken) {
+                throw new Error("CSRF token not found");
+            }
+            await logout(csrfToken);
+            navigate("/login");
+            alert("Logged out successfully");
+        }
+        catch (error) {
+            console.error("Error logging out:", error);
+            alert("Failed to log out");
+        }
+    };
+    const handleDeleteAccount = async () => {
+        try {
+            await deleteUserAccount();
+            navigate("/login");
+            alert("Account deleted successfully");
+        }
+        catch (error) {
+            console.error("Error deleting account", error);
+            alert("Failed to delete account");
+        }
+    };
+    return (_jsx("div", { className: "edit-profile-container", children: _jsxs("div", { className: "edit-profile", children: [_jsx("div", { className: "header-section", children: _jsx("h2", { children: profile.full_name ? "Edit your profile" : "Create your account" }) }), _jsxs("div", { className: "avatar-section", children: [_jsx("div", { className: "avatar-container", children: avatarPreview ? (_jsx("img", { src: avatarPreview, alt: "Avatar Preview", className: "profile-avatar-thumbnail" })) : avatarUrl ? (_jsx("img", { src: avatarUrl, alt: "User Avatar", className: "profile-avatar" })) : (_jsx(CircleUserRound, { color: "#131313", size: 100 })) }), isAvatarEditMode && (_jsx("div", { children: _jsx("input", { type: "file", accept: "image/*", onChange: handleAvatarChange }) })), _jsxs("div", { className: "avatar-actions", children: [_jsx(ButtonPrimary, { text: "Edit Avatar", onClick: () => setIsAvatarEditMode((prev) => !prev) }), avatarUrl && _jsx(ButtonPrimary, { text: "Delete Avatar", onClick: handleDeleteAvatar })] })] }), _jsxs("div", { className: "full-name-input", children: [_jsx("label", { children: "Full Name" }), _jsx("input", { type: "text", placeholder: "Full Name", value: profile.full_name || "", onChange: (e) => setProfile({ ...profile, full_name: e.target.value }) })] }), _jsxs("div", { className: "bio-input", children: [_jsx("label", { children: "Bio" }), _jsx("textarea", { placeholder: "Add your bio here", value: profile.bio || "", onChange: (e) => setProfile({ ...profile, bio: e.target.value }) })] }), _jsxs("div", { className: "links-section", children: [_jsx("label", { children: "Links" }), role === "pro" ? (_jsx("input", { type: "text", placeholder: "Enter your links", value: (profile.external_links ?? []).join(", "), onChange: (e) => setProfile({
+                                ...profile,
+                                external_links: e.target.value
+                                    .split(", ")
+                                    .map(link => link.trim())
+                                    .filter(link => link !== ""),
+                            }) })) : (_jsxs("p", { children: ["Only ", _jsx("a", { href: "/", className: "link-to-pro", onClick: (e) => { e.preventDefault(); setShowUpgradeModal(true); }, children: "Pro users" }), " ", _jsx("br", {}), "can add external links."] })), showUpgradeModal && (_jsx(FullScreenProUpgrade, { onClose: () => setShowUpgradeModal(false) }))] }), _jsx(ButtonLong, { text: "Save", onClick: handleSaveProfile }), errorMessage && _jsx("p", { className: "error-message", children: errorMessage }), _jsxs("div", { className: "action-buttons-profile", children: [_jsx(ButtonPrimary, { text: "Log Out", onClick: handleLogout }), _jsx(ButtonPrimary, { className: "delete-account-button", text: "Delete Account", onClick: handleDeleteAccount })] })] }) }));
+};
+export default EditProfile;
