@@ -1,5 +1,4 @@
-import { render, screen, act, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { render, screen, act} from '@testing-library/react';
 import ArtWorks from '../ArtWorks';
 import { vi } from 'vitest';
 import { setCsrfCookie } from '../../../utils/api'; // Corrected imports

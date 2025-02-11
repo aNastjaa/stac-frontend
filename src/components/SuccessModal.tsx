@@ -15,7 +15,7 @@ const SuccessModal = ({ message }: { message: string }) => {
   if (!isVisible) return null; // Return null if not visible
 
   return (
-    <div className="success-modal">
+    <div data-testid="success-modal"  className="success-modal">
       <div className="success-modal-content">
         <p>{message}</p>
       </div>
