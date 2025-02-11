@@ -2,7 +2,8 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { X } from "lucide-react"; // Close icon
 import { useLocation } from "react-router-dom"; // Hook to get current location
 import { useState, useEffect } from "react"; // For handling state and side-effects
-import { Link } from "react-router-dom"; // For navigation links
+import { Link } from "react-router-dom"; 
+
 function PrivateNavigation({ isOpen, closeMenu }) {
     const location = useLocation(); // Get the current location
     const [activeLink, setActiveLink] = useState(location.pathname);

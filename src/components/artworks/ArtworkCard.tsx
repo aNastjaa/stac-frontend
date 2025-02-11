@@ -1,20 +1,20 @@
 import { useState, useEffect } from "react";
 import { Heart, MessageCircle } from "lucide-react";
 import "../../css/artworks/artworkCard.css";
-import { fetchLikes, fetchComments, likePost, unlikePost } from "../../utils/api/commentsLiks"; 
+import { fetchLikes, fetchComments, likePost, unlikePost } from "../../utils/api/commentsLiks";
 import { ArtworkResponse, Like } from "../../utils/types";
 
 interface ArtworkCardProps {
   artwork: ArtworkResponse;
-  userId: string; 
-  isPending?: boolean; 
+  userId: string;
+  isPending?: boolean;
   onClick?: () => void;
 }
 
 const ArtworkCard = ({ artwork, userId, isPending, onClick }: ArtworkCardProps) => {
   const [likesCount, setLikesCount] = useState<number>(0);
   const [commentsCount, setCommentsCount] = useState<number>(0);
-  const [userHasLiked, setUserHasLiked] = useState<boolean>(false); 
+  const [userHasLiked, setUserHasLiked] = useState<boolean>(false);
   const [likes, setLikes] = useState<Like[]>([]);
 
   useEffect(() => {
@@ -74,10 +74,7 @@ const ArtworkCard = ({ artwork, userId, isPending, onClick }: ArtworkCardProps) 
   };
 
   return (
-    <div 
-      className={`artwork-card ${isPending ? "blurred" : ""}`} 
-      onClick={handleClick}
-    >
+    <div className={`artwork-card ${isPending ? "blurred" : ""}`} onClick={handleClick}>
       {/* Artwork Header */}
       <div className="artwork-card-header">@{artwork.user.username}</div>
 
@@ -91,10 +88,10 @@ const ArtworkCard = ({ artwork, userId, isPending, onClick }: ArtworkCardProps) 
         {/* Conditionally render like button */}
         {artwork.status !== "pending" && (
           <div className="icon-container" onClick={handleLikeToggle}>
-            <Heart 
-              size={16} 
-              color={userHasLiked ? "red" : "#fff"} 
-              fill={userHasLiked ? "red" : "none"} 
+            <Heart
+              size={16}
+              color={userHasLiked ? "red" : "#fff"}
+              fill={userHasLiked ? "red" : "none"}
             />
             <span className="icon-count">{likesCount}</span>
           </div>
@@ -102,10 +99,7 @@ const ArtworkCard = ({ artwork, userId, isPending, onClick }: ArtworkCardProps) 
 
         {/* Conditionally render comment button */}
         {artwork.status !== "pending" && (
-          <div 
-            className="icon-container" 
-            onClick={handleCommentClick}
-          >
+          <div className="icon-container" onClick={handleCommentClick}>
             <MessageCircle size={16} color="#fff" />
             <span className="icon-count">{commentsCount}</span>
           </div>

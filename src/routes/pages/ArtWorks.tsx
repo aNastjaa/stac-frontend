@@ -177,7 +177,7 @@ const ArtWorks = () => {
             <h2>Submit Your Artwork</h2>
             <form onSubmit={handleSubmit} className="artwork-submit-form">
               <div className="form-group artwork-image">
-                <label className="form-label" onClick={handleIconClick}>
+                <label htmlFor="file-input" className="form-label" onClick={handleIconClick}>
                   <ImagePlus size={50} color="#131313" className="image-icon" />
                 </label>
                 <p className="icon-explanation">Click on the icon <br />to choose a photo</p>
@@ -188,14 +188,16 @@ const ArtWorks = () => {
                   className="form-input"
                   onChange={(e) => setImageFile(e.target.files ? e.target.files[0] : null)}
                   style={{ display: 'none' }}
+                  data-testid="file-input"
                 />
                 {imageFile && <img src={URL.createObjectURL(imageFile)} alt="Preview" className="image-preview" />}
               </div>
 
               <div className="form-group-artwork-description">
-                <label className="form-label">Add description:</label>
+                <label className="form-label" htmlFor="description-textarea">Add description:</label>
                 <div className="artwork-textarea-container">
                   <textarea
+                    id="description-textarea"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     placeholder="Enter artwork description"

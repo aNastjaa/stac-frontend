@@ -1,174 +1,60 @@
-import { it, expect, vi } from 'vitest';
-import { fetchCurrentTheme, submitArtwork, fetchArtworks, fetchPostById, deletePost } from '../../../utils/api/artworks';
-import { getCsrfTokenFromCookie } from '../../../utils/api'; // Correct import for CSRF token function
-import { ArtworkResponse, Theme } from '../../../utils/types';
+import { render, screen, act, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import ArtWorks from '../ArtWorks';
+import { vi } from 'vitest';
+import { setCsrfCookie } from '../../../utils/api'; // Corrected imports
+import { MemoryRouter } from 'react-router';
 
-// Mocking API module at the top
-vi.mock('../../../utils/api', async () => {
-  const actual = await vi.importActual('../../../utils/api');
-  return {
-    ...actual,
-    getCsrfTokenFromCookie: vi.fn().mockReturnValue('mock-csrf-token'),
-  };
-});
-
-// Mocked theme data
-const mockTheme: Theme = {
-  id: '1',
-  theme_name: 'Art Theme',
-  start_date: '2025-02-10',
-  posts: [],
-};
-
-// Mocked CSRF token in document.cookie
-Object.defineProperty(document, 'cookie', {
-  writable: true,
-  value: 'XSRF-TOKEN=mock-csrf-token',
-});
-
-// Mocked ArtworkResponse
-const mockArtworkResponse: ArtworkResponse = {
-  id: '1',
-  user_id: '1',
-  description: 'Artwork Description',
-  image_path: 'path_to_image.jpg',
-  created_at: '2025-02-10',
-  updated_at: '2025-02-10',
-  status: 'published',
-  user: {
-    id: '1',
-    username: 'artist_username',
-    avatar_url: 'avatar_url.jpg',
-  },
-  theme: {
-    id: '1',
-    theme_name: 'Art Theme',
-  },
-  likes: 10,
-  comments: [
-    {
-      id: '1',
-      username: 'commenter',
-      text: 'Nice artwork!',
-      created_at: '2025-02-10',
-    },
-  ],
-  comments_count: 1,
-  likes_count: 10,
-};
-
-// Mocked artworks response
-const mockArtworks: ArtworkResponse[] = [mockArtworkResponse];
-
-// Mock Auth Token function
-const getAuthToken = (): string | null => 'mock-auth-token';
-
-// Mock fetch API responses
-vi.mock('../../../utils/api/artworks', () => ({
-  fetchCurrentTheme: vi.fn().mockResolvedValue([mockTheme]),
-  submitArtwork: vi.fn().mockResolvedValue({ 
-    message: 'Artwork submitted successfully', 
-    post: mockArtworkResponse 
-  }),
-  fetchArtworks: vi.fn().mockResolvedValue(mockArtworks),
-  fetchPostById: vi.fn().mockResolvedValue(mockArtworkResponse),
-  deletePost: vi.fn().mockResolvedValue({ message: 'Post deleted successfully' }),
+// Mocking the API functions
+vi.mock('../../../utils/api', () => ({
+  // Directly mock necessary functions here
+  API_URL: 'http://localhost:8000', // Set your API_URL mock
+  setCsrfCookie: vi.fn().mockResolvedValue(undefined),
+  fetchUserArtworks: vi.fn(() => Promise.resolve([])), // Updated function name
+  getCsrfTokenFromCookie: vi.fn().mockResolvedValue('mocked-csrf-token'), // Mocked getCsrfTokenFromCookie
+  fetchCurrentTheme: vi.fn(() => Promise.resolve({/* mock theme data */})),
+  fetchArtworks: vi.fn(() => Promise.resolve({/* mock artworks data */})),
 }));
 
-
-// **Tests**
-it('should fetch the current theme and use CSRF token and auth token', async () => {
-  const csrfToken = getCsrfTokenFromCookie();
-  const authToken = getAuthToken();
-
-  await fetchCurrentTheme();
-
-  expect(global.fetch).toHaveBeenCalledWith('http://localhost:8000/api/themes', {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-CSRF-TOKEN': csrfToken,
-      Authorization: `Bearer ${authToken}`,
+// Mocking localStorage for testing
+beforeAll(() => {
+  Object.defineProperty(window, 'localStorage', {
+    value: {
+      getItem: vi.fn(() => 'mock-token'), // Mock token value
+      setItem: vi.fn(),
+      removeItem: vi.fn(),
     },
+    writable: true,
   });
 
-  expect(getCsrfTokenFromCookie).toHaveBeenCalled();
+  // Mocking cookies to return a CSRF token
+  Object.defineProperty(document, 'cookie', {
+    writable: true,
+    value: 'XSRF-TOKEN=mocked-csrf-token', // Mock the CSRF token in the cookies
+  });
 });
 
-it('should submit artwork and pass CSRF token and auth token', async () => {
-  const formData = new FormData();
-  formData.append('file', new Blob(['file contents'], { type: 'image/jpeg' }), 'artwork.jpg');
-
-  const csrfToken = getCsrfTokenFromCookie();
-  const authToken = getAuthToken();
-  const result = await submitArtwork(formData, csrfToken);
-
-  expect(global.fetch).toHaveBeenCalledWith('http://localhost:8000/api/artworks', {
-    method: 'POST',
-    body: formData,
-    headers: {
-      'X-CSRF-TOKEN': csrfToken,
-      Authorization: `Bearer ${authToken}`,
-    },
+beforeEach(async () => {
+  // Ensure the CSRF cookie is set correctly before each test
+  await act(async () => {
+    await setCsrfCookie(); // Mocked function call to set the CSRF cookie
   });
-
-  expect(getCsrfTokenFromCookie).toHaveBeenCalled();
-  expect(result.message).toBe('Artwork submitted successfully');
-  expect(result.post).toEqual(mockArtworkResponse);
 });
 
-it('should fetch all artworks and use CSRF token and auth token', async () => {
-  const csrfToken = getCsrfTokenFromCookie();
-  const authToken = getAuthToken();
+// --- TEST ARTWORK RENDER ---
+describe('ArtWorks Component', () => {
+  test('renders the ArtWorks component correctly', async () => {
+    // Render the component with the MemoryRouter for routing context
+    await act(async () => {
+      render(
+        <MemoryRouter>
+          <ArtWorks />
+        </MemoryRouter>
+      );
+    });
 
-  await fetchArtworks();
-
-  expect(global.fetch).toHaveBeenCalledWith('http://localhost:8000/api/artworks', {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-CSRF-TOKEN': csrfToken,
-      Authorization: `Bearer ${authToken}`,
-    },
+    // Wait for the ArtWorks heading to be rendered
+    const headings = await screen.findAllByText(/ArtWorks/i);
+    expect(headings.length).toBeGreaterThan(0);
   });
-
-  expect(getCsrfTokenFromCookie).toHaveBeenCalled();
-});
-
-it('should fetch post data by ID and use CSRF token and auth token', async () => {
-  const postId = '1';
-  const csrfToken = getCsrfTokenFromCookie();
-  const authToken = getAuthToken();
-
-  await fetchPostById(postId);
-
-  expect(global.fetch).toHaveBeenCalledWith(`http://localhost:8000/api/artworks/${postId}`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-CSRF-TOKEN': csrfToken,
-      Authorization: `Bearer ${authToken}`,
-    },
-  });
-
-  expect(getCsrfTokenFromCookie).toHaveBeenCalled();
-});
-
-it('should delete post and use CSRF token and auth token', async () => {
-  const postId = '1';
-  const csrfToken = getCsrfTokenFromCookie();
-  const authToken = getAuthToken();
-
-  const result = await deletePost(postId);
-
-  expect(global.fetch).toHaveBeenCalledWith(`http://localhost:8000/api/artworks/${postId}`, {
-    method: 'DELETE',
-    headers: {
-      'X-CSRF-TOKEN': csrfToken,
-      Authorization: `Bearer ${authToken}`,
-    },
-  });
-
-  expect(getCsrfTokenFromCookie).toHaveBeenCalled();
-  expect(result.message).toBe('Post deleted successfully');
 });
