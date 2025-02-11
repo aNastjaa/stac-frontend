@@ -28,12 +28,12 @@ type FullScreenPostProps = {
 };
 
 function FullScreenPost({ post, onClose, onPostDeleted }: FullScreenPostProps) {
-  const { auth } = useContext(AuthContext); // Get auth details
-  const authToken = getAuthToken(); // Get token from local storage
+  const { auth } = useContext(AuthContext); 
+  const authToken = getAuthToken(); 
   const [avatarUrl, setAvatarUrl] = useState<string>(post.avatarUrl || "");
   const [likesCount, setLikesCount] = useState<number>(post.likes_count);
   const [commentsCount, setCommentsCount] = useState<number>(post.comments_count);
-  const [isDeleting, setIsDeleting] = useState(false); // Track deletion state
+  const [isDeleting, setIsDeleting] = useState(false); 
 
   // Check if logged-in user is the post owner
   const isPostOwner = auth.id === post.userId;
@@ -87,7 +87,6 @@ function FullScreenPost({ post, onClose, onPostDeleted }: FullScreenPostProps) {
         console.error("onPostDeleted is not a function");
       }
   
-      // Optionally close the fullscreen post view after deletion
       onClose();
   
       // Show a success alert
@@ -95,7 +94,7 @@ function FullScreenPost({ post, onClose, onPostDeleted }: FullScreenPostProps) {
     } catch (error) {
       console.error("Error deleting post:", error);
     } finally {
-      setIsDeleting(false); // Set deleting state to false after the request is done
+      setIsDeleting(false);
     }
   };
   
@@ -158,7 +157,12 @@ function FullScreenPost({ post, onClose, onPostDeleted }: FullScreenPostProps) {
 
       {/* Comments Section */}
       <div className="comments-section">
-        <Comments postId={post.id} userId={post.userId} setCommentsCount={setCommentsCount} />
+        <Comments 
+          postId={post.id} 
+          setCommentsCount={setCommentsCount}
+          userId={auth?.id || ""} 
+          ownerships={{}} // Pass an empty object initially
+        />
       </div>
     </div>
   );

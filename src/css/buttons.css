@@ -2,6 +2,7 @@
 .button-long {
     width: 100%;
     min-width: 300px;
+    max-width: 450px;
     height: 45px;
     background-color: #131313;
     color: #E1E1E1;

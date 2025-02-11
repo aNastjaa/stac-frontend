@@ -269,20 +269,6 @@ export const uploadBrandLogo = async (file: File): Promise<UploadResponse> => {
       return null;
     }
   };
-// // Update sponsor challenge
-// export const updateSponsorChallenge = async (challengeId: string, challengeData: { title?: string; brief?: string; submission_deadline?: string }) => {
-//     await setCsrfCookie(); // Ensure CSRF token is set
-//     const response = await fetch(`${API_URL}/api/admin/sponsor-challenges/${challengeId}`, {
-//       method: 'PUT',
-//       headers: {
-//         'Content-Type': 'application/json',
-//       },
-//       body: JSON.stringify(challengeData),
-//       credentials: 'include',
-//     });
-//     const data = await response.json();
-//     return data.challenge;
-// };
 
 // Delete sponsor challenge
 export const deleteSponsorChallenge = async (challengeId: string) => {
@@ -315,12 +301,8 @@ export const deleteSponsorChallenge = async (challengeId: string) => {
     }
   };
 
-
-
-  
 // --- Theme Management ---
 
-// Function to create a new theme
 //Function to fetch all themes 
 export const fetchAllThemes = async (): Promise<Theme[]> => {
   try {

@@ -1,7 +1,7 @@
 /* Submission card */
 .submission-card {
     position: relative;
-    width: calc(32% - 0.5rem);
+    width: calc(33.33% - 0.5rem);
     height: 0;
     padding-bottom: 32%; 
     border-radius: 20px;
@@ -181,7 +181,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.612); /* Semi-transparent background */
+    background-color: rgba(0, 0, 0, 0.612);
     color: #e3e3e3;
     display: flex;
     justify-content: center;
