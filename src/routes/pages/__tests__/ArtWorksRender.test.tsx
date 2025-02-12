@@ -1,16 +1,15 @@
 import { render, screen, act} from '@testing-library/react';
 import ArtWorks from '../ArtWorks';
 import { vi } from 'vitest';
-import { setCsrfCookie } from '../../../utils/api'; // Corrected imports
+import { setCsrfCookie } from '../../../utils/api';
 import { MemoryRouter } from 'react-router';
 
 // Mocking the API functions
 vi.mock('../../../utils/api', () => ({
-  // Directly mock necessary functions here
-  API_URL: 'http://localhost:8000', // Set your API_URL mock
+  API_URL: 'http://localhost:8000', 
   setCsrfCookie: vi.fn().mockResolvedValue(undefined),
-  fetchUserArtworks: vi.fn(() => Promise.resolve([])), // Updated function name
-  getCsrfTokenFromCookie: vi.fn().mockResolvedValue('mocked-csrf-token'), // Mocked getCsrfTokenFromCookie
+  fetchUserArtworks: vi.fn(() => Promise.resolve([])), 
+  getCsrfTokenFromCookie: vi.fn().mockResolvedValue('mocked-csrf-token'), 
   fetchCurrentTheme: vi.fn(() => Promise.resolve({/* mock theme data */})),
   fetchArtworks: vi.fn(() => Promise.resolve({/* mock artworks data */})),
 }));
@@ -43,7 +42,8 @@ beforeEach(async () => {
 // --- TEST ARTWORK RENDER ---
 describe('ArtWorks Component', () => {
   test('renders the ArtWorks component correctly', async () => {
-    // Render the component with the MemoryRouter for routing context
+    // Step 1: Render the ArtWorks component wrapped in a MemoryRouter
+    // This simulates the router context, as the component may depend on it for routing.
     await act(async () => {
       render(
         <MemoryRouter>
@@ -52,8 +52,12 @@ describe('ArtWorks Component', () => {
       );
     });
 
-    // Wait for the ArtWorks heading to be rendered
+    // Step 2: Wait for the heading element with the text "ArtWorks" to be rendered
+    // We are confirming that the component correctly displays the title "ArtWorks" on the screen.
     const headings = await screen.findAllByText(/ArtWorks/i);
-    expect(headings.length).toBeGreaterThan(0);
+    
+    // Step 3: Assert that the heading is rendered by checking its presence on the screen
+    // This ensures the component's content is correctly rendered and visible to the user.
+    expect(headings.length).toBeGreaterThan(0); // The heading should be present at least once
   });
 });

@@ -36,42 +36,43 @@ export const fetchCurrentTheme = async (): Promise<Theme | null> => {
       throw error;
     }
   };
-// Submit artwork
-export const submitArtwork = async (
-  formData: FormData,
-  csrfToken: string
-): Promise<{ message: string; post?: ArtworkResponse }> => {
-  try {
-    const response = await fetch(`${API_URL}/api/artworks`, {
-      method: "POST",
-      headers: {
-        "X-XSRF-TOKEN": csrfToken,
-      },
-      body: formData,
-      credentials: "include",
-    });
 
-    if (!response.ok) {
-      if (response.status === 422) {
-        // Handle Laravel validation errors
-        const data = await response.json();
-        if (data.errors) {
-          const errorMessages = Object.values(data.errors).flat().join(" ");
-          throw new Error(errorMessages);
-        } else {
-          throw new Error(data.message || "Validation failed");
+// Submit artwork
+  export const submitArtwork = async (
+    formData: FormData,
+    csrfToken: string
+  ): Promise<{ message: string; post?: ArtworkResponse }> => {
+    try {
+      const response = await fetch(`${API_URL}/api/artworks`, {
+        method: "POST",
+        headers: {
+          "X-XSRF-TOKEN": csrfToken,
+        },
+        body: formData,
+        credentials: "include",
+      });
+
+      if (!response.ok) {
+        if (response.status === 422) {
+          // Handle Laravel validation errors
+          const data = await response.json();
+          if (data.errors) {
+            const errorMessages = Object.values(data.errors).flat().join(" ");
+            throw new Error(errorMessages);
+          } else {
+            throw new Error(data.message || "Validation failed");
+          }
         }
+
+        throw new Error("Failed to submit artwork");
       }
 
-      throw new Error("Failed to submit artwork");
+      return await response.json(); // Success response
+    } catch (error) {
+      console.error("Error submitting artwork", error);
+      throw error;
     }
-
-    return await response.json(); // Success response
-  } catch (error) {
-    console.error("Error submitting artwork", error);
-    throw error;
-  }
-};
+  };
 //Get all artworks
   export const fetchArtworks = async (): Promise<ArtworkResponse[]> => {
     try {

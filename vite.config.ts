@@ -13,7 +13,7 @@ export default defineConfig({
     },
   },
   build: {
-    outDir: 'public/build',
+    outDir:  'dist',
     assetsDir: 'assets',
   },
   publicDir: 'public',
