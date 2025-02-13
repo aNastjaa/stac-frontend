@@ -77,6 +77,7 @@ const EditProfile = () => {
         }
       } catch (error) {
         console.error("Error fetching user profile", error);
+        setErrorMessage("Error fetching user profile");
         setIsNewProfile(true);
       }
     };
@@ -195,8 +196,9 @@ const EditProfile = () => {
 
       {/* Full Name Input */}
       <div className="full-name-input">
-        <label>Full Name</label>
+        <label htmlFor="fullName">Full Name</label>
         <input
+          id="fullName"
           type="text"
           placeholder="Full Name"
           value={profile.full_name || ""}
@@ -206,8 +208,9 @@ const EditProfile = () => {
 
       {/* Bio Input */}
       <div className="bio-input">
-        <label>Bio</label>
+        <label htmlFor="bio">Bio</label>
         <textarea
+          id="bio"
           placeholder="Add your bio here"
           value={profile.bio || ""}
           onChange={(e) => setProfile({ ...profile, bio: e.target.value })}
@@ -216,9 +219,10 @@ const EditProfile = () => {
 
       {/* External Links */}
       <div className="links-section">
-        <label>Links</label>
+        <label htmlFor="externalLinks">Links</label>
         {role === "pro" ? (
           <input
+            id="externalLinks"
             type="text"
             placeholder="Enter your links"
             value={(profile.external_links ?? []).join(", ")}
