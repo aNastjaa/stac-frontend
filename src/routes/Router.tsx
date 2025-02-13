@@ -15,8 +15,8 @@ const ArtWorks = lazy(() => import("./pages/ArtWorks"));
 const SponsorChallenges = lazy(() => import("./pages/SponsorChallenges"));
 const ChallengeDetail = lazy(() => import("../components/challenges/ChallengeDetail"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
-const NotFound = lazy(() => import("./pages/NotFound"));
 const EditProfile = lazy(() => import("../components/EditProfile"));
+const NotFound = lazy(() => import("../routes/errors/404")); 
 
 // Loading Component
 import DotLoader from "../components/DotLoader";
@@ -54,15 +54,16 @@ const router = createBrowserRouter([
           </React.Suspense>
         ),
       },
-      {
-        path: "*",
-        element: (
-          <React.Suspense fallback={<DotLoader />}>
-            <NotFound />
-          </React.Suspense>
-        ),
-      },
     ],
+  },
+
+  {
+    path: "*",
+    element: (
+      <React.Suspense fallback={<DotLoader />}>
+        <NotFound />
+      </React.Suspense>
+    ),
   },
 
   // Authenticated Routes
