@@ -33,7 +33,7 @@ function RootNavigation({ isOpen, closeMenu }: RootNavigationProps) {
       {/* Back to Start Page Link */}
         <div className="back-link">
           <Link to="/" onClick={closeMenu} className="back-to-start">
-              Back to start page
+             To start page 
           </Link>
         </div>
     </div>
