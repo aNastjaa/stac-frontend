@@ -16,7 +16,7 @@ import FullScreenPost from '../../components/artworks/FullScreenPost';
 import ProfileStats from '../../components/profile/ProfileStats';
 import SubmissionCard from '../../components/challenges/SubmissionCard';
 import { getChallenges, getSubmissions } from '../../utils/api/challenges';
-import DotLoader from '../../components/DotLoader';  // Import the loader
+import DotLoader from '../../components/DotLoader';
 import FullScreenProUpgrade from '../../components/FullScreenProUpgrade';
 
 const UserProfile = () => {
@@ -49,6 +49,8 @@ const UserProfile = () => {
     }
 
     const fetchProfileData = async () => {
+      setLoading(true); 
+
       try {
         const profileId = await getProfileIdByUserId(userId);
         if (profileId) {
@@ -78,7 +80,7 @@ const UserProfile = () => {
             .filter((submission) => submission.user_id === userId)
             .map((submission) => ({
               ...submission,
-              challengeName: challenge.title, // Map challenge title to challengeName
+              challengeName: challenge.title,
             }));
 
           allSubmissions.push(...userSubmissions);
