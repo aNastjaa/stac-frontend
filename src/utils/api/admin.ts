@@ -135,7 +135,8 @@ export const deleteUser = async (userId: string) => {
     }
   };
 
-// --- Sponsor Challenges Management ---
+
+  // --- Sponsor Challenges Management ---
 
 // Get all sponsor challenges
 export const fetchSponsorChallenges = async (): Promise<SponsorChallenge[]> => {
@@ -174,7 +175,6 @@ export const fetchSponsorChallenges = async (): Promise<SponsorChallenge[]> => {
       return [];
     }
 };
-
 // Create a sponsor challenge
 export const createSponsorChallenge = async (challengeData: {
     title: string;
@@ -209,7 +209,6 @@ export const createSponsorChallenge = async (challengeData: {
       throw error;
     }
 };
-
 //Upload brand logo
 export const uploadBrandLogo = async (file: File): Promise<UploadResponse> => {
     try {
@@ -237,7 +236,6 @@ export const uploadBrandLogo = async (file: File): Promise<UploadResponse> => {
       throw error;
     }
 };
-
  //Fetch url from brand logo id 
  export const fetchBrandLogoUrl = async (logoId: string): Promise<string | null> => {
     try {
