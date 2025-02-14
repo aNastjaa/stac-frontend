@@ -2,8 +2,8 @@
 
 - [Table of Contents](#table-of-contents)
 - [**STAC – The Ultimate Creative Platform for Artists** 🎨✨](#stac--the-ultimate-creative-platform-for-artists-)
-  - [**Introduction**](#introduction)
-  - [**Key Pages \& Structure**](#key-pages--structure)
+  - [Introduction](#introduction)
+  - [Key Pages \& Structure](#key-pages--structure)
     - [**1️⃣ Landing Page (For Unregistered/Unlogged Users)**](#1️⃣-landing-page-for-unregisteredunlogged-users)
       - [**Features:**](#features)
     - [**2️⃣ Art Works Page (For Logged-in Users)**](#2️⃣-art-works-page-for-logged-in-users)
@@ -14,11 +14,11 @@
       - [**Features:**](#features-3)
     - [**5️⃣ Admin Dashboard (For Admins Only)**](#5️⃣-admin-dashboard-for-admins-only)
       - [**Features:**](#features-4)
-  - [\*\* Tech Stack\*\*](#-tech-stack)
+  - [Tech Stack](#tech-stack)
     - [Development Tools:](#development-tools)
     - [Optional Libraries \& Plugins:](#optional-libraries--plugins)
-  - [\*\* Features \*\*](#-features-)
-  - [\*\* Installation \& Setup \*\*](#-installation--setup-)
+  - [Features](#features-5)
+  - [Installation \& Setup](#installation--setup)
     - [Prerequisites](#prerequisites)
     - [Step-by-Step Installation](#step-by-step-installation)
     - [Additional Notes](#additional-notes)
@@ -76,7 +76,7 @@
 
 # **STAC – The Ultimate Creative Platform for Artists** 🎨✨  
 
-## **Introduction**  
+## Introduction  
 **STAC** is an exclusive platform for artists, designed to foster creativity through themed challenges and sponsor collaborations.  
 Similar to platforms like **Behance**, **Dribbble**, or **Pinterest**, STAC enables users to **post, share, and showcase their work** within a creative community.  
 
@@ -87,7 +87,7 @@ Additionally, **pro users** gain access to **sponsor challenges**, where winning
 
 ---
 
-## **Key Pages & Structure**  
+## Key Pages & Structure  
 
 ### **1️⃣ Landing Page (For Unregistered/Unlogged Users)**  
 This page aims to inspire and motivate unregistered users to **sign up** or **subscribe to a pro account**.  
@@ -152,7 +152,7 @@ Admins manage **platform content, user submissions, and sponsor challenges**.
 
 ---
 
-## ** Tech Stack**  
+## Tech Stack  
 
 The project is built using the following major technologies:
 
@@ -179,7 +179,7 @@ The project is built using the following major technologies:
 - **@vitejs/plugin-react-swc** – An alternative Vite plugin for faster React development using the SWC compiler.
 - **ESLint Plugins** – Plugins for React Hooks and React Refresh for linting rules related to React development.
 
-## ** Features **
+## Features
 
 **STAC** offers the following core features:
 
@@ -205,7 +205,7 @@ The project is built using the following major technologies:
 - **Admin Management**  
   - Admins can approve/reject artwork submissions and manage sponsor challenges.
 
-## ** Installation & Setup **
+## Installation & Setup
 
 ### Prerequisites  
 Before starting, ensure you have the following installed:
