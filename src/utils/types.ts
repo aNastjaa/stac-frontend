@@ -1,15 +1,18 @@
-export interface ErrorMessages {
+  // Interface for holding error messages related to user inputs.
+  export interface ErrorMessages {
   username?: string;
   email?: string;
   password?: string;
   role?: string;
-}
+  }
+  // Interface representing a theme in the application.
   export interface Theme {
     id: string;
-    theme_name: string;  // Updated field name
+    theme_name: string; 
     start_date: string;
-    posts: Post[]; // Associated posts
+    posts: Post[];
   }
+  // Interface for the response data when fetching artwork details.
   export interface ArtworkResponse {
     id: string;
     user_id: string;
@@ -37,6 +40,7 @@ export interface ErrorMessages {
   comments_count?: number;
   likes_count?: number;
   }
+  // Interface representing the user profile data.
   export interface UserProfileType {
     id: string;
     username: string;
@@ -49,11 +53,13 @@ export interface ErrorMessages {
     bio: string | null;
     external_links?: string[]; 
   }
+  // Interface for user profile statistics (posts, comments, likes counts).
   export interface UserProfileStatsType {
     posts_count: number;
     comments_count: number;
     likes_count: number;
   }
+  // Interface for the response data after uploading a file.
   export interface UploadResponse {
     id: string; 
     file_url: string;
@@ -61,10 +67,12 @@ export interface ErrorMessages {
     avatar_url?: string;
     brand_logo_url?: string;
   }
+  // Interface representing a role of a user (basic, pro, or admin).
   export interface Role {
     id: string;
     name: "basic" | "pro" | "admin";
   }
+  // Interface representing a user in the application.
   export interface User {
     id: string;
     username: string;
@@ -73,7 +81,8 @@ export interface ErrorMessages {
     email_verified_at?: string | null;
     created_at: string;
     updated_at: string;
-  } 
+  }
+  // Interface representing a sponsor challenge.
   export interface SponsorChallenge {
     id: string;
     title: string;
@@ -83,7 +92,8 @@ export interface ErrorMessages {
     brand_name: string;
     submission_deadline: string;
   } 
-   export interface SponsorChallengeDetail {
+  // Interface representing detailed information about a sponsor challenge.
+  export interface SponsorChallengeDetail {
     id: string; 
     title: string; 
     description: string;  
@@ -98,6 +108,7 @@ export interface ErrorMessages {
     brand_name: string;
     submission_deadline: string;
 }
+  // Interface representing a user's submission to a sponsor challenge.
   export interface Submission {
     id: string;
     user_id: string;
@@ -115,6 +126,7 @@ export interface ErrorMessages {
     votes_count: number; 
     challengeName?: string;
   }
+  // Interface representing a post created by a user in the application.
   export interface Post {
     id: string;
     user_id: string;
@@ -126,6 +138,7 @@ export interface ErrorMessages {
     created_at: string;
     updated_at: string;
   }
+  // Interface representing a comment made by a user on a post.
   export interface Comment {
     id: string; 
     user_id: string; 
@@ -139,6 +152,7 @@ export interface ErrorMessages {
       avatar_url?: string | null; 
     };
   }
+  // Interface representing a like made by a user on a post.
   export interface Like {
     id: string; 
     user_id: string; 
@@ -146,6 +160,7 @@ export interface ErrorMessages {
     created_at: string;
     updated_at: string; 
   }
+  // Interface representing a vote made by a user on a submission.
   export interface Vote {
     id: string;
     user_id: string;

@@ -97,7 +97,7 @@ const Register = () => {
               id={passwordId}
               type="password"
               placeholder="password"
-              onFocus={() => setPasswordFocus(true)} // Show password requirements on focus
+              onFocus={() => setPasswordFocus(true)} 
               {...registerField("password", {
                 required: "Password is required.",
                 minLength: { value: 8, message: "Must be at least 8 characters." },

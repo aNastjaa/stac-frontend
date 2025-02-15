@@ -16,21 +16,21 @@ const RootLayout = () => {
     <div style={{
       backgroundColor: isDarkMode ? "#131313" : "#e3e3e3",
       minHeight: "100vh",
-      margin: 0,  // Ensure no margin on body
-      padding: 0, // Ensure no padding on body
+      margin: 0, 
+      padding: 0,
       display: "flex",
       flexDirection: "column",
       color: isDarkMode ? "#e3e3e3" : "#131313",
     }}>
       <header>
-        <RootNavbar isDarkMode={isDarkMode} /> {/* Pass dark mode prop */}
+        <RootNavbar isDarkMode={isDarkMode} /> 
       </header>
       <main>
         <Outlet /> {/* Render the LandingPage or other pages */}
       </main>
 
       {/* Conditionally render Footer, hide on login/register pages */}
-      {!hideFooter && <Footer isDarkMode={isDarkMode} />} {/* Pass dark mode prop */}
+      {!hideFooter && <Footer isDarkMode={isDarkMode} />}
     </div>
   );
 };

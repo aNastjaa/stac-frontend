@@ -1,12 +1,12 @@
-import { X } from "lucide-react"; // Close icon
-import { useLocation } from "react-router-dom"; // Hook to get current location
-import { useState, useEffect } from "react"; // For handling state and side-effects
-import { Link } from "react-router-dom"; // For navigation links
+import { X } from "lucide-react";
+import { useLocation } from "react-router-dom"; 
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom"; 
 
 function PrivateNavigation({ isOpen, closeMenu }: { isOpen: boolean; closeMenu: () => void }) {
-  const location = useLocation(); // Get the current location
+  const location = useLocation(); 
   const [activeLink, setActiveLink] = useState<string>(location.pathname);
-  const [isAdmin, setIsAdmin] = useState<boolean>(false); // State to track admin role
+  const [isAdmin, setIsAdmin] = useState<boolean>(false); 
 
   useEffect(() => {
     // Check if user is an admin from localStorage or context

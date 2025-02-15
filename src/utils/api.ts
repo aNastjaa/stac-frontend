@@ -2,11 +2,16 @@ import {ArtworkResponse, UploadResponse, UserProfileType,} from "./types";
 //sasha@gmail.com
 //La;G7,8bP&V7
 
+// API base URL from the environment variable
 export const API_URL = import.meta.env.VITE_API_URL;
 
 //-------------------------------------------------------------------------------------------------------------
-//Get CSRF Cookie
+// Get CSRF Cookie
 //-------------------------------------------------------------------------------------------------------------
+/**
+ * Sets the CSRF cookie by making a request to the backend.
+ * This cookie is needed to protect against CSRF attacks.
+ */
 export const setCsrfCookie = async (): Promise<void> => {
   try {
     // Send a GET request to Laravel to set the CSRF cookie
@@ -25,7 +30,14 @@ export const setCsrfCookie = async (): Promise<void> => {
     console.error('Error setting CSRF cookie', error);
   }
 };
-//Get CSRF Token from cookie
+//-------------------------------------------------------------------------------------------------------------
+// Get CSRF Token from Cookie
+//-------------------------------------------------------------------------------------------------------------
+/**
+ * Retrieves the CSRF token from the cookies for subsequent requests.
+ * @returns {string} CSRF token string
+ * @throws Will throw an error if the CSRF token is not found.
+ */
 export const getCsrfTokenFromCookie = (): string => {
   // Retrieve the CSRF token from the cookie
   const csrfToken = document.cookie
@@ -40,9 +52,49 @@ export const getCsrfTokenFromCookie = (): string => {
   // Decode the cookie value in case it's URL encoded
   return decodeURIComponent(csrfToken);
 };
-// Function to get the auth token from localStorage
+//-------------------------------------------------------------------------------------------------------------
+// Get Auth Token from LocalStorage
+//-------------------------------------------------------------------------------------------------------------
+/**
+ * Retrieves the authentication token from localStorage.
+ * @returns {string | null} Auth token string or null if not found.
+ */
 export const getAuthToken = (): string | null => {
-  return localStorage.getItem("auth_token");  
+  const token = localStorage.getItem('auth_token');
+  if (!token) {
+    // If no token in localStorage, redirect user to login page or handle accordingly
+    redirectToLogin();
+    return null;
+  }
+  return token;
+};
+/**
+ * Validates the user's authentication token by sending it to the backend for verification.
+ * @param authToken - The authentication token used to verify the user's session.
+ * @param csrfToken - The CSRF token used to protect against cross-site request forgery attacks.
+ * @returns {Promise<boolean>} Returns true if the token is valid, otherwise false.
+ */
+export const validateToken = async (authToken: string, csrfToken: string) => {
+  try {
+    const response = await fetch(`${API_URL}/api/auth/validate-token`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        'X-XSRF-TOKEN': csrfToken,  // Include the CSRF token in the request headers
+      },
+      credentials: 'include', // Include credentials (cookies) in the request
+    });
+
+    if (!response.ok) {
+      throw new Error('Token validation failed');
+    }
+
+    // If the response is successful, return true
+    return true;
+  } catch (error) {
+    console.error('Token validation failed:', error);
+    return false;
+  }
 };
 
 //-------------------------------------------------------------------------------------------------------------
@@ -64,6 +116,11 @@ interface RegisterResponse {
     csrfToken: string;
   };
 }
+/**
+ * Registers a new user by submitting a form with user data.
+ * @param formData - Form data containing user registration information.
+ * @returns {Promise<RegisterResponse>} The response data including success flag and potential validation errors.
+ */
 export const register = async (
   formData: FormData
 ): Promise<RegisterResponse> => {
@@ -103,6 +160,14 @@ interface LoginResponse {
   csrfToken: string;
   token: string;
 }
+/**
+ * Logs in a user with their credentials and retrieves a token.
+ * @param email - User's email.
+ * @param password - User's password.
+ * @param rememberMe - Flag to remember the user (for session).
+ * @param csrfToken - CSRF token for security.
+ * @returns {Promise<LoginResponse>} The login response containing user data and tokens.
+ */
 export const login = async (
   email: string,
   password: string,
@@ -143,16 +208,25 @@ export const login = async (
 //-------------------------------------------------------------------------------------------------------------
 //GET USER BY ID
 //-------------------------------------------------------------------------------------------------------------
-// Function to fetch the user ID from localStorage
+/**
+ * Fetches the user ID from localStorage.
+ * @returns {string | null} The user ID if available, or null if not found.
+ */
 export const getUserIdFromLocalStorage = (): string | null => {
   const storedUser = localStorage.getItem('auth_user');
   if (storedUser) {
     const parsedUser = JSON.parse(storedUser);
-    return parsedUser.id || null; // Return the user ID
+    return parsedUser.id || null; // Return the user ID or null if not present
   }
   return null;
 };
-// Function to get user profile by profileId
+
+/**
+ * Fetches the user profile based on the provided profileId.
+ * @param profileId - The ID of the profile to fetch.
+ * @returns {Promise<UserProfileType | null>} The user profile data if found, or null if not found.
+ * @throws {Error} If the profile fetch fails.
+ */
 export const getUserProfileByProfileId = async (profileId: string): Promise<UserProfileType | null> => {
   try {
     const csrfToken = getCsrfTokenFromCookie();
@@ -161,10 +235,10 @@ export const getUserProfileByProfileId = async (profileId: string): Promise<User
     const response = await fetch(`${API_URL}/api/users/profile/${profileId}`, {
       method: 'GET',
       headers: {
-        'X-XSRF-TOKEN': decodedCsrfToken,
-        'Accept': 'application/json',
+        'X-XSRF-TOKEN': decodedCsrfToken, // CSRF token for security
+        'Accept': 'application/json', // Request for JSON response
       },
-      credentials: 'include',
+      credentials: 'include', // Include credentials (cookies) in the request
     });
 
     if (!response.ok) {
@@ -178,7 +252,13 @@ export const getUserProfileByProfileId = async (profileId: string): Promise<User
     throw error;
   }
 };
-// Function to get the profileId by userId
+
+/**
+ * Fetches the profile ID based on the user ID.
+ * @param userId - The ID of the user whose profile ID is to be fetched.
+ * @returns {Promise<string | null>} The profile ID if found, or null if not found.
+ * @throws {Error} If the profile ID fetch fails.
+ */
 export const getProfileIdByUserId = async (userId: string): Promise<string | null> => {
   try {
     const csrfToken = getCsrfTokenFromCookie();
@@ -187,10 +267,10 @@ export const getProfileIdByUserId = async (userId: string): Promise<string | nul
     const response = await fetch(`${API_URL}/api/users/profile`, {
       method: 'GET',
       headers: {
-        'X-XSRF-TOKEN': decodedCsrfToken,
-        'Accept': 'application/json',
+        'X-XSRF-TOKEN': decodedCsrfToken, // CSRF token for security
+        'Accept': 'application/json', // Request for JSON response
       },
-      credentials: 'include',
+      credentials: 'include', // Include credentials (cookies) in the request
     });
 
     if (!response.ok) {
@@ -207,11 +287,17 @@ export const getProfileIdByUserId = async (userId: string): Promise<string | nul
 };
 
 
+
 //-------------------------------------------------------------------------------------------------------------
 //USER PROFILE
 //-------------------------------------------------------------------------------------------------------------
 
-// Function to create user profile (POST method)
+/**
+ * Creates a new user profile.
+ * @param profileData - The data for the user profile to be created.
+ * @returns {Promise<UserProfileType>} The newly created user profile.
+ * @throws {Error} If the profile creation fails.
+ */
 export const createUserProfile = async (profileData: UserProfileType): Promise<UserProfileType> => {
   try {
     const csrfToken = getCsrfTokenFromCookie();
@@ -238,7 +324,13 @@ export const createUserProfile = async (profileData: UserProfileType): Promise<U
     throw error;
   }
 };
-// Function to update user profile (PUT method)
+
+/**
+ * Updates the user profile with the provided data.
+ * @param profileData - The data to update the user profile with.
+ * @returns {Promise<UserProfileType>} The updated user profile.
+ * @throws {Error} If the profile update fails.
+ */
 export const updateUserProfile = async (profileData: UserProfileType): Promise<UserProfileType> => {
   try {
     const csrfToken = getCsrfTokenFromCookie();
@@ -265,7 +357,13 @@ export const updateUserProfile = async (profileData: UserProfileType): Promise<U
     throw error;
   }
 };
-// Function to upload an avatar
+
+/**
+ * Uploads a user's avatar image.
+ * @param file - The avatar image file to be uploaded.
+ * @returns {Promise<UploadResponse>} The upload response containing the avatar data.
+ * @throws {Error} If the avatar upload fails.
+ */
 export const uploadAvatar = async (file: File): Promise<UploadResponse> => {
   try {
     const csrfToken = getCsrfTokenFromCookie();
@@ -292,7 +390,13 @@ export const uploadAvatar = async (file: File): Promise<UploadResponse> => {
     throw error;
   }
 };
-//Fetch avatar URL
+
+/**
+ * Fetches the avatar URL for a given avatar ID.
+ * @param avatarId - The ID of the avatar to fetch.
+ * @returns {Promise<string | null>} The URL of the avatar image, or null if not found.
+ * @throws {Error} If fetching the avatar URL fails.
+ */
 export const fetchAvatarUrl = async (avatarId: string): Promise<string | null> => {
   try {
     const response = await fetch(`${API_URL}/api/uploads/${avatarId}`, {
@@ -323,39 +427,12 @@ export const fetchAvatarUrl = async (avatarId: string): Promise<string | null> =
     return null;
   }
 };
-// Change User Password
-// export const changePassword = async (
-//   oldPassword: string,
-//   newPassword: string
-// ): Promise<void> => {
-//   try {
-//     const csrfToken = getCsrfTokenFromCookie();
 
-//     const response = await fetch(`${API_URL}/api/auth/update`, {
-//       method: 'PUT',
-//       headers: {
-//         'X-XSRF-TOKEN': csrfToken,
-//         'Content-Type': 'application/json',
-//       },
-//       body: JSON.stringify({
-//         old_password: oldPassword,
-//         new_password: newPassword,
-//       }),
-//       credentials: 'include',
-//     });
-
-//     if (!response.ok) {
-//       throw new Error('Failed to change password');
-//     }
-
-//     const result = await response.json();
-//     console.log('Password changed successfully', result);
-//   } catch (error) {
-//     console.error('Error changing password', error);
-//     throw error;
-//   }
-// };
-// Delete User Account (DELETE Request)
+/**
+ * Deletes the user's account.
+ * @returns {Promise<void>} A promise that resolves when the account is deleted.
+ * @throws {Error} If the account deletion fails.
+ */
 export const deleteUserAccount = async (): Promise<void> => {
   try {
     const csrfToken = getCsrfTokenFromCookie();
@@ -379,7 +456,13 @@ export const deleteUserAccount = async (): Promise<void> => {
     throw error;
   }
 };
-// Logout User (POST Request)
+
+/**
+ * Logs the user out by invalidating the session.
+ * @param csrfToken - The CSRF token for the logout request.
+ * @returns {Promise<void>} A promise that resolves when the user is logged out.
+ * @throws {Error} If the logout process fails.
+ */
 export const logout = async (csrfToken: string): Promise<void> => {
   try {
     // Decode the CSRF token to handle any URL-encoded characters
@@ -412,7 +495,13 @@ export const logout = async (csrfToken: string): Promise<void> => {
     throw error; // Rethrow the error for further handling by the calling function
   }
 };
-//Get all the artworks related to user
+
+/**
+ * Fetches all the artworks associated with a user.
+ * @param userId - The ID of the user whose artworks are to be fetched.
+ * @returns {Promise<ArtworkResponse[]>} A list of artworks related to the user.
+ * @throws {Error} If fetching the artworks fails.
+ */
 export const fetchUserArtworks = async (userId: string): Promise<ArtworkResponse[]> => {
   try {
     const csrfToken = getCsrfTokenFromCookie();

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import UserList from '../../components/admin/UserList';
-import { fetchUsers } from '../../utils/api/admin'; // Import the API function
+import { fetchUsers } from '../../utils/api/admin';
 import { User } from '../../utils/types';
 import SponsorChallengeList from '../../components/admin/SponsorChallengeList';
 import { ButtonPrimary } from '../../components/Buttons';
@@ -17,7 +17,6 @@ const AdminDashboard = () => {
     setSection(newSection);
   };
 
-  // Fetch users for the 'users' section
   useEffect(() => {
     const loadData = async () => {
       const fetchedUsers = await fetchUsers();

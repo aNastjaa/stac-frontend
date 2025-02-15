@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { ButtonCTA } from "../../components/Buttons";
-import ArtworkCarousel from "../../components/carousels/ArtworkCarousel"; // Import the ArtworkCarousel component
+import ArtworkCarousel from "../../components/carousels/ArtworkCarousel";
 import "../../css/landingPage.css";
-import { fetchArtworks } from "../../utils/api/artworks";  // Correct import for the API function
-import { ArtworkResponse } from "../../utils/types";  // Assuming this is your type for artwork
+import { fetchArtworks } from "../../utils/api/artworks"; 
+import { ArtworkResponse } from "../../utils/types"; 
 import SponsorChallengesCarousel from "../../components/carousels/SponsorChallengesCarousel";
 
 const LandingPage = () => {

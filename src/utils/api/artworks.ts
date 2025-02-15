@@ -1,7 +1,11 @@
 import { API_URL, getAuthToken, getCsrfTokenFromCookie} from "../api";
 import { ArtworkResponse, Theme } from "../types";
 
-// Fetch the current theme for the artwork
+/**
+ * Fetches the current theme for the artwork.
+ * @returns {Promise<Theme | null>} The current theme if available, otherwise null.
+ * @throws {Error} If fetching the theme fails.
+ */
 export const fetchCurrentTheme = async (): Promise<Theme | null> => {
     try {
       const csrfToken = getCsrfTokenFromCookie(); // Get the CSRF token from the cookies
@@ -37,7 +41,13 @@ export const fetchCurrentTheme = async (): Promise<Theme | null> => {
     }
   };
 
-// Submit artwork
+/**
+ * Submits artwork to the server.
+ * @param {FormData} formData - The artwork data to be submitted.
+ * @param {string} csrfToken - The CSRF token for authentication.
+ * @returns {Promise<{ message: string; post?: ArtworkResponse }>} Response message and optional artwork data.
+ * @throws {Error} If submission fails.
+ */
   export const submitArtwork = async (
     formData: FormData,
     csrfToken: string
@@ -73,7 +83,11 @@ export const fetchCurrentTheme = async (): Promise<Theme | null> => {
       throw error;
     }
   };
-//Get all artworks
+/**
+ * Fetches all artworks.
+ * @returns {Promise<ArtworkResponse[]>} List of artworks.
+ * @throws {Error} If fetching artworks fails.
+ */
   export const fetchArtworks = async (): Promise<ArtworkResponse[]> => {
     try {
       const csrfToken = getCsrfTokenFromCookie();
@@ -103,7 +117,12 @@ export const fetchCurrentTheme = async (): Promise<Theme | null> => {
       throw error;
     }
   };
-// Get post data by id
+/**
+ * Fetches post data by its ID.
+ * @param {string} postId - The ID of the post.
+ * @returns {Promise<ArtworkResponse>} The fetched post data.
+ * @throws {Error} If fetching the post fails.
+ */
   export const fetchPostById = async (postId: string): Promise<ArtworkResponse> => {
     try {
       const csrfToken = getCsrfTokenFromCookie();
@@ -133,7 +152,12 @@ export const fetchCurrentTheme = async (): Promise<Theme | null> => {
       throw error;
     }
   };
-//Delete post
+/**
+ * Deletes a post by its ID.
+ * @param {string} postId - The ID of the post to delete.
+ * @returns {Promise<{ message: string }>} Response message.
+ * @throws {Error} If deleting the post fails.
+ */
 export const deletePost = async (postId: string): Promise<{ message: string }> => {
   try {
     const csrfToken = getCsrfTokenFromCookie();
@@ -158,3 +182,8 @@ export const deletePost = async (postId: string): Promise<{ message: string }> =
     throw error;
   }
 };
+
+
+
+
+

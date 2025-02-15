@@ -1,13 +1,13 @@
 import { Navigate, Outlet } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
-import { AuthContext } from "../../context/AuthContext"; // Import the AuthContext
+import { AuthContext } from "../../context/AuthContext";
 import PrivateNavbar from "../../components/navigation/PrivateNavbar";
 import Footer from "../../components/navigation/Footer";
 
 const AdminLayout = () => {
-  const { auth, setAuth } = useContext(AuthContext); // Destructure setAuth to update context
-  const [loading, setLoading] = useState(true); // State to track if we are loading auth data
-  const [isAdmin, setIsAdmin] = useState(false); // State to track if user is admin
+  const { auth, setAuth } = useContext(AuthContext); 
+  const [loading, setLoading] = useState(true); 
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     const storedUser = localStorage.getItem("auth_user");
@@ -18,15 +18,15 @@ const AdminLayout = () => {
       setAuth({
         id: user.id,
         username: user.username,
-        email: user.email, // Ensure email is part of the state
-        role_name: user.role_name, // Check the role name
+        email: user.email,
+        role_name: user.role_name,
       });
 
       // Check if the user is an admin
       if (user.role_name === "admin") {
         setIsAdmin(true);
       } else {
-        setIsAdmin(false); // Ensure non-admins are not accessing admin layout
+        setIsAdmin(false);
       }
 
       setLoading(false);
@@ -36,15 +36,15 @@ const AdminLayout = () => {
   }, [setAuth]);
 
   if (loading) {
-    return <div>Loading...</div>; // Show loading indicator
+    return <div>Loading...</div>;
   }
 
   if (!auth?.id) {
-    return <Navigate to="/login" replace />; // If user is not authenticated, redirect to login
+    return <Navigate to="/login" replace />;
   }
 
   if (!isAdmin) {
-    return <Navigate to="/" replace />; // Redirect non-admins
+    return <Navigate to="/" replace />;
   }
 
   return (

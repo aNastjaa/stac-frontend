@@ -4,9 +4,12 @@ import { Post, SponsorChallenge, Submission, Theme, UploadResponse, User } from 
 export const API_URL = import.meta.env.VITE_API_URL;
 
 // --- Users Management ---
-
-// Get all users(works)
-export const fetchUsers = async (): Promise<User[]> => {
+/**
+ * Fetches all users from the server.
+ * @returns {Promise<User[]>} A list of users.
+ * @throws {Error} If fetching users fails.
+ */
+  export const fetchUsers = async (): Promise<User[]> => {
     try {
       const response = await fetch(`${API_URL}/api/admin/users`, {
         method: 'GET',
@@ -42,8 +45,17 @@ export const fetchUsers = async (): Promise<User[]> => {
     }
   };
   
-// Create a new user(works)
-export const createUser = async (userData: { username: string; email: string; password: string; role: string }) => {
+/**
+ * Creates a new user.
+ * @param {Object} userData - The user details.
+ * @param {string} userData.username - The username of the new user.
+ * @param {string} userData.email - The email of the new user.
+ * @param {string} userData.password - The password of the new user.
+ * @param {string} userData.role - The role of the new user.
+ * @returns {Promise<User>} The created user object.
+ * @throws {Error} If user creation fails.
+ */
+  export const createUser = async (userData: { username: string; email: string; password: string; role: string }) => {
     try {
       // First, ensure the CSRF token is set
       await setCsrfCookie(); 
@@ -74,7 +86,13 @@ export const createUser = async (userData: { username: string; email: string; pa
     }
   };
 
-//Update user role
+/**
+ * Updates a user's role.
+ * @param {string} userId - The ID of the user.
+ * @param {string} newRole - The new role to assign.
+ * @returns {Promise<User>} The updated user object.
+ * @throws {Error} If updating the user role fails.
+ */
   export const updateUserRole = async (userId: string, newRole: string) => {
     try {
       // Get CSRF token from cookie
@@ -103,9 +121,13 @@ export const createUser = async (userData: { username: string; email: string; pa
       throw error; // Re-throw error to be handled in the component
     }
   };
-
-// Delete user
-export const deleteUser = async (userId: string) => {
+/**
+ * Deletes a user from the system.
+ * @param {string} userId - The ID of the user to be deleted.
+ * @returns {Promise<Object>} A success message or the deleted user info.
+ * @throws {Error} If deleting the user fails.
+ */
+  export const deleteUser = async (userId: string) => {
     try {
       // First, ensure the CSRF token is set
       await setCsrfCookie(); 
@@ -137,9 +159,12 @@ export const deleteUser = async (userId: string) => {
 
 
   // --- Sponsor Challenges Management ---
-
-// Get all sponsor challenges
-export const fetchSponsorChallenges = async (): Promise<SponsorChallenge[]> => {
+/**
+ * Fetches all sponsor challenges from the server.
+ * @returns {Promise<SponsorChallenge[]>} A list of sponsor challenges.
+ * @throws {Error} If fetching the sponsor challenges fails.
+ */
+  export const fetchSponsorChallenges = async (): Promise<SponsorChallenge[]> => {
     try {
       // Send GET request to fetch sponsor challenges
       const response = await fetch(`${API_URL}/api/sponsor-challenges`, {
@@ -175,8 +200,18 @@ export const fetchSponsorChallenges = async (): Promise<SponsorChallenge[]> => {
       return [];
     }
 };
-// Create a sponsor challenge
-export const createSponsorChallenge = async (challengeData: {
+/**
+ * Creates a new sponsor challenge in the system.
+ * @param {Object} challengeData - The data for the new sponsor challenge.
+ * @param {string} challengeData.title - The title of the challenge.
+ * @param {string} challengeData.brief - A brief description of the challenge.
+ * @param {string} challengeData.brand_name - The brand name associated with the challenge.
+ * @param {string} challengeData.submission_deadline - The deadline for submitting entries.
+ * @param {string} [challengeData.brand_logo_id] - Optional ID for the brand's logo.
+ * @returns {Promise<SponsorChallenge>} The created sponsor challenge.
+ * @throws {Error} If creating the sponsor challenge fails.
+ */
+  export const createSponsorChallenge = async (challengeData: {
     title: string;
     brief: string;
     brand_name: string;
@@ -209,8 +244,13 @@ export const createSponsorChallenge = async (challengeData: {
       throw error;
     }
 };
-//Upload brand logo
-export const uploadBrandLogo = async (file: File): Promise<UploadResponse> => {
+/**
+ * Uploads a brand logo file to the server.
+ * @param {File} file - The brand logo file to upload.
+ * @returns {Promise<UploadResponse>} The response data containing the upload result.
+ * @throws {Error} If the upload fails.
+ */
+  export const uploadBrandLogo = async (file: File): Promise<UploadResponse> => {
     try {
       const csrfToken = getCsrfTokenFromCookie(); // Ensure CSRF token is fetched correctly
       const formData = new FormData();
@@ -236,8 +276,13 @@ export const uploadBrandLogo = async (file: File): Promise<UploadResponse> => {
       throw error;
     }
 };
- //Fetch url from brand logo id 
- export const fetchBrandLogoUrl = async (logoId: string): Promise<string | null> => {
+/**
+ * Fetches the brand logo URL from the server using its logo ID.
+ * @param {string} logoId - The ID of the brand logo.
+ * @returns {Promise<string | null>} The URL of the brand logo or null if not found.
+ * @throws {Error} If fetching the brand logo URL fails.
+ */
+  export const fetchBrandLogoUrl = async (logoId: string): Promise<string | null> => {
     try {
       const response = await fetch(`${API_URL}/api/uploads/${logoId}`, {
         method: 'GET',
@@ -267,9 +312,13 @@ export const uploadBrandLogo = async (file: File): Promise<UploadResponse> => {
       return null;
     }
   };
-
-// Delete sponsor challenge
-export const deleteSponsorChallenge = async (challengeId: string) => {
+/**
+ * Deletes a sponsor challenge from the system.
+ * @param {string} challengeId - The ID of the sponsor challenge to be deleted.
+ * @returns {Promise<Object>} The response data, possibly a success message.
+ * @throws {Error} If deleting the sponsor challenge fails.
+ */
+  export const deleteSponsorChallenge = async (challengeId: string) => {
     try {
       // Ensure the CSRF token is set
       await setCsrfCookie();
@@ -299,9 +348,13 @@ export const deleteSponsorChallenge = async (challengeId: string) => {
     }
   };
 
-// --- Theme Management ---
 
-//Function to fetch all themes 
+  // --- Theme Management ---
+/**
+ * Fetches all available themes.
+ * @returns {Promise<Theme[]>} A promise that resolves to an array of themes.
+ * @throws {Error} If fetching the themes fails.
+ */
 export const fetchAllThemes = async (): Promise<Theme[]> => {
   try {
     const csrfToken = getCsrfTokenFromCookie(); // Get the CSRF token from the cookies
@@ -331,6 +384,13 @@ export const fetchAllThemes = async (): Promise<Theme[]> => {
     throw error;
   }
 };
+/**
+ * Creates a new theme.
+ * @param {string} themeName - The name of the theme to be created.
+ * @param {string} startDate - The start date of the theme.
+ * @returns {Promise<Theme>} A promise that resolves to the created theme.
+ * @throws {Error} If creating the theme fails.
+ */
 export const createTheme = async (themeName: string, startDate: string) => {
   try {
     // First, ensure the CSRF token is set
@@ -368,7 +428,14 @@ export const createTheme = async (themeName: string, startDate: string) => {
     throw error; // Re-throw the error to handle it where the function is called
   }
 };
-// Function to update a theme
+/**
+ * Updates an existing theme.
+ * @param {string} themeId - The ID of the theme to be updated.
+ * @param {string} themeName - The new name of the theme.
+ * @param {string} startDate - The new start date of the theme.
+ * @returns {Promise<Theme>} A promise that resolves to the updated theme.
+ * @throws {Error} If updating the theme fails.
+ */
 export const updateTheme = async (themeId: string, themeName: string, startDate: string) => {
   try {
     // Ensure the CSRF token is set only if not already available
@@ -397,7 +464,12 @@ export const updateTheme = async (themeId: string, themeName: string, startDate:
     throw error; // Re-throw the error for the caller to handle
   }
 };
-// Function to delete a theme
+/**
+ * Deletes a theme by its ID.
+ * @param {string} themeId - The ID of the theme to be deleted.
+ * @returns {Promise<void>} A promise that resolves when the theme is deleted.
+ * @throws {Error} If deleting the theme fails.
+ */
 export const deleteTheme = async (themeId: string): Promise<void> => {
   try {
     // Ensure the CSRF token is set
@@ -430,7 +502,12 @@ export const deleteTheme = async (themeId: string): Promise<void> => {
     throw error; // Re-throw the error to handle it where the function is called
   }
 };
-// Function to archive a theme
+/**
+ * Archives a theme by its ID.
+ * @param {string} themeId - The ID of the theme to be archived.
+ * @returns {Promise<void>} A promise that resolves when the theme is archived.
+ * @throws {Error} If archiving the theme fails.
+ */
 export const archiveTheme = async (themeId: string): Promise<void> => {
   try {
     // Ensure the CSRF token is set
@@ -464,7 +541,11 @@ export const archiveTheme = async (themeId: string): Promise<void> => {
     throw error; // Re-throw the error to handle it where the function is called
   }
 };
-// Get archiver themes
+/**
+ * Fetches the list of archived themes.
+ * @returns {Promise<Theme[]>} A promise that resolves to an array of archived themes.
+ * @throws {Error} If fetching the archived themes fails.
+ */
 export const fetchArchivedThemes = async (): Promise<Theme[]> => {
   try {
     // Ensure the CSRF token is set
@@ -498,12 +579,12 @@ export const fetchArchivedThemes = async (): Promise<Theme[]> => {
   }
 };
 
-
-
-
-
 // --- Post status Management  ---
-// Fetch pending posts
+/**
+ * Fetches the list of pending posts.
+ * @returns {Promise<Post[]>} A promise that resolves to an array of pending posts.
+ * @throws {Error} If fetching the pending posts fails.
+ */
 export const fetchPendingPosts = async (): Promise<Post[]> => {
   const response = await fetch(`${API_URL}/api/admin/pending-posts`, {
     method: 'GET',
@@ -514,8 +595,13 @@ export const fetchPendingPosts = async (): Promise<Post[]> => {
   }
   return response.json();
 };
-
-// Update post status
+/**
+ * Updates the status of a post.
+ * @param {string} postId - The ID of the post to be updated.
+ * @param {'accepted' | 'rejected'} status - The new status to be set for the post.
+ * @returns {Promise<void>} A promise that resolves when the post status has been updated.
+ * @throws {Error} If updating the post status fails.
+ */
 export const updatePostStatus = async (postId: string, status: 'accepted' | 'rejected'): Promise<void> => {
   await setCsrfCookie();
   const csrfToken = getCsrfTokenFromCookie();
@@ -536,9 +622,12 @@ export const updatePostStatus = async (postId: string, status: 'accepted' | 'rej
 };
 
 
-
 // --- Stubmission status Management  ---
-// Fetch pending submissions
+/**
+ * Fetches the list of pending submissions.
+ * @returns {Promise<Submission[]>} A promise that resolves to an array of pending submissions.
+ * @throws {Error} If fetching the pending submissions fails.
+ */
 export const fetchPendingSubmissions = async (): Promise<Submission[]> => {
   const response = await fetch(`${API_URL}/api/admin/pending-submissions`, {
     method: 'GET',
@@ -549,8 +638,13 @@ export const fetchPendingSubmissions = async (): Promise<Submission[]> => {
   }
   return response.json();
 };
-
-// Update submission status
+/**
+ * Updates the status of a submission.
+ * @param {string} submissionId - The ID of the submission to be updated.
+ * @param {'accepted' | 'rejected'} status - The new status to be set for the submission.
+ * @returns {Promise<void>} A promise that resolves when the submission status has been updated.
+ * @throws {Error} If updating the submission status fails.
+ */
 export const updateSubmissionStatus = async (submissionId: string, status: 'accepted' | 'rejected'): Promise<void> => {
   await setCsrfCookie();
   const csrfToken = getCsrfTokenFromCookie();
