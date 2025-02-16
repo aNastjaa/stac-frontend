@@ -126,10 +126,10 @@ export const unlikePost = async (postId: string, likeId: string): Promise<void> 
         const response = await fetch(`${API_URL}/api/artworks/${postId}/likes/${likeId}`, {
             method: 'DELETE',
             headers: {
-                'X-XSRF-TOKEN': getCsrfTokenFromCookie(), // CSRF token for security
+                'X-XSRF-TOKEN': getCsrfTokenFromCookie(), 
                 'Content-Type': 'application/json',
             },
-            credentials: 'include', // Include cookies for authentication
+            credentials: 'include', 
         });
 
         if (!response.ok) {
@@ -148,26 +148,32 @@ export const unlikePost = async (postId: string, likeId: string): Promise<void> 
  */
 export const fetchLikes = async (postId: string): Promise<Like[]> => {
     try {
+        console.log(`Fetching likes for post ID: ${postId}`);
+
         const response = await fetch(`${API_URL}/api/artworks/${postId}/likes`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'X-XSRF-TOKEN': getCsrfTokenFromCookie(), // CSRF token for security
+                'X-XSRF-TOKEN': getCsrfTokenFromCookie(),
             },
-            credentials: 'include', // Include cookies for authentication
+            credentials: 'include',
         });
 
+        console.log('fetchLikes response status:', response.status);
         if (!response.ok) {
-            throw new Error('Failed to fetch likes');
+            throw new Error(`Failed to fetch likes (Status: ${response.status})`);
         }
 
         const likes = await response.json();
+        console.log('Fetched likes:', likes);
+
         return likes;
     } catch (error) {
         console.error('Error fetching likes:', error);
-        return []; // Return an empty array if an error occurs
+        return [];
     }
 };
+
 
 /**
  * Checks if the user has liked a specific post.

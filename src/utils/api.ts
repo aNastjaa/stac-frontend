@@ -63,7 +63,6 @@ export const getAuthToken = (): string | null => {
   const token = localStorage.getItem('auth_token');
   if (!token) {
     // If no token in localStorage, redirect user to login page or handle accordingly
-    redirectToLogin();
     return null;
   }
   return token;

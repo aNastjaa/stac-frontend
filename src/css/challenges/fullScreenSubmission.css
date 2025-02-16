@@ -84,7 +84,7 @@
   .post-actions {
     display: flex;
     justify-content: flex-start;
-    padding: 1rem;
+    margin-top: 1rem;
     gap: 1rem;
   }
   
@@ -92,6 +92,7 @@
     display: flex;
     align-items: center;
     gap: 0.3rem;
+    background: none;
   }
   
   .action-item {
@@ -106,7 +107,7 @@
   .comments-section {
     padding: 10px;
     border-top: 1px solid #444;
-    flex-grow: 1;  /* Allow comments section to take up the remaining space */
+    flex-grow: 1; 
   }
   
   .comments-list {

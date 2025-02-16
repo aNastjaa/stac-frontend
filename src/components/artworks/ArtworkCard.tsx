@@ -88,7 +88,7 @@ const ArtworkCard = ({ artwork, userId, isPending, onClick }: ArtworkCardProps) 
         {/* Conditionally render like button */}
         {artwork.status !== "pending" && (
           <div className="icon-container" onClick={handleLikeToggle}>
-            <Heart
+           <Heart
               size={16}
               color={userHasLiked ? "red" : "#fff"}
               fill={userHasLiked ? "red" : "none"}

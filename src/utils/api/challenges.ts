@@ -303,4 +303,36 @@ import { SponsorChallenge, SponsorChallengeDetail,Submission, Vote} from "../typ
       return false;
     }
   };  
+
+  export const getVotesCount = async (challengeId: string, submissionId: string): Promise<number> => {
+    try {
+      const csrfToken = getCsrfTokenFromCookie();
+      const authToken = localStorage.getItem("auth_token");
+  
+      if (!authToken) {
+        throw new Error("Authentication token is missing");
+      }
+  
+      const response = await fetch(`${API_URL}/api/sponsor-challenges/${challengeId}/submissions/${submissionId}/votes`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "X-XSRF-TOKEN": csrfToken,
+          Authorization: `Bearer ${authToken}`,
+        },
+        credentials: "include",
+      });
+  
+      if (!response.ok) {
+        throw new Error(`Error fetching votes: ${response.statusText}`);
+      }
+  
+      const votes = await response.json();
+      return votes.length; // Count the total votes
+    } catch (error) {
+      console.error("Error fetching votes count:", error);
+      return 0; // Return 0 on error to prevent app crashes
+    }
+  };
+  
  

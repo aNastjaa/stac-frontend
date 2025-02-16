@@ -1,11 +1,12 @@
-import { useEffect, useState } from 'react';
-import { Submission, Vote } from '../../utils/types';
-import VoteButton from '../../components/challenges/VoteButton';
-import FullScreenSubmission from '../../components/challenges/FullScreenSubmission';
-import '../../css/challenges/submissionCard.css';
+import { useEffect, useState } from "react";
+import { Submission } from "../../utils/types";
+import VoteButton from "../../components/challenges/VoteButton";
+import FullScreenSubmission from "../../components/challenges/FullScreenSubmission";
+import { getVotesCount } from "../../utils/api/challenges";
+import "../../css/challenges/submissionCard.css";
 
 interface SubmissionCardProps {
-  submission: Submission & { votes?: Vote[] };
+  submission: Submission;
   isPending?: boolean;
   onClick?: () => void;
   challenge: string;
@@ -15,9 +16,7 @@ interface SubmissionCardProps {
 const SubmissionCard = ({ submission, isPending, onClick, challenge, onSubmissionDeleted }: SubmissionCardProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [username, setUsername] = useState<string | null>(null);
-  const [votesCount, setVotesCount] = useState<number>(
-    submission.votes ? Math.max(submission.votes.length, 1) : 1
-  );
+  const [votesCount, setVotesCount] = useState<number>(0);
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
 
   useEffect(() => {
@@ -27,6 +26,20 @@ const SubmissionCard = ({ submission, isPending, onClick, challenge, onSubmissio
       setIsLoading(false);
     }, 1000);
   }, [submission.user.username]);
+
+  // Fetch the vote count on mount
+  useEffect(() => {
+    const fetchVotes = async () => {
+      try {
+        const count = await getVotesCount(submission.challenge_id, submission.id);
+        setVotesCount(count);
+      } catch (error) {
+        console.error("Error fetching votes count:", error);
+      }
+    };
+
+    fetchVotes();
+  }, [submission.challenge_id, submission.id]);
 
   const handleClick = (e: React.MouseEvent) => {
     if (isPending) {
@@ -46,11 +59,11 @@ const SubmissionCard = ({ submission, isPending, onClick, challenge, onSubmissio
 
   const handleSubmissionDeleted = (submissionId: string) => {
     console.log(`Submission with ID ${submissionId} deleted`);
-    onSubmissionDeleted(submissionId); 
+    onSubmissionDeleted(submissionId);
   };
 
   return (
-    <div className={`submission-card ${isPending ? 'blurred' : ''}`} onClick={handleClick}>
+    <div className={`submission-card ${isPending ? "blurred" : ""}`} onClick={handleClick}>
       {/* Submission Header */}
       <div className="submission-card-header">
         {isLoading ? <span>Loading...</span> : `@${username}`}
@@ -65,12 +78,7 @@ const SubmissionCard = ({ submission, isPending, onClick, challenge, onSubmissio
       <div className="submission-card-footer">
         {!isPending && (
           <div className="icon-container">
-            <VoteButton
-              challengeId={submission.challenge_id}
-              submissionId={submission.id}
-              setVotesCount={setVotesCount}
-            />
-            <span className="icon-count">{votesCount} votes</span>
+            <VoteButton challengeId={submission.challenge_id} submissionId={submission.id} />
           </div>
         )}
       </div>

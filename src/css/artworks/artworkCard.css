@@ -94,8 +94,8 @@
 
     @media (min-width: 700px){
       .artwork-card {
-        height: 500px;
-        width: auto;
+        height: auto;
+        width: 30%;
       }
     }
 

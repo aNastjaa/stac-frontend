@@ -59,7 +59,7 @@ const SubmissionList = () => {
             <li key={submission.id} className="submission-item">
               <div className="submission-details">
                 {challenge && (
-                  <div className="challenge-info">
+                  <div className="challenge-info-admin">
                     {challenge.brand_name && <h3 className="brand-name">{challenge.brand_name}</h3>}
                     {challenge.brief && <p className="brief">{challenge.brief}</p>}
                   </div>

@@ -1,14 +1,12 @@
-/* Carousel styling */
-/* .carousel-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-    position: relative;
-    gap: 1rem;
-    max-width: 700px;
-  } */
-  
+
+.artwork-carousel-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 700px; /* Adjust width */
+  margin: auto;
+  overflow: hidden;
+}
+
   /* Central slide is larger */
   .carousel-slide {
     width: 70%; /* Central slide takes most of the space */
@@ -34,3 +32,16 @@
     background: #131313;
   }
  
+  @media (min-width: 700px) {
+    .artwork-carousel-wrapper .artwork-card {
+        height: 400px;
+        width: auto;
+    }
+}
+
+@media (min-width: 500px) and (max-width: 699px) {
+  .artwork-carousel-wrapper .artwork-card {
+      height: 300px;
+      width: auto;
+  }
+}

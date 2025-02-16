@@ -20,7 +20,7 @@
 
 .logo-navbar {
   font-family: 'Sedgwick Ave Display', sans-serif;
-  font-size: calc(40px + 2vw);
+  font-size: calc(40px + 0.5vw);
   color: #131313;
 }
 

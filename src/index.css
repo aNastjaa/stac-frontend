@@ -57,4 +57,28 @@ body {
   background-color: #e3e3e3;
 }
 
+/* Default styles (Mobile First) */
+
+/* Reduce font size and spacing for tablets */
+@media screen and (min-width: 768px) {
+  html {
+    font-size: 85%; /* Scale down everything slightly */
+  }
+}
+
+/* Reduce font size and scale down elements for desktops */
+@media screen and (min-width: 1024px) {
+  html {
+    font-size: 75%; /* Scale down text further */
+  }
+}
+
+/* Further reduction for very large screens */
+@media screen and (min-width: 1440px) {
+  html {
+    font-size: 60%; /* Scale down even more */
+  }
+}
+
+
 

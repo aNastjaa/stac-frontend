@@ -185,4 +185,14 @@
  .sponsors-section-wrapper,
 .sponsors-section {
   width: 100%;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.sponsor-info{
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
+  font-size: calc(1.1rem + 0.3vw);
 }

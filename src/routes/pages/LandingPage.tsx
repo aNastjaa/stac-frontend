@@ -54,7 +54,9 @@ const LandingPage = () => {
         ) : error ? (
           <p>{error}</p>
         ) : (
-          <ArtworkCarousel artworks={artworks} userId={userId} isPending={isPending} />
+          <div className="artwork-carousel-wrapper">
+            <ArtworkCarousel artworks={artworks} userId={userId} isPending={isPending} />
+          </div>
         )}
         <div className="submit-button-wrapper">
           <ButtonCTA text="Submit" link="/login" />
@@ -116,6 +118,16 @@ const LandingPage = () => {
       <div className="sponsors-section-wrapper"> 
         <section className="sponsors-section">
           <h2 className="bite">Sponsors</h2>
+          <div className="sponsor-info">
+            <p className="sponsor-info">
+              Take your creativity to the next level! Participate in Sponsor Challenges and showcase your talent to world-renowned brands.</p>
+            <p className="sponsor-info">
+              If you win, you’ll get an exclusive opportunity to collaborate on a real campaign with top sponsors.</p>
+            <p className="sponsor-info">    
+              This could be your chance to gain recognition, build your portfolio, and work on exciting projects with industry leaders.  
+              Dare to create, compete, and win! 🚀
+            </p>
+          </div>
           <SponsorChallengesCarousel />
         </section>
       </div>

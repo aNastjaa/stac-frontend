@@ -21,13 +21,11 @@ const FullScreenSubmission = ({
   submission,
   onClose,
   challengeName,
-  votesCount: initialVotesCount,
   onSubmissionDeleted
 }: FullScreenSubmissionProps) => {
   const { auth } = useContext(AuthContext);
   const authToken = getAuthToken();
   const [avatarUrl, setAvatarUrl] = useState<string>(submission.user.avatar_url || "");
-  const [votesCount, setVotesCount] = useState<number>(initialVotesCount);
   const [challengeTitle, setChallengeTitle] = useState<string>(challengeName);
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -171,12 +169,7 @@ const FullScreenSubmission = ({
       {/* Submission Actions */}
       <div className="post-actions">
         <div className="icon-container-full-post">
-          <VoteButton
-            challengeId={submission.challenge_id}
-            submissionId={submission.id}
-            setVotesCount={setVotesCount} // Update votes count
-          />
-          <span>{votesCount} votes</span>
+        <VoteButton challengeId={submission.challenge_id} submissionId={submission.id} />
         </div>
       </div>
     </div>

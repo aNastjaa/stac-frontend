@@ -37,7 +37,8 @@
   }
   
   .profile-header-left {
-   font-family: "Sedgwick Ave Display"; 
+   font-family: "Sedgwick Ave Display";
+   font-size: calc(1.2rem + 0.3vw); 
   }
   
   .profile-avatar-stats {
@@ -61,7 +62,7 @@
     flex-wrap: wrap;
     flex-direction: row;
     justify-content: center;
-    gap: 0.5rem;
+    gap: calc(0.5rem + 3vw);
 
   }
   .profile-stats p {
@@ -80,7 +81,7 @@
     font-family: "bebas neue";
     font-size: 24px;
     text-align: left;
-    padding: 1rem 0;
+    padding: 1rem;
   }
   
   .profile-bio p {
@@ -88,8 +89,7 @@
     font-family: "Montserrat";
     font-size: 16px;
     text-align: left;
-    padding:  0;
-    margin-bottom: 1rem;
+    padding:  1rem;
   }
 
   .external-links a{
@@ -264,7 +264,7 @@
   .user-artworks{
     display: flex;
     flex-wrap: wrap; 
-    justify-content: space-between; 
+    justify-content: center; 
     width: 100%;
     max-width: 700px;
     gap: 0.5rem; 
@@ -334,5 +334,4 @@
       display: flex;
       gap: 0.5rem;
   }
- 
 }
