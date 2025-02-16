@@ -303,7 +303,13 @@ import { SponsorChallenge, SponsorChallengeDetail,Submission, Vote} from "../typ
       return false;
     }
   };  
-
+/**
+ * Fetches the total vote count for a specific submission in a sponsor challenge.
+ * @param {string} challengeId - The ID of the sponsor challenge.
+ * @param {string} submissionId - The ID of the submission.
+ * @returns {Promise<number>} The total number of votes for the submission.
+ * @throws {Error} If fetching the vote count fails.
+ */
   export const getVotesCount = async (challengeId: string, submissionId: string): Promise<number> => {
     try {
       const csrfToken = getCsrfTokenFromCookie();
